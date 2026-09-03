@@ -248,6 +248,190 @@
     }
   }
 
+  /* ---------- Interactive world map (markets section) ---------- */
+
+  var worldPanel = document.getElementById('world-panel');
+
+  if (worldPanel) {
+    var ORIGIN = { r: 'us', n: 'California — Origin', lat: 36.8, lon: -119.8 };
+    var MARKETS = [
+      { r: 'us', n: 'United States', lat: 39.8, lon: -98.6 },
+      { r: 'na', n: 'Canada', lat: 53.9, lon: -106.3 },
+      { r: 'na', n: 'Mexico', lat: 23.6, lon: -102.5 },
+      { r: 'ap', n: 'Vietnam', lat: 16.2, lon: 106.0 },
+      { r: 'ap', n: 'China', lat: 34.5, lon: 104.0 },
+      { r: 'ap', n: 'Hong Kong', lat: 22.3, lon: 114.2 },
+      { r: 'ap', n: 'Japan', lat: 36.2, lon: 138.3 },
+      { r: 'ap', n: 'South Korea', lat: 36.5, lon: 127.9 },
+      { r: 'ap', n: 'Taiwan', lat: 23.7, lon: 121.0 },
+      { r: 'ap', n: 'Singapore', lat: 1.35, lon: 103.8 },
+      { r: 'ap', n: 'Malaysia', lat: 3.9, lon: 102.0 },
+      { r: 'ap', n: 'Indonesia', lat: -2.5, lon: 117.9 },
+      { r: 'ap', n: 'Thailand', lat: 15.0, lon: 101.0 },
+      { r: 'ap', n: 'Philippines', lat: 12.9, lon: 122.0 },
+      { r: 'sa', n: 'India', lat: 21.0, lon: 78.0 },
+      { r: 'sa', n: 'Pakistan', lat: 29.9, lon: 69.4 },
+      { r: 'sa', n: 'Bangladesh', lat: 23.7, lon: 90.4 },
+      { r: 'sa', n: 'Sri Lanka', lat: 7.9, lon: 80.8 },
+      { r: 'me', n: 'United Arab Emirates', lat: 24.3, lon: 54.4 },
+      { r: 'me', n: 'Saudi Arabia', lat: 23.9, lon: 45.1 },
+      { r: 'me', n: 'Qatar', lat: 25.3, lon: 51.2 },
+      { r: 'me', n: 'Kuwait', lat: 29.3, lon: 47.5 },
+      { r: 'me', n: 'Bahrain', lat: 26.0, lon: 50.5 },
+      { r: 'me', n: 'Oman', lat: 21.5, lon: 57.0 },
+      { r: 'me', n: 'Jordan', lat: 31.3, lon: 36.4 },
+      { r: 'eu', n: 'Germany', lat: 51.1, lon: 10.4 },
+      { r: 'eu', n: 'Netherlands', lat: 52.2, lon: 5.3 },
+      { r: 'eu', n: 'Spain', lat: 40.2, lon: -3.7 },
+      { r: 'eu', n: 'Italy', lat: 42.8, lon: 12.5 },
+      { r: 'eu', n: 'France', lat: 46.6, lon: 2.5 },
+      { r: 'eu', n: 'United Kingdom', lat: 53.0, lon: -1.5 }
+    ];
+    // One arc from California to a hub country per region.
+    var HUBS = {
+      na: { lat: 23.6, lon: -102.5 },
+      ap: { lat: 16.2, lon: 106.0 },
+      sa: { lat: 21.0, lon: 78.0 },
+      me: { lat: 24.3, lon: 54.4 },
+      eu: { lat: 51.1, lon: 10.4 }
+    };
+
+    // Equirectangular projection → percentages of the 800×400 map.
+    function project(pt) {
+      return { x: (pt.lon + 180) / 360 * 100, y: (90 - pt.lat) / 180 * 100 };
+    }
+
+    var pinsLayer = worldPanel.querySelector('.world-pins');
+    var arcsSvg = worldPanel.querySelector('.world-arcs');
+
+    function addPin(pt, isOrigin) {
+      var p = project(pt);
+      var pin = document.createElement('span');
+      pin.className = 'map-pin' + (isOrigin ? ' map-pin-origin' : '');
+      pin.style.left = p.x.toFixed(2) + '%';
+      pin.style.top = p.y.toFixed(2) + '%';
+      pin.setAttribute('data-name', pt.n);
+      pin.dataset.region = pt.r;
+      pinsLayer.appendChild(pin);
+    }
+
+    MARKETS.forEach(function (pt) { addPin(pt, false); });
+    addPin(ORIGIN, true);
+
+    var o = project(ORIGIN);
+    Object.keys(HUBS).forEach(function (region) {
+      var h = project(HUBS[region]);
+      var x1 = o.x * 8, y1 = o.y * 4, x2 = h.x * 8, y2 = h.y * 4;
+      var mx = (x1 + x2) / 2;
+      var my = Math.max(8, Math.min(y1, y2) - Math.abs(x2 - x1) * 0.18 - 20);
+      var arc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      arc.setAttribute('d', 'M' + x1.toFixed(1) + ' ' + y1.toFixed(1) +
+                            ' Q' + mx.toFixed(1) + ' ' + my.toFixed(1) +
+                            ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1));
+      arc.setAttribute('class', 'world-arc');
+      arc.dataset.region = region;
+      arcsSvg.appendChild(arc);
+    });
+
+    // Hovering (or focusing) a region chip spotlights its markets on the map.
+    document.querySelectorAll('.region-chips [data-region], .market-card[data-region]').forEach(function (chip) {
+      var region = chip.dataset.region;
+
+      function spotlight() {
+        chip.classList.add('active');
+        worldPanel.classList.add('hl');
+        worldPanel.querySelectorAll('[data-region]').forEach(function (el) {
+          el.classList.toggle('hot', el.dataset.region === region);
+        });
+      }
+      function clear() {
+        chip.classList.remove('active');
+        worldPanel.classList.remove('hl');
+        worldPanel.querySelectorAll('.hot').forEach(function (el) {
+          el.classList.remove('hot');
+        });
+      }
+
+      chip.addEventListener('mouseenter', spotlight);
+      chip.addEventListener('mouseleave', clear);
+      chip.addEventListener('focusin', spotlight);
+      chip.addEventListener('focusout', clear);
+    });
+  }
+
+  /* ---------- Sourcing slider ---------- */
+
+  var slider = document.getElementById('sourcing-slider');
+
+  if (slider) {
+    var sliderTrack = slider.querySelector('.slider-track');
+    var slides = sliderTrack.children;
+    var dotsWrap = slider.querySelector('.slider-dots');
+    var currentSlide = 0;
+    var sliderTimer = null;
+
+    for (var s = 0; s < slides.length; s++) {
+      (function (idx) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+        dot.addEventListener('click', function () { goToSlide(idx); restartAutoplay(); });
+        dotsWrap.appendChild(dot);
+      })(s);
+    }
+    var dots = dotsWrap.children;
+
+    function goToSlide(i) {
+      currentSlide = (i + slides.length) % slides.length;
+      sliderTrack.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].classList.toggle('active', d === currentSlide);
+      }
+    }
+
+    slider.querySelector('.slider-prev').addEventListener('click', function () {
+      goToSlide(currentSlide - 1);
+      restartAutoplay();
+    });
+    slider.querySelector('.slider-next').addEventListener('click', function () {
+      goToSlide(currentSlide + 1);
+      restartAutoplay();
+    });
+
+    function startAutoplay() {
+      if (prefersReducedMotion || sliderTimer) return;
+      sliderTimer = setInterval(function () { goToSlide(currentSlide + 1); }, 5000);
+    }
+    function stopAutoplay() {
+      if (sliderTimer) { clearInterval(sliderTimer); sliderTimer = null; }
+    }
+    function restartAutoplay() { stopAutoplay(); startAutoplay(); }
+
+    slider.addEventListener('mouseenter', stopAutoplay);
+    slider.addEventListener('mouseleave', startAutoplay);
+    slider.addEventListener('focusin', stopAutoplay);
+    slider.addEventListener('focusout', startAutoplay);
+
+    // Simple swipe support.
+    var swipeStartX = null;
+    slider.addEventListener('pointerdown', function (e) { swipeStartX = e.clientX; });
+    slider.addEventListener('pointerup', function (e) {
+      if (swipeStartX === null) return;
+      var dx = e.clientX - swipeStartX;
+      if (Math.abs(dx) > 40) {
+        goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+        restartAutoplay();
+      }
+      swipeStartX = null;
+    });
+    Array.prototype.forEach.call(slider.querySelectorAll('img'), function (img) {
+      img.draggable = false;
+    });
+
+    goToSlide(0);
+    startAutoplay();
+  }
+
   /* ---------- 3D tilt on cards (fine pointers only) ---------- */
 
   if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {

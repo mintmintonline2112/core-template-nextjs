@@ -41,7 +41,7 @@ then visit http://localhost:8000
 ## Design notes
 
 - **Primary color:** `#295328` (deep almond-orchard green) — full token set in `:root` of `styles.css`
-- **Typeface:** EB Garamond (Google Fonts) with system Garamond fallback
+- **Typeface:** Roboto (Google Fonts) with Segoe UI/Arial fallback
 - **Accent:** almond-gold `#C9A25E` / `#D9B45F` for CTAs, rules, and botanical line art
 - Scroll animations respect `prefers-reduced-motion`; the page renders fully without JavaScript
 - All forms (quote, contact, newsletter) are front-end demos only — they validate and show a confirmation, but do not send data

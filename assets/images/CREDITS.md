@@ -17,6 +17,9 @@ and Wikimedia Commons (CC-licensed files require the attribution below).
 - **green-almond.jpg** — "20150722-USDA-OC-PSD-0070 Agriculture in the United States" · USDAgov · Public domain
   https://commons.wikimedia.org/wiki/File:20150722-USDA-OC-PSD-0070_Agriculture_in_the_United_States.jpg
 
+- **world-map.svg** — "World location map" · via Wikimedia Commons · Public domain (recolored)
+  https://commons.wikimedia.org/wiki/File:World_location_map.svg
+
 ## Attribution required (Creative Commons)
 
 - **orchard-rows.jpg** — "AlmondorchardWintonCA08" by Nehrams2020 · CC BY-SA 3.0

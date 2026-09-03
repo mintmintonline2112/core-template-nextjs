@@ -76,11 +76,11 @@
       .sea  { fill: none;
               stroke:none;
             }
-      .land { fill: #3B6C37; fill-opacity:1; fill-rule:nonzero;
-              stroke:#1B3A20;stroke-width:0.25;stroke-miterlimit:1;
+      .land { fill: #B3B6AD; fill-opacity:1; fill-rule:nonzero;
+              stroke:#83887D;stroke-width:0.25;stroke-miterlimit:1;
             }
       .carved-out { fill:none;
-              stroke:#1B3A20;stroke-width:0.25;stroke-miterlimit:1;
+              stroke:#83887D;stroke-width:0.25;stroke-miterlimit:1;
               stroke-dasharray:0.25,0.25;stroke-dashoffset:0;
       }
 

@@ -711,7 +711,13 @@ button {
   gap: 0.4rem 1.3rem;
   font-size: 0.8rem;
   letter-spacing: 0.08em;
-  color: var(--light-soft);
+  color: var(--light);
+  background: rgba(20, 39, 24, 0.75);
+  border: 1px solid rgba(217, 180, 95, 0.35);
+  border-radius: 100px;
+  padding: 0.45rem 1.1rem;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .world-legend span { display: inline-flex; align-items: center; gap: 0.45rem; }

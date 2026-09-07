@@ -1,0 +1,162 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ContactForm } from "@/components/site/forms";
+import { getCmsPage, sectionMap } from "@/lib/cms";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getCmsPage("contact");
+  return {
+    title: page?.metaTitle ?? "Contact",
+    description:
+      page?.metaDescription ??
+      "Contact Prime Nuts USA for California almond supply — B2B inquiries, quotations, and distribution partnerships.",
+  };
+}
+
+const CHECKLIST = [
+  "Almond Variety", "Size & Grade", "Required Volume", "Packaging",
+  "Destination Country & Port", "Preferred Incoterm", "Target Shipment Window",
+  "Certifications Required",
+];
+
+type ContactInfo = {
+  location: string;
+  email: string;
+  phone: string;
+  businessHours: string;
+};
+
+const DEFAULT_INFO: ContactInfo = {
+  location: "California, United States",
+  email: "info@primenutsusa.com",
+  phone: "+1 (209) 000-0000",
+  businessHours: "Monday – Friday · 8:00 AM – 5:00 PM (Pacific Time)",
+};
+
+export default async function ContactPage() {
+  // Nội dung sửa được từ admin; API tắt → fallback hardcode.
+  const page = await getCmsPage("contact");
+  const sections = sectionMap(page);
+  const meta = (sections.get("contact-info")?.metadata ?? {}) as Partial<ContactInfo>;
+  const info: ContactInfo = { ...DEFAULT_INFO, ...meta };
+  const checklistSection = sections.get("quotation-checklist");
+  const checklist =
+    ((checklistSection?.metadata?.checklist as string[] | undefined) ?? CHECKLIST).filter(Boolean);
+
+  return (
+    <>
+      <section className="page-hero">
+        <div className="container page-hero-inner">
+          <p className="eyebrow eyebrow-gold reveal">Contact Us</p>
+          <h1 className="reveal">Let&rsquo;s Talk Almonds</h1>
+          <p className="lead reveal">
+            {page?.lead ??
+              "Whether you are an established importer or developing a new market for California almonds, our team is ready to review your requirements and respond with current availability."}
+          </p>
+        </div>
+      </section>
+
+      <section className="section" id="contact-form-section">
+        <div className="container contact-grid">
+          <div className="reveal">
+            <p className="eyebrow">
+              {sections.get("contact-info")?.subheading ?? "Get in Touch"}
+            </p>
+            <h2>{sections.get("contact-info")?.heading ?? "Prime Nuts USA"}</h2>
+            <p className="section-intro">
+              We work with commercial buyers — importers, distributors, wholesalers, food
+              manufacturers, roasters, and private-label brands.
+            </p>
+
+            <ul className="contact-info-list">
+              <li>
+                <span className="icon-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" /><circle cx="12" cy="10" r="2.6" />
+                  </svg>
+                </span>
+                <div>
+                  <h4>Location</h4>
+                  <p>{info.location}</p>
+                </div>
+              </li>
+              <li>
+                <span className="icon-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 7 8.5-7" />
+                  </svg>
+                </span>
+                <div>
+                  <h4>Email</h4>
+                  <p><a href={`mailto:${info.email}`}>{info.email}</a></p>
+                </div>
+              </li>
+              <li>
+                <span className="icon-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 4h4l1.8 4.5-2.3 1.7a13 13 0 0 0 5.3 5.3l1.7-2.3L20 15v4a1.5 1.5 0 0 1-1.6 1.5C10.8 20 4 13.2 3.5 5.6A1.5 1.5 0 0 1 5 4z" />
+                  </svg>
+                </span>
+                <div>
+                  <h4>Phone / WhatsApp</h4>
+                  <p>{info.phone}</p>
+                </div>
+              </li>
+              <li>
+                <span className="icon-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />
+                  </svg>
+                </span>
+                <div>
+                  <h4>Business Hours</h4>
+                  <p>{info.businessHours}</p>
+                </div>
+              </li>
+            </ul>
+
+            <p className="contact-note">
+              We typically respond to commercial inquiries within 1–2 business days. For the
+              fastest quotation, include your target variety, size &amp; grade, volume,
+              packaging, destination port, and preferred Incoterm.
+            </p>
+
+            <figure className="photo-frame split-photo reveal">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/orchard-rows.jpg" alt="Rows of almond trees in a California orchard" loading="lazy" />
+            </figure>
+          </div>
+
+          <ContactForm />
+        </div>
+      </section>
+
+      <section className="section section-tint">
+        <div className="container">
+          <div className="section-head reveal">
+            <p className="eyebrow">{checklistSection?.subheading ?? "Faster Quotations"}</p>
+            <h2>{checklistSection?.heading ?? "Tell Us What You Need"}</h2>
+            <p className="section-intro">
+              The more detail you share, the faster we can prepare a commercial quotation based
+              on current availability and market conditions.
+            </p>
+          </div>
+
+          <ul className="doc-grid reveal">
+            {checklist.map((item) => (
+              <li key={item}>
+                <span className="doc-check" aria-hidden="true">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <p className="section-note reveal">
+            Prefer a structured form? Use the detailed{" "}
+            <Link href="/#quote">B2B quote request form</Link> on our home page.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}

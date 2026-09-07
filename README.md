@@ -1,48 +1,23 @@
-# Prime Nuts USA — Website Demo
+# Prime Nuts USA
 
-Static B2B landing page for Prime Nuts USA — California almond supply for U.S. and global markets.
-Built with plain HTML, CSS, and JavaScript (no build step, no dependencies).
+Website for Prime Nuts USA — California almond supply for U.S. and global markets.
 
 ## Structure
 
 ```
 primenutsvn/
-├── index.html          # Home (hero, markets, products overview, orders,
-│                       # sourcing, logistics, who-we-serve, why-us, quote form)
-├── products.html       # Our Products — natural varieties (Nonpareil, Independence,
-│                       # Monterey, Carmel, Butte, Padre) + processed almonds
-│                       # (blanched, sliced, slivered, diced, flour & meal) + sizes
-├── news.html           # News & Insights — featured article, article grid,
-│                       # newsletter signup (demo)
-├── contact.html        # Contact — info cards, inquiry form, quotation checklist
-├── css/
-│   └── styles.css      # Design tokens + all styling (brand green #295328,
-│                       # EB Garamond, cream/gold palette, responsive layout)
-├── js/
-│   └── main.js         # Shared: mobile nav, sticky header, scroll-reveal,
-│                       # active-link highlighting, form validation + success states
-├── assets/
-│   ├── favicon.svg     # Almond mark favicon
-│   └── images/         # Photos (rawpixel CC0 + Wikimedia Commons) + CREDITS.md
-│                       # CC BY-SA files require the attribution listed in CREDITS.md
-└── skills/, tools/     # (not part of the website)
+├── frontend-next/    # Website + admin CMS (Next.js 15) — bản chính thức, nối backend
+├── backend/          # NestJS + TypeORM/MySQL CMS API — see backend/README.md
+├── frontend/         # Bản demo tĩnh ban đầu (HTML/CSS/JS) — tham chiếu thiết kế
+└── skills/, tools/   # Local Claude/dev tooling — not part of the website
 ```
 
-## Run it
+## Quick start
 
-Open `index.html` directly in a browser, or serve the folder:
-
-```
-python -m http.server 8000
-```
-
-then visit http://localhost:8000
-
-## Design notes
-
-- **Primary color:** `#295328` (deep almond-orchard green) — full token set in `:root` of `styles.css`
-- **Typeface:** Roboto (Google Fonts) with Segoe UI/Arial fallback
-- **Accent:** almond-gold `#C9A25E` / `#D9B45F` for CTAs, rules, and botanical line art
-- Scroll animations respect `prefers-reduced-motion`; the page renders fully without JavaScript
-- All forms (quote, contact, newsletter) are front-end demos only — they validate and show a confirmation, but do not send data
-- Contact details on `contact.html` (email, phone) and the articles on `news.html` are placeholders — replace them with real content before publishing
+1. **Backend:** `cd backend`, cấu hình `.env` (DB `primenuts`, JWT), rồi
+   `npm install`, `npm run db:run && npm run db:seed`, `npm run start:dev`
+   → API `http://localhost:3010/api`, Swagger `/docs`
+2. **Frontend:** `cd frontend-next && npm install && npm run dev`
+   → site `http://localhost:3001`, quản trị `/admin`
+   (đăng nhập seed: admin@gmail.com / admin#123)
+3. Bản demo tĩnh cũ: mở `frontend/index.html` trực tiếp trong trình duyệt

@@ -1,4 +1,4 @@
-import { BlogPostForm } from '@/admin/features/blog-posts/blog-post-form';
+import { BlogPostForm } from '@/app/admin/(protected)/blog-posts/_components/blog-post-form';
 
 export default function AdminBlogPostCreatePage() {
   return <BlogPostForm />;

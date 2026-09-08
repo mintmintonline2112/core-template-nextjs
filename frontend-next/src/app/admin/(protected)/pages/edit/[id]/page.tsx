@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { PageForm } from '@/admin/features/pages/page-form';
+import { PageForm } from '@/app/admin/(protected)/pages/_components/page-form';
 
 export default async function AdminPageEditPage({
   params,

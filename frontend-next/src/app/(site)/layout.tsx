@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { Footer } from "@/components/site/Footer";
-import { Header } from "@/components/site/Header";
-import { SiteEffects } from "@/components/site/SiteEffects";
-import { getSiteMenu } from "@/lib/menu";
+import { Footer } from "@/app/(site)/_components/Footer";
+import { Header } from "@/app/(site)/_components/Header";
+import { SiteEffects } from "@/app/(site)/_components/SiteEffects";
+import { getSiteMenu } from "@/app/(site)/_lib/menu";
 import { FONT_STACKS, getSiteSettings } from "@/lib/settings";
 
 /** Khung site public: header (menu CMS) + nội dung + footer + hiệu ứng. */

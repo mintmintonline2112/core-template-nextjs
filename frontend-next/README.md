@@ -16,18 +16,36 @@ trỏ về backend (`http://localhost:3010/api`), `REVALIDATE_SECRET` khớp bac
 
 ## Cấu trúc
 
+Theo chuẩn App Router: **route groups** `(group)` gom layout mà không đổi URL,
+**private folders** `_folder` chứa code không phải route, đặt cạnh route dùng nó.
+
 ```
 src/
 ├── app/
-│   ├── (site)/          # Site public: / , /products, /news, /news/[slug], /contact
-│   ├── admin/           # Dashboard CMS (copy từ dentis-next, đã adapt en/vi)
-│   └── api/revalidate/  # Backend ping để drop fetch-cache khi admin sửa nội dung
-├── components/site/     # Header, Footer, WorldMap, SourcingSlider, forms, SiteEffects
-├── admin/               # Framework admin: generic-form, data-table, rich-text, RBAC…
-├── lib/                 # api, cms, menu, settings, sanitize, env, i18n (en/vi)
-├── config/site-menu.ts  # Menu fallback khi API lỗi
-└── styles/              # site.css (port từ bản tĩnh) + admin.css
+│   ├── layout.tsx                 # Root layout (metadata, site.css)
+│   ├── (site)/                    # Site public — URL: / , /products, /news, /news/[slug], /contact, /[slug]
+│   │   ├── layout.tsx             # Header (menu CMS) + Footer + SiteEffects
+│   │   ├── _components/           # Header, Footer, Brand, WorldMap, SourcingSlider, forms, sections/…
+│   │   └── _lib/                  # cms.ts, menu.ts, sanitize.ts, site-menu.ts (fallback menu)
+│   ├── admin/                     # Dashboard CMS — URL: /admin/…
+│   │   ├── layout.tsx             # AuthProvider + React Query + admin.css
+│   │   ├── login/                 # /admin/login (+ _components/LoginScreen)
+│   │   ├── (protected)/           # Cần đăng nhập — layout.tsx bọc AdminShell
+│   │   │   └── <feature>/         # page.tsx, create/, edit/[id]/, _components/ (form, list), _lib/ (*.service.ts)
+│   │   ├── _auth/                 # AuthProvider
+│   │   ├── _layout/               # AdminShell, AdminSidebar, AdminProviders, navigation
+│   │   ├── _components/           # data-table, generic-form, rich-text-editor, library-picker, image-compress-dialog…
+│   │   └── _lib/                  # admin-api, crud-service, pagination, session, utils, confirm, cms-shared, seo/translation-fields
+│   └── api/revalidate/            # Backend ping để drop fetch-cache khi admin sửa nội dung
+├── lib/                           # Dùng chung site + admin: env, api, settings, i18n, fonts, contact-page, video…
+├── types/                         # Kiểu dữ liệu chung (cms.ts)
+├── styles/                        # site.css (port từ bản tĩnh) + admin.css
+└── fonts/                         # Barlow / Barlow Condensed (woff2, next/font/local)
 ```
+
+Quy ước: import bằng alias `@/…` (`@/app/(site)/_lib/cms`, `@/app/admin/_lib/utils`);
+file cùng thư mục dùng `./`. Service của feature này cần ở feature khác thì import
+thẳng `@/app/admin/(protected)/<feature>/_lib/<x>.service`.
 
 ## Nối backend
 

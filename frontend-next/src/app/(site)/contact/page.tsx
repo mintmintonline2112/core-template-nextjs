@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ContactForm } from "@/components/site/forms";
-import { getCmsPage, sectionMap } from "@/lib/cms";
+import { ContactForm } from "@/app/(site)/_components/forms";
+import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("contact");

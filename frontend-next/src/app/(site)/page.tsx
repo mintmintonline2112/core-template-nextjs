@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { QuoteForm } from "@/components/site/forms";
-import { SourcingSlider, type SourcingSlide } from "@/components/site/SourcingSlider";
-import { WorldMap } from "@/components/site/WorldMap";
-import { getCmsPage, mediaUrl, sectionMap } from "@/lib/cms";
-import { sanitizeRichText } from "@/lib/sanitize";
+import { QuoteForm } from "@/app/(site)/_components/forms";
+import { SourcingSlider, type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
+import { WorldMap } from "@/app/(site)/_components/WorldMap";
+import { getCmsPage, mediaUrl, sectionMap } from "@/app/(site)/_lib/cms";
+import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("home");

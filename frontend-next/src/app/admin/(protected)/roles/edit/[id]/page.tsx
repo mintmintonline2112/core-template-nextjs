@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { RoleForm } from '@/admin/features/roles/role-form';
+import { RoleForm } from '@/app/admin/(protected)/roles/_components/role-form';
 
 export default async function AdminRoleEditPage({
   params,

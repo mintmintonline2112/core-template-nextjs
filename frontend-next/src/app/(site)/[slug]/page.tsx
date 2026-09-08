@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { SectionRenderer } from "@/components/site/SectionRenderer";
-import { getCmsPage } from "@/lib/cms";
+import { SectionRenderer } from "@/app/(site)/_components/SectionRenderer";
+import { getCmsPage } from "@/app/(site)/_lib/cms";
 
 /**
  * Trang CMS tự do: mọi Page admin tạo thêm (ngoài 4 trang chuẩn) render tại

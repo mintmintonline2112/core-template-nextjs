@@ -1,4 +1,4 @@
-import { BlogPostList } from '@/admin/features/blog-posts/blog-post-list';
+import { BlogPostList } from '@/app/admin/(protected)/blog-posts/_components/blog-post-list';
 
 export default function AdminBlogPostsPage() {
   return <BlogPostList />;

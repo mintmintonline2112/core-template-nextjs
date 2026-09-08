@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { NewsletterForm } from "@/components/site/forms";
-import { getBlogCategories, getBlogPosts, getCmsPage, mediaUrl } from "@/lib/cms";
+import { NewsletterForm } from "@/app/(site)/_components/forms";
+import { getBlogCategories, getBlogPosts, getCmsPage, mediaUrl } from "@/app/(site)/_lib/cms";
 import type { BlogPost } from "@/types/cms";
 
 export async function generateMetadata(): Promise<Metadata> {

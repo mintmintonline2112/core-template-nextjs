@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { AuthProvider } from '@/admin/auth/AuthProvider';
-import { AdminProviders } from '@/admin/layout/AdminProviders';
+import { AuthProvider } from '@/app/admin/_auth/AuthProvider';
+import { AdminProviders } from '@/app/admin/_layout/AdminProviders';
 import { fontClassName } from '@/lib/fonts';
 import '@/styles/admin.css';
 

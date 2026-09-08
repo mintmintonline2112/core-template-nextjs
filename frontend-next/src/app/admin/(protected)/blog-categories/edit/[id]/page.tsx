@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { BlogCategoryForm } from '@/admin/features/blog-categories/blog-category-form';
+import { BlogCategoryForm } from '@/app/admin/(protected)/blog-categories/_components/blog-category-form';
 
 export default async function AdminBlogCategoryEditPage({
   params,

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBlogPost, mediaUrl } from "@/lib/cms";
-import { sanitizeRichText } from "@/lib/sanitize";
+import { getBlogPost, mediaUrl } from "@/app/(site)/_lib/cms";
+import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 import { getSiteSettings, POST_TITLE_DEFAULT } from "@/lib/settings";
 
 export async function generateMetadata({

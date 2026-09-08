@@ -1,4 +1,4 @@
-import { MenuItemList } from '@/admin/features/menu-items/menu-item-list';
+import { MenuItemList } from '@/app/admin/(protected)/menus/_components/menu-item-list';
 
 export default function AdminMenusPage() {
   return <MenuItemList />;

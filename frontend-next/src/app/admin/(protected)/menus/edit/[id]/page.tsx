@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { MenuItemForm } from '@/admin/features/menu-items/menu-item-form';
+import { MenuItemForm } from '@/app/admin/(protected)/menus/_components/menu-item-form';
 
 export default async function AdminMenuEditPage({
   params,

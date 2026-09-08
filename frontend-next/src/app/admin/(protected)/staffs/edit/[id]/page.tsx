@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { StaffForm } from '@/admin/features/staffs/staff-form';
+import { StaffForm } from '@/app/admin/(protected)/staffs/_components/staff-form';
 
 export default async function AdminStaffEditPage({
   params,

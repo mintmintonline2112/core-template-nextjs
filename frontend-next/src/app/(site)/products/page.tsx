@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCmsPage, sectionMap } from "@/lib/cms";
-import { sanitizeRichText } from "@/lib/sanitize";
+import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
+import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("products");

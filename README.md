@@ -21,3 +21,66 @@ primenutsvn/
    → site `http://localhost:3001`, quản trị `/admin`
    (đăng nhập seed: admin@gmail.com / admin#123)
 3. Bản demo tĩnh cũ: mở `frontend/index.html` trực tiếp trong trình duyệt
+
+## Deploy (VPS — aaPanel)
+
+Sơ đồ trên server:
+
+| Thành phần | Giá trị |
+|---|---|
+| Code | `/www/wwwroot/primenuts.vn` (git clone repo này) |
+| Node project 1 | `primenuts_api` — Path `backend/`, Run opt `start:prod`, Port **3010** |
+| Node project 2 | `primenuts_web` — Path `frontend-next/`, Run opt `start`, Port **3001**, Domain `primenuts.vn` |
+| Nginx (site primenuts.vn) | `location /api` và `location /uploads` → proxy `http://127.0.0.1:3010` |
+| Env | `backend/.env` và `frontend-next/.env.local` — chỉ tồn tại trên server, không có trong git |
+| Database | MySQL `primenuts` (tạo trong panel → Databases) |
+
+### Cập nhật code (deploy bản mới)
+
+```bash
+cd /www/wwwroot/primenuts.vn && git pull
+cd backend && npm install && npm run build && npm run db:run:prod && npm run db:seed:prod
+cd ../frontend-next && npm install && npm run build
+```
+
+Rồi **restart cả 2 project**: aaPanel → Website → Node.js Project → Restart
+`primenuts_api` và `primenuts_web` (project dạng Default, KHÔNG dùng `pm2 restart`).
+
+- `npm install` chỉ cần khi `package.json` đổi; `db:run:prod`/`db:seed:prod` chạy dư
+  vô hại (migration đã chạy bị bỏ qua, seed insert-only không đè dữ liệu admin sửa).
+- Sửa `NEXT_PUBLIC_*` trong `frontend-next/.env.local` → **bắt buộc** `npm run build`
+  lại rồi restart (giá trị bị nhúng vào code lúc build). Sửa `backend/.env` → chỉ cần
+  restart `primenuts_api`.
+
+### Cache
+
+Nội dung sửa từ admin tự cập nhật ra site: backend ping revalidate ngay khi lưu,
+ngoài ra ISR tự làm mới mỗi **60 giây** — bình thường không phải làm gì.
+
+**Xả cache nội dung thủ công** (khi site hiển thị dữ liệu cũ) — chạy trên VPS,
+phải gọi thẳng port 3001 vì `https://primenuts.vn/api` đã bị nginx chuyển cho backend:
+
+```bash
+curl -X POST http://127.0.0.1:3001/api/revalidate \
+  -H "x-revalidate-secret: <REVALIDATE_SECRET trong frontend-next/.env.local>" \
+  -H "Content-Type: application/json" \
+  -d '{"tags":["pages","blog-posts","menu","settings"]}'
+```
+
+**Xả cache toàn bộ** (nghi ngờ build cũ/cache hỏng):
+
+```bash
+cd /www/wwwroot/primenuts.vn/frontend-next && rm -rf .next && npm run build
+```
+rồi restart `primenuts_web` trong panel.
+
+### Sự cố thường gặp
+
+- **Start báo `EADDRINUSE ... port 3001/3010`**: còn tiến trình cũ chiếm port —
+  `fuser -k 3001/tcp` (hoặc `3010/tcp`) rồi Start lại từ panel.
+- **Form ngoài site báo lỗi CORS/Network**: kiểm tra `FRONTEND_URL` trong
+  `backend/.env` phải chứa `https://primenuts.vn` và 2 block proxy `/api`,
+  `/uploads` còn trong config nginx của site.
+- **Sau reboot VPS site chết**: vào panel Start lại 2 project.
+- Test nhanh: `curl -s https://primenuts.vn/api` trả JSON 404 của Nest = proxy OK;
+  trả HTML = proxy mất.

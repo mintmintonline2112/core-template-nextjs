@@ -168,9 +168,7 @@ export function WorldMap({ regions }: { regions?: MapRegion[] }) {
         ))}
       </div>
       <p className="world-hint reveal">
-        Hover a region — its markets light up on the map. Additional destinations can be
-        evaluated based on product requirements, import regulations, logistics, and
-        commercial volume.
+        Hover a region — its markets light up. Additional destinations on request.
       </p>
     </>
   );

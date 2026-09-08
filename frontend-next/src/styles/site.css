@@ -32,8 +32,13 @@
   --light:     #F5F1E3;
   --light-soft:#C4CFBB;
 
-  /* Type */
+  /* Type — chỉnh font toàn site tại đây:
+     --font-main    = chữ thân bài (mặc định Roboto)
+     --font-display = tiêu đề h1/h2/h3 + số liệu nổi bật (mặc định Montserrat)
+     Lưu ý: đổi sang font Google khác thì thêm font đó vào link fonts
+     trong src/app/layout.tsx nữa nhé. */
   --font-main: "Roboto", "Segoe UI", Arial, sans-serif;
+  --font-display: "Montserrat", "Segoe UI", Arial, sans-serif;
 
   /* Rhythm */
   --radius: 6px;
@@ -76,6 +81,20 @@ h1, h2, h3, h4 {
   margin: 0 0 0.6em;
   color: inherit;
   text-wrap: balance;
+}
+
+/* Tiêu đề dùng --font-display (admin tự override bằng Barlow riêng) */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 em, h2 em, h3 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold-400);
 }
 
 p { margin: 0 0 1em; }
@@ -130,9 +149,51 @@ button {
 
 .eyebrow-gold { color: var(--gold-300); }
 
-.section-head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-.section-head h2 { font-size: clamp(2rem, 3.6vw, 2.85rem); }
+/* Sếp không thích subtitle: ẩn toàn bộ eyebrow phía trên tiêu đề
+   (mọi section + hero + page-hero + CTA). Riêng .serve-band giữ lại
+   vì eyebrow ở đó chính là tiêu đề của dải marquee. Muốn khôi phục
+   thì xóa khối này. */
+.section-head .eyebrow,
+.hero-copy .eyebrow,
+.page-hero .eyebrow,
+.cta-band .eyebrow,
+.quote-copy .eyebrow {
+  display: none;
+}
+
+/* Số thứ tự kiểu tạp chí trước eyebrow của mỗi section */
+body { counter-reset: sect; }
+
+.section-head .eyebrow::before {
+  counter-increment: sect;
+  content: counter(sect, decimal-leading-zero);
+  display: inline-block;
+  margin-right: 0.8rem;
+  padding-right: 0.8rem;
+  border-right: 1px solid var(--gold-400);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.1em;
+  letter-spacing: 0.08em;
+  color: var(--gold-500);
+}
+
+.section-head-light .eyebrow::before {
+  color: var(--gold-300);
+  border-right-color: rgba(217, 180, 95, 0.45);
+}
+
+/* Khối tiêu đề section: căn giữa, nới rộng để title đỡ gãy dòng sớm */
+.section-head {
+  max-width: 54rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+}
+.section-head h2 { font-size: clamp(2.1rem, 3.8vw, 3rem); }
 .section-intro { font-size: 1.16rem; color: var(--ink-soft); max-width: 44rem; }
+.section-head .section-intro { margin-inline: auto; }
 .section-head-light h2 { color: var(--light); }
 .section-head-light .section-intro { color: var(--light-soft); }
 
@@ -165,11 +226,12 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.9rem;
+  padding: 0.9rem 1.9rem;
   font-family: var(--font-main);
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   border-radius: var(--radius);
   border: 1px solid transparent;
   cursor: pointer;
@@ -366,6 +428,7 @@ button {
 
 .hero-inner {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   align-items: center;
@@ -418,7 +481,8 @@ button {
 
 .stat dd {
   margin: 0 0 0.35rem;
-  font-size: clamp(2rem, 3.4vw, 2.7rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 3.5vw, 2.9rem);
   font-weight: 600;
   color: var(--gold-300);
   line-height: 1;
@@ -1302,16 +1366,49 @@ button {
 .why-card h3 { font-size: 1.4rem; margin-bottom: 0.4rem; }
 .why-card p { margin: 0; color: var(--ink-soft); font-size: 1.02rem; }
 
+/* Thẻ "Why Prime Nuts USA?" (trang chủ): nền xanh chủ đạo #295328, chữ trắng. */
+#why .why-card {
+  background: var(--green-700);
+  border-color: rgba(217, 180, 95, 0.28);
+  box-shadow: var(--shadow-lift);
+}
+
+#why .why-card h3 { color: var(--light); }
+#why .why-card p { color: rgba(245, 241, 227, 0.88); }
+
+#why .why-card .icon-badge {
+  background: rgba(245, 241, 227, 0.10);
+  border-color: rgba(245, 241, 227, 0.30);
+  color: var(--light);
+}
+
+#why .why-card:hover { border-color: var(--gold-400); }
+
 /* ============ QUOTE ============ */
 
 .quote {
+  position: relative;
   background:
     radial-gradient(120% 90% at 90% 100%, rgba(53, 103, 47, 0.5) 0%, rgba(27, 58, 32, 0) 55%),
     linear-gradient(160deg, var(--green-900) 0%, var(--green-800) 100%);
   color: var(--light);
+  overflow: hidden;
+}
+
+/* Ảnh hạnh nhân mờ lót sau khối form — chỉnh độ mờ tại opacity */
+.quote::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/almonds-table.webp");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.14;
+  pointer-events: none;
 }
 
 .quote-inner {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(2.5rem, 6vw, 5rem);
@@ -1628,8 +1725,13 @@ html.js :is(.photo-frame.reveal.is-visible, .reveal.is-visible .photo-frame) img
   display: flex;
   gap: 1.4rem;
   width: max-content;
-  animation: marquee 38s linear infinite;
 }
+
+/* Dòng trên chạy sang phải, dòng dưới chạy sang trái — vô hạn */
+.serve-track-right { animation: marquee-right 32s linear infinite; }
+.serve-track-left { animation: marquee-left 26s linear infinite; }
+
+.serve-marquee + .serve-marquee { margin-top: 0.2rem; }
 
 .serve-marquee:hover .serve-track { animation-play-state: paused; }
 
@@ -1645,8 +1747,13 @@ html.js :is(.photo-frame.reveal.is-visible, .reveal.is-visible .photo-frame) img
   color: var(--green-700);
 }
 
-@keyframes marquee {
+@keyframes marquee-left {
   to { transform: translateX(calc(-50% - 0.7rem)); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(calc(-50% - 0.7rem)); }
+  to { transform: translateX(0); }
 }
 
 /* Scroll progress bar (injected by JS) */
@@ -1731,14 +1838,8 @@ html.gsap :is(.btn-gold, .btn-primary) {
   .map-pin-origin::before { animation: none; }
   .slider .slider-track { transition: none; }
   .btn-gold::after { display: none; }
-  .serve-track {
-    animation: none;
-    width: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .serve-copy { white-space: normal; flex-wrap: wrap; justify-content: center; }
-  .serve-copy + .serve-copy { display: none; }
+  /* Marquee "Who We Serve" vẫn chạy kể cả khi máy tắt animation —
+     quyết định của chủ site; vẫn dừng khi rê chuột vào. */
   .btn, .market-card, .why-card, .size-cell, .config-list li,
   .chain-step, .doc-grid li, .icon-badge, .news-card-thumb img { transition: none; }
 }
@@ -1908,6 +2009,11 @@ html.gsap :is(.btn-gold, .btn-primary) {
 .section-photo {
   aspect-ratio: 21 / 9;
   margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* Vòm cong nhắc lại khung hero — motif chữ ký (slider giữ nguyên dáng cũ) */
+.section-photo:not(.slider) {
+  border-radius: 240px 240px var(--radius-lg) var(--radius-lg);
 }
 
 .split-photo {
@@ -2409,3 +2515,374 @@ html.gsap :is(.btn-gold, .btn-primary) {
 .stats-band { border-top-color: var(--line); }
 .stats-band dt { color: var(--ink-faint); }
 .stats-band dd { color: var(--gold-500); }
+
+/* ============================================================
+   PERSONALITY PASS — texture, con dấu, chi tiết editorial
+   ============================================================ */
+
+/* Hạt phim mịn trên các dải nền xanh đậm — chất "thủ công" */
+.cta-band { position: relative; overflow: hidden; }
+
+.hero::after,
+.page-hero::after,
+.cta-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Caption ảnh & ghi chú chuyển sang serif nghiêng — giọng tạp chí */
+.photo-strip figcaption,
+.hero-frame-caption,
+.section-note {
+  font-family: var(--font-display);
+}
+
+/* Slider sourcing giữ nguyên style cũ — Roboto toàn khối */
+.chain h3 {
+  font-family: var(--font-main);
+}
+
+/* Con dấu tròn xoay "California Grown" đè góc khung hero */
+.hero-figure { position: relative; }
+
+/* Ảnh hero tràn mép phải — không khung/viền, cạnh trái tan vào nền xanh */
+.hero-figure-bleed {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(55vw, 1150px);
+  margin: 0;
+  z-index: 0;
+}
+
+.hero-figure-bleed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34%);
+          mask-image: linear-gradient(to right, transparent 0, #000 34%);
+}
+
+@media (max-width: 900px) {
+  .hero-figure-bleed {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 300px;
+  }
+  .hero-figure-bleed img {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+  }
+}
+
+.hero-seal {
+  position: absolute;
+  top: clamp(-1.4rem, -1.6vw, -0.8rem);
+  left: clamp(-2rem, -2.6vw, -1rem);
+  width: clamp(104px, 11vw, 146px);
+  aspect-ratio: 1;
+  z-index: 2;
+  filter: drop-shadow(0 12px 26px rgba(10, 20, 12, 0.4));
+}
+
+.hero-seal svg { width: 100%; height: 100%; }
+
+.hero-seal .seal-ring {
+  transform-origin: 50% 50%;
+  animation: seal-spin 30s linear infinite;
+}
+
+@keyframes seal-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-seal .seal-ring { animation: none; }
+}
+
+@media (max-width: 640px) {
+  .hero-seal { width: 92px; top: -0.7rem; left: -0.3rem; }
+}
+
+/* ============================================================
+   KAFFA-STYLE SECTIONS — ảnh tròn đánh số, blob + badge,
+   docs kẹp ảnh trung tâm (tham chiếu theme Kaffa, màu Prime Nuts)
+   ============================================================ */
+
+/* --- Varieties: dàn ảnh tròn đánh số --- */
+.variety-circles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+.variety-circle h4 { font-size: 1.24rem; margin: 1.2rem 0 0.4rem; }
+.variety-circle p { color: var(--ink-soft); font-size: 0.98rem; margin: 0; }
+
+.vc-photo {
+  position: relative;
+  width: clamp(150px, 15vw, 210px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.vc-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--paper);
+  box-shadow: var(--shadow-lift);
+  transition: transform 350ms var(--ease);
+}
+
+.variety-circle:hover .vc-photo img { transform: scale(1.05); }
+
+.vc-num {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--gold-400);
+  color: var(--green-900);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 3px solid var(--cream-2);
+  box-shadow: 0 6px 14px -6px rgba(20, 39, 24, 0.4);
+}
+
+.product-sizes-band {
+  max-width: 58rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+}
+
+/* Ô size gọn lại khi trải rộng cả band (mặc định là ô vuông cho cột hẹp) */
+.product-sizes-band .size-cell {
+  aspect-ratio: auto;
+  padding: 1.15rem 0.75rem;
+}
+
+/* Nhãn "Common Sizes" căn giữa cho khớp section-head giữa trang */
+.product-sizes-band .panel-title { justify-content: center; }
+
+/* --- Thước đo cỡ hạt: hạt vàng nhỏ dần trên panel xanh đậm --- */
+.size-scale {
+  background:
+    radial-gradient(120% 100% at 80% 0%, rgba(53, 103, 47, 0.5) 0%, rgba(27, 58, 32, 0) 55%),
+    linear-gradient(160deg, var(--green-800) 0%, var(--green-900) 100%);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.8rem, 4vw, 2.6rem) clamp(1.2rem, 3vw, 2.4rem) 1.3rem;
+  box-shadow: var(--shadow-lift);
+}
+
+.size-scale-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border-bottom: 1px solid rgba(217, 180, 95, 0.4);
+}
+
+.size-scale-row li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.size-scale-row svg {
+  width: calc(clamp(38px, 4.4vw, 66px) * var(--k, 1));
+  height: auto;
+  color: var(--gold-300);
+}
+
+.size-scale-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+  color: var(--light);
+  line-height: 1;
+}
+
+.size-scale-cap {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--light-soft);
+  white-space: nowrap;
+}
+
+/* Vạch chia chạm xuống đường chuẩn — cảm giác thước đo */
+.size-scale-row li::after {
+  content: "";
+  width: 1px;
+  height: 10px;
+  margin-top: 0.5rem;
+  background: rgba(217, 180, 95, 0.7);
+}
+
+.size-scale-note {
+  margin: 1.1rem 0 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--gold-300);
+}
+
+@media (max-width: 760px) {
+  .size-scale-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem 1.8rem;
+    border-bottom: 0;
+  }
+  .size-scale-row li::after { display: none; }
+}
+
+@media (max-width: 900px) {
+  .variety-circles { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+}
+
+/* --- Orders: blob hữu cơ + badge tròn + hàng cấu hình --- */
+.orders-side { display: flex; flex-direction: column; gap: 1.8rem; }
+
+.blob-figure {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+.blob-figure img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  border-radius: 62% 38% 56% 44% / 48% 60% 40% 52%;
+  box-shadow: var(--shadow-lift);
+}
+
+.blob-badge {
+  position: absolute;
+  left: -12px;
+  bottom: -10px;
+  width: 94px;
+  height: 94px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--gold-400);
+  color: var(--green-900);
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  border: 4px solid var(--cream);
+  box-shadow: 0 10px 22px -10px rgba(20, 39, 24, 0.45);
+  rotate: -6deg;
+}
+
+.config-rows { display: flex; flex-direction: column; }
+
+.config-rows li {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.95rem 0.2rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.config-rows li:last-child { border-bottom: 0; }
+.config-rows .icon-badge { flex-shrink: 0; }
+.config-rows h4 { margin: 0; font-size: 1.08rem; }
+.config-rows p { margin: 0.15rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+/* --- Logistics: chứng từ kẹp ảnh tròn trung tâm --- */
+.doc-features {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.doc-col { display: flex; flex-direction: column; gap: 1.5rem; }
+.doc-col li { display: flex; gap: 1rem; align-items: center; }
+.doc-col-left li { flex-direction: row-reverse; text-align: right; }
+
+.doc-num {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--gold-500);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.02rem;
+  border: 1px solid var(--gold-400);
+  box-shadow: var(--shadow-soft);
+}
+
+.doc-body h4 { margin: 0; font-size: 1.05rem; font-family: var(--font-main); }
+.doc-body .doc-note { display: block; font-style: italic; color: var(--ink-faint); font-size: 0.88rem; margin-top: 0.15rem; }
+
+.doc-center { display: flex; justify-content: center; }
+
+.doc-center-ring {
+  position: relative;
+  width: clamp(220px, 24vw, 320px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 14px;
+}
+
+/* Vòng nét đứt xoay quanh ảnh (ảnh đứng yên) — đổi 26s để nhanh/chậm */
+.doc-center-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed var(--gold-400);
+  animation: doc-ring-spin 26s linear infinite;
+  pointer-events: none;
+}
+
+.doc-center-ring:hover::before { animation-duration: 9s; }
+
+@keyframes doc-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+.doc-center-ring img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: var(--shadow-lift);
+}
+
+@media (max-width: 900px) {
+  .doc-features { grid-template-columns: 1fr; row-gap: 2rem; }
+  .doc-center { order: -1; }
+  .doc-col-left li { flex-direction: row; text-align: left; }
+}

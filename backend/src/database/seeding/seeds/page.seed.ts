@@ -35,8 +35,7 @@ const PAGES: PageDefinition[] = [
         heading: 'Reliable California Almond Supply for U.S. & Global Markets',
         subheading: 'California Almonds to the World',
         content:
-          '<p>Prime Nuts USA connects California almond supply with importers, distributors, wholesalers, food manufacturers, roasters, retailers, and other commercial buyers in the United States and international markets.</p>' +
-          '<p>Based in California, we work with established growers, handlers, processors, and packers to source almonds to your product specifications, volume requirements, packaging needs, and destination markets.</p>',
+          '<p>Prime Nuts USA connects California almond supply with commercial buyers in the U.S. and worldwide &mdash; reliable supply, consistent quality, competitive B2B pricing.</p>',
         metadata: {
           stats: [
             { label: 'Export Markets', value: '30+' },
@@ -51,7 +50,7 @@ const PAGES: PageDefinition[] = [
         heading: 'From California to Global Markets',
         subheading: 'Global Distribution',
         content:
-          '<p>California is at the center of the global almond industry. Prime Nuts USA provides B2B customers with access to California almond supply and supports domestic and international distribution.</p>',
+          '<p>California sits at the center of the global almond industry &mdash; we give B2B buyers direct access to it, at home and abroad.</p>',
         metadata: {
           regions: [
             { key: 'us', name: 'United States', countries: ['United States'] },
@@ -95,7 +94,7 @@ const PAGES: PageDefinition[] = [
         heading: 'Almonds for Wholesale, Distribution & Food Manufacturing',
         subheading: 'Our California Almonds',
         content:
-          '<p>Prime Nuts USA offers California almonds for commercial and industrial applications &mdash; natural almond kernels in the varieties, sizes, and grades your market requires.</p>',
+          '<p>Natural almond kernels in the varieties, sizes, and grades your market requires.</p>',
         metadata: {
           varieties: ['Nonpareil', 'Carmel', 'Monterey', 'California Varieties'],
           sizes: ['18/20', '20/22', '23/25', '25/27', '27/30', '30/32', '32/34'],
@@ -112,14 +111,14 @@ const PAGES: PageDefinition[] = [
         heading: 'Built for B2B Supply',
         subheading: 'Bulk & Container Orders',
         content:
-          '<p>Prime Nuts USA supports commercial-volume almond orders ranging from domestic wholesale requirements to international container shipments. Pricing is quoted according to almond variety, grade, size, crop year, quantity, packaging, destination, and applicable Incoterms.</p>',
+          '<p>From domestic wholesale volumes to international container shipments.</p>',
         metadata: {
           configurations: [
-            { title: 'Full Container Load — FCL', text: '20-foot and 40-foot ocean containers for export volumes.' },
-            { title: '50 lb Cartons', text: 'The industry-standard export carton for almond kernels.' },
-            { title: 'Palletized Shipments', text: 'Stretch-wrapped, export-ready pallet configurations.' },
-            { title: 'Bulk Packaging', text: 'Tote and bulk-bin formats for high-volume manufacturing lines.' },
-            { title: 'Custom Commercial Packaging', text: 'Tailored packaging configurations available upon request.' },
+            { title: 'Full Container Load — FCL', text: '20′ & 40′ ocean containers.' },
+            { title: '50 lb Cartons', text: 'The industry-standard export carton.' },
+            { title: 'Palletized Shipments', text: 'Stretch-wrapped, export-ready.' },
+            { title: 'Bulk Packaging', text: 'Totes & bins for manufacturing lines.' },
+            { title: 'Custom Commercial Packaging', text: 'Tailored on request.' },
           ],
         },
         sortOrder: 4,
@@ -129,7 +128,7 @@ const PAGES: PageDefinition[] = [
         heading: "Access to California's Almond Supply Network",
         subheading: 'California Sourcing',
         content:
-          '<p>Our California location gives Prime Nuts USA access to one of the world&rsquo;s most established almond production and processing ecosystems. We work with qualified participants throughout the supply chain.</p>',
+          '<p>Our California location plugs us straight into the world&rsquo;s most established almond supply chain.</p>',
         metadata: {
           chain: [
             'Growers', 'Hullers & Shellers', 'Processors', 'Packers',
@@ -151,7 +150,7 @@ const PAGES: PageDefinition[] = [
         heading: 'More Than Almond Supply',
         subheading: 'Export & Logistics Support',
         content:
-          '<p>Depending on the transaction and destination, Prime Nuts USA can coordinate or support documentation such as commercial invoice, packing list, certificate of origin, phytosanitary certificate, bill of lading, product specifications, food safety documentation, and laboratory testing documentation.</p>',
+          '<p>Depending on the transaction and destination, we coordinate or support:</p>',
         metadata: {
           incoterms: ['FOB', 'CFR', 'CIF'],
           documents: [
@@ -174,7 +173,7 @@ const PAGES: PageDefinition[] = [
           ],
         },
         content:
-          '<p>Importers, distributors, wholesalers, food manufacturers, roasters, retail suppliers, private-label brands, and food-service companies. We welcome both established buyers and companies developing new markets for California almonds.</p>',
+          '<p>Established buyers and new-market developers alike are welcome.</p>',
         sortOrder: 7,
       },
       {
@@ -183,12 +182,12 @@ const PAGES: PageDefinition[] = [
         subheading: 'Why Prime Nuts USA?',
         metadata: {
           reasons: [
-            { title: 'California Based', text: "Located close to the source of the world's leading almond industry." },
-            { title: 'Reliable Sourcing', text: 'Access to established California growers, handlers, processors, and packers.' },
-            { title: 'B2B Focus', text: 'Structured around commercial buyers, wholesale volumes, and long-term supply relationships.' },
-            { title: 'Flexible Specifications', text: 'Multiple varieties, sizes, grades, packaging configurations, and commercial quantities.' },
-            { title: 'Global Trade Support', text: 'We coordinate the commercial and logistical requirements to move California almonds into international markets.' },
-            { title: 'Long-Term Partnerships', text: 'Consistency, transparency, competitive execution, and reliable relationships.' },
+            { title: 'California Based', text: "At the source of the world's leading almond industry." },
+            { title: 'Reliable Sourcing', text: 'Established growers, handlers, processors, and packers.' },
+            { title: 'B2B Focus', text: 'Built for commercial buyers and wholesale volumes.' },
+            { title: 'Flexible Specifications', text: 'Varieties, sizes, grades, and packaging to your spec.' },
+            { title: 'Global Trade Support', text: 'We move California almonds into international markets.' },
+            { title: 'Long-Term Partnerships', text: 'Consistency, transparency, and reliable execution.' },
           ],
         },
         sortOrder: 8,
@@ -198,7 +197,7 @@ const PAGES: PageDefinition[] = [
         heading: "Let's Grow Together",
         subheading: 'Become a Prime Nuts Distribution Partner',
         content:
-          '<p>Prime Nuts USA welcomes inquiries from importers, distributors, wholesalers, food manufacturers, and commercial partners seeking California almond supply.</p>',
+          '<p>Importers, distributors, wholesalers, food manufacturers &mdash; tell us what you need:</p>',
         metadata: {
           checklist: [
             'Almond variety', 'Size & grade', 'Required volume', 'Packaging',

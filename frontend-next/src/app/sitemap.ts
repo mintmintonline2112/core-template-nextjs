@@ -18,25 +18,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl(siteRoutes.contact), lastModified: now, changeFrequency: "yearly", priority: 0.6 },
   ];
 
-  const [categories, posts] = await Promise.all([getBlogCategories(), fetchAllPosts()]);
+  // API tắt lúc build → sitemap vẫn phải sinh được (chỉ gồm trang tĩnh).
+  let categories: Awaited<ReturnType<typeof getBlogCategories>> = [];
+  let posts: Awaited<ReturnType<typeof fetchAllPosts>> = [];
+  try {
+    [categories, posts] = await Promise.all([getBlogCategories(), fetchAllPosts()]);
+  } catch {
+    categories = [];
+    posts = [];
+  }
 
   const categoryEntries: MetadataRoute.Sitemap = categories
     .filter((c) => c.isActive !== false)
     .map((c) => ({
       url: absoluteUrl(siteRoutes.newsCategory(c.slug)),
-      lastModified: new Date(c.updatedAt),
+      lastModified: safeDate(c.updatedAt, now),
       changeFrequency: "weekly",
       priority: 0.5,
     }));
 
   const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
     url: absoluteUrl(siteRoutes.newsPost(p.slug)),
-    lastModified: new Date(p.updatedAt ?? p.publishedAt ?? now),
+    lastModified: safeDate(p.updatedAt ?? p.publishedAt, now),
     changeFrequency: "monthly",
     priority: 0.7,
   }));
 
   return [...staticEntries, ...categoryEntries, ...postEntries];
+}
+
+/** Ngày hợp lệ hoặc fallback — tránh RangeError "Invalid time value" khi data thiếu/hỏng. */
+function safeDate(value: string | null | undefined, fallback: Date): Date {
+  if (!value) return fallback;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed;
 }
 
 /** Gom hết bài viết qua các trang phân trang của API client. */

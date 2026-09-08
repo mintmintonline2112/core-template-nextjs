@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SizeScale } from "@/app/(site)/_components/SizeScale";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
@@ -205,17 +206,7 @@ export default async function ProductsPage() {
           </div>
 
           <div className="product-sizes reveal">
-            <div className="size-grid">
-              {kernelSizes.map((size) => (
-                <div className="size-cell" key={size}>
-                  <span className="size-num">{size}</span>
-                  <span className="size-cap">kernels / oz</span>
-                </div>
-              ))}
-              <div className="size-cell size-cell-note">
-                <span className="size-cap">Custom sizes &amp; grades on request</span>
-              </div>
-            </div>
+            <SizeScale sizes={kernelSizes} />
             <p className="panel-footnote">
               Different grades, varieties and specifications may be available depending on crop
               and market conditions.

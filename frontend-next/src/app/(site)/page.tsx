@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { QuoteForm } from "@/app/(site)/_components/forms";
+import { SizeScale } from "@/app/(site)/_components/SizeScale";
 import { SourcingSlider, type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { getCmsPage, mediaUrl, sectionMap } from "@/app/(site)/_lib/cms";
@@ -44,11 +45,11 @@ function FloatGlyph({ style, dur, delay, width }: { style: React.CSSProperties; 
 }
 
 const CONFIGS = [
-  { title: "Full Container Load — FCL", text: "20-foot and 40-foot ocean containers for export volumes.", icon: <><rect x="2.5" y="7" width="19" height="11" rx="1" /><path d="M6.5 7v11M10.5 7v11M14.5 7v11M18.5 7v11" /></> },
-  { title: "50 lb Cartons", text: "The industry-standard export carton for almond kernels.", icon: <><path d="M12 3 3.5 7v10L12 21l8.5-4V7L12 3z" /><path d="M3.5 7 12 11l8.5-4M12 11v10" /></> },
-  { title: "Palletized Shipments", text: "Stretch-wrapped, export-ready pallet configurations.", icon: <><rect x="4" y="4" width="7" height="7" rx="0.5" /><rect x="13" y="4" width="7" height="7" rx="0.5" /><path d="M3 15h18M3 19h18M6 15v4M12 15v4M18 15v4" /></> },
-  { title: "Bulk Packaging", text: "Tote and bulk-bin formats for high-volume manufacturing lines.", icon: <><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></> },
-  { title: "Custom Commercial Packaging", text: "Tailored packaging configurations available upon request.", icon: <><path d="M4 21v-4M4 13v-2M4 7V3M12 21v-8M12 9V3M20 21v-2M20 15V3" /><circle cx="4" cy="15" r="2" /><circle cx="12" cy="11" r="2" /><circle cx="20" cy="17" r="2" /></> },
+  { title: "Full Container Load — FCL", text: "20′ & 40′ ocean containers.", icon: <><rect x="2.5" y="7" width="19" height="11" rx="1" /><path d="M6.5 7v11M10.5 7v11M14.5 7v11M18.5 7v11" /></> },
+  { title: "50 lb Cartons", text: "The industry-standard export carton.", icon: <><path d="M12 3 3.5 7v10L12 21l8.5-4V7L12 3z" /><path d="M3.5 7 12 11l8.5-4M12 11v10" /></> },
+  { title: "Palletized Shipments", text: "Stretch-wrapped, export-ready.", icon: <><rect x="4" y="4" width="7" height="7" rx="0.5" /><rect x="13" y="4" width="7" height="7" rx="0.5" /><path d="M3 15h18M3 19h18M6 15v4M12 15v4M18 15v4" /></> },
+  { title: "Bulk Packaging", text: "Totes & bins for manufacturing lines.", icon: <><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></> },
+  { title: "Custom Commercial Packaging", text: "Tailored on request.", icon: <><path d="M4 21v-4M4 13v-2M4 7V3M12 21v-8M12 9V3M20 21v-2M20 15V3" /><circle cx="4" cy="15" r="2" /><circle cx="12" cy="11" r="2" /><circle cx="20" cy="17" r="2" /></> },
 ];
 
 const CHAIN = [
@@ -66,22 +67,30 @@ const DOCS = [
 ];
 
 const WHY = [
-  { title: "California Based", text: "Located close to the source of the world's leading almond industry.", icon: <><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" /><circle cx="12" cy="10" r="2.6" /></> },
-  { title: "Reliable Sourcing", text: "Access to established California growers, handlers, processors, and packers.", icon: <path d="M12 2c1 4-1 7-4 9 4 0 7-2 8-6 .8 5-2 10-8 11C4 15 4 8 8 5c-1 3 0 5 1 6 0-4 1-7 3-9z" /> },
-  { title: "B2B Focus", text: "Our business is structured around commercial buyers, wholesale volumes, and long-term supply relationships.", icon: <><path d="M12 4v16M5 8l7-4 7 4" /><path d="M5 8l-2.5 6a3.5 3.5 0 0 0 7 0L7 8M19 8l-2.5 6a3.5 3.5 0 0 0 7 0L21 8" /><path d="M8 20h8" /></> },
-  { title: "Flexible Specifications", text: "Multiple varieties, sizes, grades, packaging configurations, and commercial quantities sourced according to availability.", icon: <><path d="M4 21v-4M4 13v-2M4 7V3M12 21v-8M12 9V3M20 21v-2M20 15V3" /><circle cx="4" cy="15" r="2" /><circle cx="12" cy="11" r="2" /><circle cx="20" cy="17" r="2" /></> },
-  { title: "Global Trade Support", text: "We coordinate the commercial and logistical requirements necessary to move California almonds into international markets.", icon: <path d="M3 17h18l-2 4H5l-2-4zM6 17V9l4-2v10M14 17V7l4 2v8" /> },
-  { title: "Long-Term Partnerships", text: "Successful agricultural trade is built on consistency, transparency, competitive execution, and reliable relationships.", icon: <path d="M12 21c-5-3.5-8-7-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 4-3 7.5-8 11z" /> },
+  { title: "California Based", text: "At the source of the world's leading almond industry.", icon: <><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" /><circle cx="12" cy="10" r="2.6" /></> },
+  { title: "Reliable Sourcing", text: "Established growers, handlers, processors, and packers.", icon: <path d="M12 2c1 4-1 7-4 9 4 0 7-2 8-6 .8 5-2 10-8 11C4 15 4 8 8 5c-1 3 0 5 1 6 0-4 1-7 3-9z" /> },
+  { title: "B2B Focus", text: "Built for commercial buyers and wholesale volumes.", icon: <><path d="M12 4v16M5 8l7-4 7 4" /><path d="M5 8l-2.5 6a3.5 3.5 0 0 0 7 0L7 8M19 8l-2.5 6a3.5 3.5 0 0 0 7 0L21 8" /><path d="M8 20h8" /></> },
+  { title: "Flexible Specifications", text: "Varieties, sizes, grades, and packaging to your spec.", icon: <><path d="M4 21v-4M4 13v-2M4 7V3M12 21v-8M12 9V3M20 21v-2M20 15V3" /><circle cx="4" cy="15" r="2" /><circle cx="12" cy="11" r="2" /><circle cx="20" cy="17" r="2" /></> },
+  { title: "Global Trade Support", text: "We move California almonds into international markets.", icon: <path d="M3 17h18l-2 4H5l-2-4zM6 17V9l4-2v10M14 17V7l4 2v8" /> },
+  { title: "Long-Term Partnerships", text: "Consistency, transparency, and reliable execution.", icon: <path d="M12 21c-5-3.5-8-7-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 4-3 7.5-8 11z" /> },
 ];
 
 const VARIETIES = [
-  { name: "Nonpareil", text: "The flagship California variety — light color and a smooth, attractive kernel, favored for premium snacking and retail programs." },
-  { name: "Carmel", text: "A versatile kernel well suited to roasting, blanching, and food-manufacturing applications." },
-  { name: "Monterey", text: "A larger, elongated kernel and a dependable workhorse for industrial and ingredient use." },
-  { name: "California Varieties", text: "A flexible classification covering multiple interchangeable varieties, ideal for processing and blanched applications." },
+  { name: "Nonpareil", text: "The flagship variety — the benchmark for premium snacking and retail." },
+  { name: "Carmel", text: "A versatile kernel for roasting, blanching, and manufacturing." },
+  { name: "Monterey", text: "A larger kernel — the workhorse for industrial and ingredient use." },
+  { name: "California Varieties", text: "Interchangeable varieties, ideal for processing and blanching." },
 ];
 
 const SIZES = ["18/20", "20/22", "23/25", "25/27", "27/30", "30/32", "32/34"];
+
+// Ảnh tròn cho dàn varieties (tham chiếu Kaffa) — lặp vòng khi CMS thêm giống mới.
+const VARIETY_PHOTOS = [
+  "/images/almonds-ramekin.webp",
+  "/images/almonds-table.webp",
+  "/images/kernels-study.jpg",
+  "/images/green-almond.jpg",
+];
 
 const SERVE = [
   "Importers", "Distributors", "Wholesalers", "Food Manufacturers", "Roasters",
@@ -274,6 +283,11 @@ export default async function HomePage() {
     (sec("who-we-serve")?.metadata?.audiences as string[] | undefined) ?? SERVE
   ).filter(Boolean);
 
+  // Chia 2 dòng marquee chạy ngược chiều (trên → phải, dưới → trái).
+  const serveHalf = Math.ceil(audiences.length / 2);
+  const serveRowA = audiences.slice(0, serveHalf);
+  const serveRowB = audiences.slice(serveHalf);
+
   return (
     <>
       {/* ============ HERO ============ */}
@@ -298,8 +312,7 @@ export default async function HomePage() {
               dangerouslySetInnerHTML={{
                 __html: sanitizeRichText(
                   sec("hero")?.content ??
-                    "<p>Prime Nuts USA connects California almond supply with importers, distributors, wholesalers, food manufacturers, roasters, retailers, and other commercial buyers in the United States and international markets.</p>" +
-                      "<p>Based in California, we work with established growers, handlers, processors, and packers to source almonds to your product specifications, volume requirements, packaging needs, and destination markets. Our focus is straightforward — reliable supply, consistent quality, competitive B2B pricing, and efficient distribution.</p>",
+                    "<p>Prime Nuts USA connects California almond supply with commercial buyers in the U.S. and worldwide — reliable supply, consistent quality, competitive B2B pricing.</p>",
                 ),
               }}
             />
@@ -318,18 +331,13 @@ export default async function HomePage() {
             </dl>
           </div>
 
-          <figure className="hero-figure reveal" aria-hidden="true">
-            <div className="hero-frame">
-              <div className="hero-photo">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/almonds-table.webp" alt="" />
-              </div>
-              <figcaption className="hero-frame-caption">
-                Prunus dulcis · The California Almond
-              </figcaption>
-            </div>
-          </figure>
         </div>
+
+        {/* Ảnh hero tràn mép phải — không khung, không viền, cạnh trái hòa vào nền */}
+        <figure className="hero-figure-bleed reveal" aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/orchard-rows.jpg" alt="" />
+        </figure>
       </section>
 
       {/* ============ MARKETS ============ */}
@@ -340,7 +348,7 @@ export default async function HomePage() {
             <h2>{heading("markets", "From California to Global Markets")}</h2>
             <Intro
               sectionKey="markets"
-              fallback="California is at the center of the global almond industry. Prime Nuts USA provides B2B customers with access to California almond supply and supports domestic and international distribution."
+              fallback="California sits at the center of the global almond industry — we give B2B buyers direct access to it, at home and abroad."
             />
           </div>
           <WorldMap regions={mapRegions} />
@@ -355,41 +363,38 @@ export default async function HomePage() {
             <h2>{heading("products-overview", "Almonds for Wholesale, Distribution & Food Manufacturing")}</h2>
             <Intro
               sectionKey="products-overview"
-              fallback="Prime Nuts USA offers California almonds for commercial and industrial applications — natural almond kernels in the varieties, sizes, and grades your market requires."
+              fallback="Natural almond kernels in the varieties, sizes, and grades your market requires."
             />
           </div>
 
-          <div className="product-grid">
-            <div className="product-varieties reveal">
-              <h3 className="panel-title"><span className="panel-title-line" />Varieties</h3>
-              <ul className="variety-list">
-                {overviewVarieties.map((variety) => (
-                  <li key={variety.name}>
-                    <h4>{variety.name}</h4>
-                    {variety.text ? <p>{variety.text}</p> : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="product-sizes reveal">
-              <h3 className="panel-title"><span className="panel-title-line" />Common Sizes</h3>
-              <div className="size-grid">
-                {overviewSizes.map((size) => (
-                  <div className="size-cell" key={size}>
-                    <span className="size-num">{size}</span>
-                    <span className="size-cap">kernels / oz</span>
-                  </div>
-                ))}
-                <div className="size-cell size-cell-note">
-                  <span className="size-cap">Custom sizes &amp; grades on request</span>
+          {/* Dàn ảnh tròn đánh số kiểu Kaffa — mỗi giống một vòng tròn + badge số */}
+          <ul className="variety-circles reveal">
+            {overviewVarieties.map((variety, index) => (
+              <li className="variety-circle" key={variety.name}>
+                <div className="vc-photo">
+                  <span className="vc-num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={VARIETY_PHOTOS[index % VARIETY_PHOTOS.length]}
+                    alt={variety.name}
+                    loading="lazy"
+                  />
                 </div>
-              </div>
-              <p className="panel-footnote">
-                Different grades, varieties and specifications may be available depending on crop
-                and market conditions.
-              </p>
-            </div>
+                <h4>{variety.name}</h4>
+                {variety.text ? <p>{variety.text}</p> : null}
+              </li>
+            ))}
+          </ul>
+
+          <div className="product-sizes product-sizes-band reveal">
+            <h3 className="panel-title"><span className="panel-title-line" />Common Sizes</h3>
+            <SizeScale sizes={overviewSizes} />
+            <p className="panel-footnote">
+              Different grades, varieties and specifications may be available depending on crop
+              and market conditions.
+            </p>
           </div>
 
           <div className="photo-strip reveal">
@@ -423,35 +428,29 @@ export default async function HomePage() {
               <h2>{heading("orders", "Built for B2B Supply")}</h2>
               <Intro
                 sectionKey="orders"
-                fallback="Prime Nuts USA supports commercial-volume almond orders ranging from domestic wholesale requirements to international container shipments."
+                fallback="From domestic wholesale volumes to international container shipments."
               />
-              <p className="pricing-note">
-                <strong>Pricing</strong> is quoted according to almond variety, grade, size, crop
-                year, quantity, packaging, destination, and applicable Incoterms.
-              </p>
-              <div className="term-chips" aria-label="Quoting factors">
-                {["Variety", "Grade", "Size", "Crop Year", "Quantity", "Packaging", "Destination", "Incoterms"].map((term) => (
-                  <span key={term}>{term}</span>
-                ))}
-              </div>
-
-              <figure className="photo-frame split-photo reveal">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/ship-color.webp" alt="Container ship being loaded at a port terminal" loading="lazy" />
-              </figure>
             </div>
 
-            <ul className="config-list reveal">
-              {ordersConfigs.map((config) => (
-                <li key={config.title}>
-                  <IconBadge>{config.icon}</IconBadge>
-                  <div>
-                    <h4>{config.title}</h4>
-                    {config.text ? <p>{config.text}</p> : null}
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {/* Ảnh blob hữu cơ + badge tròn (tham chiếu Kaffa) và các dòng cấu hình đóng gói */}
+            <div className="orders-side reveal">
+              <figure className="blob-figure">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/ship-color.webp" alt="Container ship being loaded at a port terminal" loading="lazy" />
+                <span className="blob-badge" aria-hidden="true">20&prime; &amp; 40&prime;<br />FCL</span>
+              </figure>
+              <ul className="config-rows">
+                {ordersConfigs.map((config) => (
+                  <li key={config.title}>
+                    <IconBadge>{config.icon}</IconBadge>
+                    <div>
+                      <h4>{config.title}</h4>
+                      {config.text ? <p>{config.text}</p> : null}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -464,7 +463,7 @@ export default async function HomePage() {
             <h2>{heading("sourcing", "Access to California's Almond Supply Network")}</h2>
             <Intro
               sectionKey="sourcing"
-              fallback="Our California location gives Prime Nuts USA access to one of the world's most established almond production and processing ecosystems. We work with qualified participants throughout the supply chain."
+              fallback="Our California location plugs us straight into the world's most established almond supply chain."
             />
           </div>
 
@@ -495,25 +494,46 @@ export default async function HomePage() {
             <h2>{heading("logistics", "More Than Almond Supply")}</h2>
             <Intro
               sectionKey="logistics"
-              fallback="International almond trade requires coordination across sourcing, product specifications, documentation, logistics, and destination-country requirements. Depending on the transaction and destination, Prime Nuts USA can coordinate or support documentation such as:"
+              fallback="Depending on the transaction and destination, we coordinate or support:"
             />
           </div>
 
-          <ul className="doc-grid reveal">
-            {logisticsDocs.map((doc) => (
-              <li key={doc.label}>
-                <span className="doc-check" aria-hidden="true">✓</span>
-                {doc.label}
-                {doc.note ? <span className="doc-note">{doc.note}</span> : null}
-              </li>
-            ))}
-          </ul>
+          {/* Chứng từ kẹp hai bên ảnh tròn trung tâm (tham chiếu Kaffa) */}
+          <div className="doc-features reveal">
+            <ul className="doc-col doc-col-left">
+              {logisticsDocs.slice(0, Math.ceil(logisticsDocs.length / 2)).map((doc, index) => (
+                <li key={doc.label}>
+                  <span className="doc-num" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <div className="doc-body">
+                    <h4>{doc.label}</h4>
+                    {doc.note ? <span className="doc-note">{doc.note}</span> : null}
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="doc-center">
+              <div className="doc-center-ring">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/container-ship.jpg" alt="" loading="lazy" />
+              </div>
+            </div>
+            <ul className="doc-col doc-col-right">
+              {logisticsDocs.slice(Math.ceil(logisticsDocs.length / 2)).map((doc, index) => (
+                <li key={doc.label}>
+                  <span className="doc-num" aria-hidden="true">
+                    {String(Math.ceil(logisticsDocs.length / 2) + index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="doc-body">
+                    <h4>{doc.label}</h4>
+                    {doc.note ? <span className="doc-note">{doc.note}</span> : null}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="incoterm-band reveal">
-            <p>
-              Shipping quotations may be available under common international trade terms,
-              depending on destination and transaction requirements:
-            </p>
+            <p>Quotations available under common international trade terms:</p>
             <div className="incoterm-chips">
               {incoterms.map((term) => (
                 <span key={term}>{term}</span>
@@ -528,15 +548,25 @@ export default async function HomePage() {
         <div className="container reveal">
           <p className="eyebrow">{heading("who-we-serve", "Who We Serve")}</p>
           <p className="sr-only">{audiences.join(", ")}</p>
+          {/* 2 dòng chạy vô hạn ngược chiều; nhân 4 bản để vòng lặp liền mạch */}
           <div className="serve-marquee">
-            <div className="serve-track">
-              <ServeLine items={audiences} />
-              <ServeLine items={audiences} />
+            <div className="serve-track serve-track-right">
+              {[0, 1, 2, 3].map((copy) => (
+                <ServeLine items={serveRowA} key={copy} />
+              ))}
             </div>
           </div>
+          {serveRowB.length > 0 ? (
+            <div className="serve-marquee">
+              <div className="serve-track serve-track-left">
+                {[0, 1, 2, 3].map((copy) => (
+                  <ServeLine items={serveRowB} key={copy} />
+                ))}
+              </div>
+            </div>
+          ) : null}
           <p className="serve-sub">
-            We welcome both established buyers and companies developing new markets for
-            California almonds.
+            Established buyers and new-market developers alike are welcome.
           </p>
         </div>
       </section>
@@ -571,7 +601,7 @@ export default async function HomePage() {
             <h2>{heading("quote-cta", "Let's Grow Together")}</h2>
             <Intro
               sectionKey="quote-cta"
-              fallback="Prime Nuts USA welcomes inquiries from importers, distributors, wholesalers, food manufacturers, and commercial partners seeking California almond supply."
+              fallback="Importers, distributors, wholesalers, food manufacturers — tell us what you need:"
             />
             <ul className="quote-checklist">
               {quoteChecklist.map((item) => (
@@ -579,8 +609,7 @@ export default async function HomePage() {
               ))}
             </ul>
             <p className="quote-followup">
-              Our team will review your requirements and prepare a commercial quotation based on
-              current availability and market conditions.
+              We&apos;ll respond with current availability and pricing.
             </p>
           </div>
 

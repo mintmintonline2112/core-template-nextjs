@@ -16,6 +16,7 @@ import {
   BLOG_CATEGORY_QUERY_KEY,
 } from '@/app/admin/(protected)/blog-categories/_lib/blog-category.service';
 import { blogPostService, BLOG_POST_QUERY_KEY, type BlogPost } from '@/app/admin/(protected)/blog-posts/_lib/blog-post.service';
+import { adminRoutes } from '@/config/routes';
 
 export function BlogPostList() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export function BlogPostList() {
         label: 'Tiêu đề',
         type: 'text',
         align: 'left',
-        link: (row) => `/admin/blog-posts/edit/${row.id}`,
+        link: (row) => adminRoutes.blogPosts.edit(row.id),
       },
       {
         key: 'categoryId',
@@ -89,10 +90,10 @@ export function BlogPostList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/blog-posts/create');
+        router.push(adminRoutes.blogPosts.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/blog-posts/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.blogPosts.edit(item.id));
         break;
       case 'delete':
         if (item?.id) {

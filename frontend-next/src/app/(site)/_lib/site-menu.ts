@@ -1,3 +1,4 @@
+import { siteRoutes } from "@/config/routes";
 /** Fallback menu tĩnh — dùng khi API menu lỗi hoặc CMS chưa có dữ liệu. */
 
 export type SiteMenuChild = {
@@ -14,29 +15,29 @@ export type SiteMenuItem = {
 };
 
 export const SITE_MENU_ITEMS: SiteMenuItem[] = [
-  { key: "home", label: "Home", href: "/" },
+  { key: "home", label: "Home", href: siteRoutes.home },
   {
     key: "products",
     label: "Products",
-    href: "/products",
+    href: siteRoutes.products,
     children: [
-      { label: "Natural Almonds", href: "/products#natural" },
-      { label: "Processed Almonds", href: "/products#processed" },
-      { label: "Kernel Sizes", href: "/products#sizes" },
+      { label: "Natural Almonds", href: siteRoutes.productsSection('natural') },
+      { label: "Processed Almonds", href: siteRoutes.productsSection('processed') },
+      { label: "Kernel Sizes", href: siteRoutes.productsSection('sizes') },
     ],
   },
-  { key: "markets", label: "Markets", href: "/#markets" },
-  { key: "sourcing", label: "Sourcing", href: "/#sourcing" },
+  { key: "markets", label: "Markets", href: siteRoutes.homeSection('markets') },
+  { key: "sourcing", label: "Sourcing", href: siteRoutes.homeSection('sourcing') },
   {
     key: "news",
     label: "News",
-    href: "/news",
+    href: siteRoutes.news,
     children: [
-      { label: "Market Update", href: "/news?category=market-update" },
-      { label: "Company News", href: "/news?category=company-news" },
-      { label: "Industry Insight", href: "/news?category=industry-insight" },
-      { label: "Logistics", href: "/news?category=logistics" },
+      { label: "Market Update", href: siteRoutes.newsCategory('market-update') },
+      { label: "Company News", href: siteRoutes.newsCategory('company-news') },
+      { label: "Industry Insight", href: siteRoutes.newsCategory('industry-insight') },
+      { label: "Logistics", href: siteRoutes.newsCategory('logistics') },
     ],
   },
-  { key: "contact", label: "Contact", href: "/contact" },
+  { key: "contact", label: "Contact", href: siteRoutes.contact },
 ];

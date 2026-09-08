@@ -13,6 +13,7 @@ import type {
 import { confirmAction } from '@/app/admin/_lib/confirm';
 import { getErrorMessage } from '@/app/admin/_lib/utils';
 import { staffService, STAFF_QUERY_KEY, type Staff } from '@/app/admin/(protected)/staffs/_lib/staff.service';
+import { adminRoutes } from '@/config/routes';
 
 const STATUS_CONFIG: TableStatusConfig[] = [
   { value: 'active', label: 'Hoạt động', className: 'is-success' },
@@ -32,7 +33,7 @@ export function StaffList() {
         label: 'Họ tên',
         type: 'text',
         align: 'left',
-        link: (row) => `/admin/staffs/edit/${row.id}`,
+        link: (row) => adminRoutes.staffs.edit(row.id),
       },
       { key: 'email', label: 'Email', type: 'text', align: 'left' },
       { key: 'staffCode', label: 'Mã NS', type: 'badge', align: 'center' },
@@ -59,10 +60,10 @@ export function StaffList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/staffs/create');
+        router.push(adminRoutes.staffs.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/staffs/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.staffs.edit(item.id));
         break;
       case 'block':
         if (item?.id) {

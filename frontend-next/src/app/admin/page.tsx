@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
+import { adminRoutes } from '@/config/routes';
 
 export default function AdminIndexPage() {
-  redirect('/admin/dashboard');
+  redirect(adminRoutes.dashboard);
 }

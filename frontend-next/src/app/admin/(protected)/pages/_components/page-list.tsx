@@ -11,6 +11,7 @@ import type {
 import { confirmAction } from '@/app/admin/_lib/confirm';
 import { PUBLISH_STATUS_CONFIG, PUBLISH_STATUS_OPTIONS } from '@/app/admin/_lib/cms-shared';
 import { pageService, PAGE_QUERY_KEY, type SitePage } from '@/app/admin/(protected)/pages/_lib/page.service';
+import { adminRoutes } from '@/config/routes';
 
 const COLUMNS: TableColumn<SitePage>[] = [
   { key: 'sortOrder', label: '#', type: 'sort', align: 'center' },
@@ -19,7 +20,7 @@ const COLUMNS: TableColumn<SitePage>[] = [
     label: 'Tiêu đề trang',
     type: 'text',
     align: 'left',
-    link: (row) => `/admin/pages/edit/${row.id}`,
+    link: (row) => adminRoutes.pages.edit(row.id),
   },
   { key: 'slug', label: 'Slug', type: 'badge', align: 'left' },
   {
@@ -55,10 +56,10 @@ export function PageList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/pages/create');
+        router.push(adminRoutes.pages.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/pages/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.pages.edit(item.id));
         break;
       case 'sort':
         if (item?.id && event.value) {

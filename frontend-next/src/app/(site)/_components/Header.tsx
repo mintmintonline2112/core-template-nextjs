@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SiteMenuItem } from "@/app/(site)/_lib/site-menu";
 import { Brand } from "./Brand";
+import { siteRoutes } from "@/config/routes";
+import { isActivePath } from "@/utils/route";
 
 /** Header dính đầu trang: menu từ CMS, toggle mobile, thu gọn khi cuộn. */
 export function Header({ menu }: { menu: SiteMenuItem[] }) {
@@ -31,11 +33,7 @@ export function Header({ menu }: { menu: SiteMenuItem[] }) {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  const isCurrent = (href: string) => {
-    const base = href.split("#")[0].split("?")[0] || "/";
-    if (base === "/") return pathname === "/" && !href.includes("#");
-    return pathname === base || pathname.startsWith(`${base}/`);
-  };
+  const isCurrent = (href: string) => isActivePath(pathname, href, siteRoutes.home);
 
   return (
     <header
@@ -57,7 +55,7 @@ export function Header({ menu }: { menu: SiteMenuItem[] }) {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href={siteRoutes.contact}
             className="btn btn-primary btn-sm nav-cta"
             onClick={() => setOpen(false)}
           >

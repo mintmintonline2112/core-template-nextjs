@@ -11,6 +11,7 @@ import {
   BLOG_CATEGORY_QUERY_KEY,
   type BlogCategory,
 } from '@/app/admin/(protected)/blog-categories/_lib/blog-category.service';
+import { adminRoutes } from '@/config/routes';
 
 const COLUMNS: TableColumn<BlogCategory>[] = [
   { key: 'sortOrder', label: '#', type: 'sort', align: 'center' },
@@ -54,10 +55,10 @@ export function BlogCategoryList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/blog-categories/create');
+        router.push(adminRoutes.blogCategories.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/blog-categories/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.blogCategories.edit(item.id));
         break;
       case 'sort':
         if (item?.id && event.value) {

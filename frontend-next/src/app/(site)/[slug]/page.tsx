@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { SectionRenderer } from "@/app/(site)/_components/SectionRenderer";
 import { getCmsPage } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
+import { siteRoutes } from "@/config/routes";
 
 /**
  * Trang CMS tự do: mọi Page admin tạo thêm (ngoài 4 trang chuẩn) render tại
@@ -21,11 +23,14 @@ export async function generateMetadata({
   const { slug } = await params;
   if (RESERVED_SLUGS.has(slug)) return {};
   const page = await getCmsPage(slug);
-  if (!page) return { title: "Page not found" };
-  return {
+  if (!page) return { title: "Page not found", robots: { index: false } };
+  return buildPageMetadata({
     title: page.metaTitle ?? page.title,
-    description: page.metaDescription ?? page.lead ?? undefined,
-  };
+    description: page.metaDescription ?? page.lead,
+    path: siteRoutes.page(page.slug),
+    image: page.ogImagePath,
+    canonical: page.canonicalUrl,
+  });
 }
 
 export default async function CmsGenericPage({
@@ -76,8 +81,8 @@ export default async function CmsGenericPage({
           <h2>Looking for California Almond Supply?</h2>
           <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
           <div className="cta-band-actions">
-            <Link href="/contact" className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href="/products" className="btn btn-ghost">Browse Our Products</Link>
+            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
+            <Link href={siteRoutes.products} className="btn btn-ghost">Browse Our Products</Link>
           </div>
         </div>
       </section>

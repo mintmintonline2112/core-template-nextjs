@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("products");
-  return {
+  return buildPageMetadata({
     title: page?.metaTitle ?? "Our Products",
     description:
       page?.metaDescription ??
       "Natural and processed California almonds — Nonpareil, Independence, Monterey, Carmel, Butte, Padre kernels plus blanched, sliced, slivered, diced almonds and almond flour.",
-  };
+    path: siteRoutes.products,
+    image: page?.ogImagePath,
+    canonical: page?.canonicalUrl,
+  });
 }
 
 const ALMOND_ICON = (
@@ -228,8 +233,8 @@ export default async function ProductsPage() {
             respond with current availability and pricing.
           </p>
           <div className="cta-band-actions">
-            <Link href="/contact" className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href="/#markets" className="btn btn-ghost">See Our Markets</Link>
+            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
+            <Link href={siteRoutes.homeSection('markets')} className="btn btn-ghost">See Our Markets</Link>
           </div>
         </div>
       </section>

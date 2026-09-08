@@ -3,14 +3,12 @@ import type { ReactNode } from "react";
 import { env } from "@/lib/env";
 import "@/styles/site.css";
 
+/**
+ * Chỉ giữ phần dùng chung cho CẢ site lẫn admin. Title/description/OG của site
+ * public nằm ở app/(site)/layout.tsx; admin tự khai báo (noindex) ở app/admin/layout.tsx.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
-  title: {
-    default: "Prime Nuts USA — California Almonds to the World",
-    template: "%s — Prime Nuts USA",
-  },
-  description:
-    "Prime Nuts USA connects California almond supply with importers, distributors, wholesalers, food manufacturers, roasters and retailers in the U.S. and global markets.",
   icons: { icon: "/favicon.svg" },
 };
 

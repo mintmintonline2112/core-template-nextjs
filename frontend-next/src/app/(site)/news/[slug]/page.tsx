@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlogPost, mediaUrl } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 import { getSiteSettings, POST_TITLE_DEFAULT } from "@/lib/settings";
+import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata({
   params,
@@ -12,11 +14,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
-  if (!post) return { title: "Article not found" };
-  return {
+  if (!post) return { title: "Article not found", robots: { index: false } };
+  return buildPageMetadata({
     title: post.metaTitle ?? post.title,
-    description: post.metaDescription ?? post.excerpt ?? undefined,
-  };
+    description: post.metaDescription ?? post.excerpt,
+    path: siteRoutes.newsPost(post.slug),
+    image: post.ogImagePath ?? post.coverImagePath,
+    canonical: post.canonicalUrl,
+    type: "article",
+    publishedTime: post.publishedAt,
+    modifiedTime: post.updatedAt,
+  });
 }
 
 function formatDate(value: string | null): string {
@@ -76,7 +84,7 @@ export default async function NewsDetailPage({
           />
 
           <p className="section-note reveal">
-            <Link href="/news">← Back to News &amp; Insights</Link>
+            <Link href={siteRoutes.news}>← Back to News &amp; Insights</Link>
           </p>
         </div>
       </section>
@@ -87,8 +95,8 @@ export default async function NewsDetailPage({
           <h2>Looking for California Almond Supply?</h2>
           <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
           <div className="cta-band-actions">
-            <Link href="/contact" className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href="/news" className="btn btn-ghost">More Articles</Link>
+            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
+            <Link href={siteRoutes.news} className="btn btn-ghost">More Articles</Link>
           </div>
         </div>
       </section>

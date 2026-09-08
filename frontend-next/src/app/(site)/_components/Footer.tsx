@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Brand } from "./Brand";
+import { siteRoutes } from "@/config/routes";
 
 export function Footer() {
   return (
@@ -14,25 +15,25 @@ export function Footer() {
 
         <nav className="footer-col" aria-label="Explore">
           <h4>Explore</h4>
-          <Link href="/products">Our Products</Link>
-          <Link href="/#markets">Global Markets</Link>
-          <Link href="/#orders">Bulk &amp; Container Orders</Link>
-          <Link href="/#sourcing">California Sourcing</Link>
-          <Link href="/#logistics">Export &amp; Logistics</Link>
+          <Link href={siteRoutes.products}>Our Products</Link>
+          <Link href={siteRoutes.homeSection('markets')}>Global Markets</Link>
+          <Link href={siteRoutes.homeSection('orders')}>Bulk &amp; Container Orders</Link>
+          <Link href={siteRoutes.homeSection('sourcing')}>California Sourcing</Link>
+          <Link href={siteRoutes.homeSection('logistics')}>Export &amp; Logistics</Link>
         </nav>
 
         <nav className="footer-col" aria-label="Company">
           <h4>Company</h4>
-          <Link href="/#why">Why Prime Nuts USA</Link>
-          <Link href="/#serve">Who We Serve</Link>
-          <Link href="/news">News &amp; Insights</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href={siteRoutes.homeSection('why')}>Why Prime Nuts USA</Link>
+          <Link href={siteRoutes.homeSection('serve')}>Who We Serve</Link>
+          <Link href={siteRoutes.news}>News &amp; Insights</Link>
+          <Link href={siteRoutes.contact}>Contact</Link>
         </nav>
 
         <div className="footer-col">
           <h4>Prime Nuts USA</h4>
           <p className="footer-address">California, United States</p>
-          <Link href="/contact" className="btn btn-gold btn-sm">
+          <Link href={siteRoutes.contact} className="btn btn-gold btn-sm">
             Request a Quote
           </Link>
         </div>

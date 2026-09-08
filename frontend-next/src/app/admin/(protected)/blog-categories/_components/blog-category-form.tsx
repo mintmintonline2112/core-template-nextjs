@@ -23,6 +23,7 @@ import {
   zhTranslationsPayload,
 } from '@/app/admin/_lib/translation-fields';
 import { blogCategoryService, BLOG_CATEGORY_QUERY_KEY } from '@/app/admin/(protected)/blog-categories/_lib/blog-category.service';
+import { adminRoutes } from '@/config/routes';
 
 interface FormValues extends SeoFormValues {
   name: string;
@@ -133,7 +134,7 @@ export function BlogCategoryForm({ id }: { id?: number }) {
 
       await queryClient.invalidateQueries({ queryKey: BLOG_CATEGORY_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật danh mục' : 'Đã tạo danh mục');
-      router.push('/admin/blog-categories');
+      router.push(adminRoutes.blogCategories.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -147,7 +148,7 @@ export function BlogCategoryForm({ id }: { id?: number }) {
       title={isEdit ? 'Sửa danh mục' : 'Tạo danh mục'}
       subtitle={isEdit ? 'Cập nhật thông tin danh mục blog' : 'Thêm danh mục blog mới'}
       breadcrumbs={[
-        { label: 'Danh mục blog', link: '/admin/blog-categories' },
+        { label: 'Danh mục blog', link: adminRoutes.blogCategories.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -156,7 +157,7 @@ export function BlogCategoryForm({ id }: { id?: number }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push('/admin/blog-categories')}
+      onCancel={() => router.push(adminRoutes.blogCategories.list)}
     />
   );
 }

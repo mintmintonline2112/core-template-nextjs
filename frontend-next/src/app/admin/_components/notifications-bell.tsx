@@ -7,6 +7,7 @@ import { Bell, CheckCheck, FileText, Mail, Megaphone } from 'lucide-react';
 import { adminApi } from '@/app/admin/_lib/admin-api';
 import { cn } from '@/app/admin/_lib/utils';
 import type { PaginatedResponse } from '@/app/admin/_lib/pagination';
+import { adminRoutes } from '@/config/routes';
 
 interface AppNotification {
   id: number;
@@ -23,11 +24,11 @@ interface AppNotification {
 const NOTIFICATIONS_QUERY_KEY = ['admin', 'notifications'];
 
 const MODULE_LINKS: Record<string, string> = {
-  contact: '/admin/contacts',
-  contacts: '/admin/contacts',
-  admincontact: '/admin/contacts',
-  blogposts: '/admin/blog-posts',
-  pages: '/admin/pages',
+  contact: adminRoutes.contacts,
+  contacts: adminRoutes.contacts,
+  admincontact: adminRoutes.contacts,
+  blogposts: adminRoutes.blogPosts.list,
+  pages: adminRoutes.pages.list,
 };
 
 const MODULE_ICONS: Record<string, React.ReactNode> = {
@@ -86,7 +87,7 @@ export function NotificationsBell() {
     const link =
       (n.metadata?.link as string | undefined) ??
       MODULE_LINKS[n.module?.toLowerCase?.() ?? ''] ??
-      '/admin/dashboard';
+      adminRoutes.dashboard;
     router.push(link);
   }
 

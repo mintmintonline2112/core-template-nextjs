@@ -25,6 +25,7 @@ import {
   zhTranslationsPayload,
 } from '@/app/admin/_lib/translation-fields';
 import { pageService, PAGE_QUERY_KEY } from '@/app/admin/(protected)/pages/_lib/page.service';
+import { adminRoutes } from '@/config/routes';
 
 interface FormValues extends SeoFormValues {
   title: string;
@@ -128,7 +129,7 @@ export function PageForm({ id }: { id?: number }) {
 
       await queryClient.invalidateQueries({ queryKey: PAGE_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật trang' : 'Đã tạo trang');
-      router.push('/admin/pages');
+      router.push(adminRoutes.pages.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -143,7 +144,7 @@ export function PageForm({ id }: { id?: number }) {
         title={isEdit ? 'Sửa trang' : 'Tạo trang'}
         subtitle={isEdit ? 'Cập nhật thông tin trang nội dung' : 'Thêm trang nội dung mới'}
         breadcrumbs={[
-          { label: 'Trang nội dung', link: '/admin/pages' },
+          { label: 'Trang nội dung', link: adminRoutes.pages.list },
           { label: isEdit ? 'Sửa' : 'Tạo mới' },
         ]}
         fields={FIELDS}
@@ -152,7 +153,7 @@ export function PageForm({ id }: { id?: number }) {
         loading={submitting}
         submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
         onSubmit={handleSubmit}
-        onCancel={() => router.push('/admin/pages')}
+        onCancel={() => router.push(adminRoutes.pages.list)}
       />
 
       {isEdit && sections.length > 0 && (
@@ -174,7 +175,7 @@ export function PageForm({ id }: { id?: number }) {
                     <td>{s.sortOrder}</td>
                     <td><span className="dt-badge">{s.sectionKey}</span></td>
                     <td>
-                      <Link href={`/admin/page-sections/edit/${s.id}`} className="dt-link">
+                      <Link href={adminRoutes.pageSections.edit(s.id)} className="dt-link">
                         {s.heading ?? s.sectionKey}
                       </Link>
                     </td>
@@ -189,7 +190,7 @@ export function PageForm({ id }: { id?: number }) {
             </table>
             <p className="gf-hint">
               Nội dung từng section chỉnh tại mục{' '}
-              <Link href="/admin/page-sections" className="dt-link">Section trang</Link>.
+              <Link href={adminRoutes.pageSections.list} className="dt-link">Section trang</Link>.
             </p>
           </div>
         </div>

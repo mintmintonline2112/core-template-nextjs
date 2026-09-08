@@ -15,6 +15,7 @@ import {
   type AccountStatus,
   type AccountType,
 } from '@/app/admin/(protected)/staffs/_lib/staff.service';
+import { adminRoutes } from '@/config/routes';
 
 interface FormValues {
   staffCode: string;
@@ -150,7 +151,7 @@ export function StaffForm({ id }: { id?: string }) {
 
       await queryClient.invalidateQueries({ queryKey: STAFF_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật nhân sự' : 'Đã tạo nhân sự');
-      router.push('/admin/staffs');
+      router.push(adminRoutes.staffs.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -164,7 +165,7 @@ export function StaffForm({ id }: { id?: string }) {
       title={isEdit ? 'Sửa nhân sự' : 'Thêm nhân sự'}
       subtitle={isEdit ? 'Cập nhật tài khoản quản trị' : 'Tạo tài khoản quản trị mới'}
       breadcrumbs={[
-        { label: 'Nhân sự', link: '/admin/staffs' },
+        { label: 'Nhân sự', link: adminRoutes.staffs.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -172,7 +173,7 @@ export function StaffForm({ id }: { id?: string }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push('/admin/staffs')}
+      onCancel={() => router.push(adminRoutes.staffs.list)}
     />
   );
 }

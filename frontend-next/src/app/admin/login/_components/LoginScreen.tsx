@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { useAdminAuth } from '@/app/admin/_auth/AuthProvider';
 import { AdminApiError } from '@/app/admin/_lib/admin-api';
+import { adminRoutes } from '@/config/routes';
 
 export function LoginScreen() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export function LoginScreen() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user) router.replace('/admin/dashboard');
+    if (user) router.replace(adminRoutes.dashboard);
   }, [router, user]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -25,7 +26,7 @@ export function LoginScreen() {
 
     try {
       await login({ email: email.trim(), password });
-      router.replace('/admin/dashboard');
+      router.replace(adminRoutes.dashboard);
       router.refresh();
     } catch (reason) {
       setError(

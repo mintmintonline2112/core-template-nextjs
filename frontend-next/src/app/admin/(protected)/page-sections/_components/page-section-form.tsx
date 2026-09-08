@@ -22,6 +22,7 @@ import {
   PAGE_SECTION_QUERY_KEY,
   SECTION_DEFINITION_QUERY_KEY,
 } from '@/app/admin/(protected)/page-sections/_lib/page-section.service';
+import { adminRoutes } from '@/config/routes';
 
 /**
  * Website render section THEO sectionKey — danh mục loại section (kèm cấu trúc
@@ -231,7 +232,7 @@ export function PageSectionForm({ id }: { id?: number }) {
       await queryClient.invalidateQueries({ queryKey: PAGE_SECTION_QUERY_KEY });
       await queryClient.invalidateQueries({ queryKey: PAGE_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật section' : 'Đã tạo section');
-      router.push('/admin/page-sections');
+      router.push(adminRoutes.pageSections.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -249,7 +250,7 @@ export function PageSectionForm({ id }: { id?: number }) {
           : 'Thêm khối nội dung cho một trang'
       }
       breadcrumbs={[
-        { label: 'Section trang', link: '/admin/page-sections' },
+        { label: 'Section trang', link: adminRoutes.pageSections.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -258,7 +259,7 @@ export function PageSectionForm({ id }: { id?: number }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push('/admin/page-sections')}
+      onCancel={() => router.push(adminRoutes.pageSections.list)}
     />
   );
 }

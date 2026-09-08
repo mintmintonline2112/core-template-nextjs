@@ -7,6 +7,7 @@ import { useAdminAuth } from '@/app/admin/_auth/AuthProvider';
 import { AdminIcon } from '@/app/admin/_components/AdminIcon';
 import { PurgeCacheButton } from './PurgeCacheButton';
 import type { DashboardSummary } from '@/app/admin/(protected)/dashboard/_lib/types';
+import { adminRoutes } from '@/config/routes';
 
 const numberFormatter = new Intl.NumberFormat('vi-VN');
 const dateFormatter = new Intl.DateTimeFormat('vi-VN', {
@@ -128,7 +129,7 @@ export function DashboardScreen() {
               <h2>Bài viết cập nhật gần đây</h2>
               <p>{summary?.content.draftBlogPosts ?? 0} bản nháp đang chờ hoàn thiện</p>
             </div>
-            {hasPermission('BLOG_POST_LIST') ? <Link href="/admin/blog-posts">Xem tất cả</Link> : null}
+            {hasPermission('BLOG_POST_LIST') ? <Link href={adminRoutes.blogPosts.list}>Xem tất cả</Link> : null}
           </header>
           <div className="admin-table-wrap">
             <table className="admin-table">
@@ -153,16 +154,16 @@ export function DashboardScreen() {
             <div><h2>Truy cập nhanh</h2><p>Các tác vụ nội dung thường dùng</p></div>
           </header>
           <div className="admin-quick-links">
-            {hasPermission('BLOG_POST_LIST') ? <Link href="/admin/blog-posts"><AdminIcon name="article" /><span><strong>Quản lý bài viết</strong><small>{summary?.content.blogPosts ?? 0} nội dung</small></span><AdminIcon name="chevron" /></Link> : null}
-            {hasPermission('PAGE_LIST') ? <Link href="/admin/pages"><AdminIcon name="page" /><span><strong>Quản lý trang</strong><small>{summary?.content.publishedPages ?? 0} đang hiển thị</small></span><AdminIcon name="chevron" /></Link> : null}
-            {hasPermission('CONTACT_LIST') ? <Link href="/admin/contacts"><AdminIcon name="contact" /><span><strong>Liên hệ khách hàng</strong><small>{summary?.contacts.thisMonth ?? 0} trong tháng</small></span><AdminIcon name="chevron" /></Link> : null}
+            {hasPermission('BLOG_POST_LIST') ? <Link href={adminRoutes.blogPosts.list}><AdminIcon name="article" /><span><strong>Quản lý bài viết</strong><small>{summary?.content.blogPosts ?? 0} nội dung</small></span><AdminIcon name="chevron" /></Link> : null}
+            {hasPermission('PAGE_LIST') ? <Link href={adminRoutes.pages.list}><AdminIcon name="page" /><span><strong>Quản lý trang</strong><small>{summary?.content.publishedPages ?? 0} đang hiển thị</small></span><AdminIcon name="chevron" /></Link> : null}
+            {hasPermission('CONTACT_LIST') ? <Link href={adminRoutes.contacts}><AdminIcon name="contact" /><span><strong>Liên hệ khách hàng</strong><small>{summary?.contacts.thisMonth ?? 0} trong tháng</small></span><AdminIcon name="chevron" /></Link> : null}
           </div>
         </section>
 
         <section className="admin-panel admin-panel-full">
           <header className="admin-panel-header">
             <div><h2>Liên hệ mới nhất</h2><p>Yêu cầu gửi từ biểu mẫu trên website</p></div>
-            {hasPermission('CONTACT_LIST') ? <Link href="/admin/contacts">Xem tất cả</Link> : null}
+            {hasPermission('CONTACT_LIST') ? <Link href={adminRoutes.contacts}>Xem tất cả</Link> : null}
           </header>
           <div className="admin-table-wrap">
             <table className="admin-table">

@@ -32,6 +32,7 @@ import {
   BLOG_CATEGORY_QUERY_KEY,
 } from '@/app/admin/(protected)/blog-categories/_lib/blog-category.service';
 import { blogPostService, BLOG_POST_QUERY_KEY } from '@/app/admin/(protected)/blog-posts/_lib/blog-post.service';
+import { adminRoutes } from '@/config/routes';
 
 interface FormValues extends SeoFormValues {
   title: string;
@@ -169,7 +170,7 @@ export function BlogPostForm({ id }: { id?: number }) {
 
       await queryClient.invalidateQueries({ queryKey: BLOG_POST_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật bài viết' : 'Đã tạo bài viết');
-      router.push('/admin/blog-posts');
+      router.push(adminRoutes.blogPosts.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -183,7 +184,7 @@ export function BlogPostForm({ id }: { id?: number }) {
       title={isEdit ? 'Sửa bài viết' : 'Viết bài mới'}
       subtitle={isEdit ? 'Cập nhật nội dung bài viết' : 'Thêm bài viết kiến thức nha khoa'}
       breadcrumbs={[
-        { label: 'Bài viết', link: '/admin/blog-posts' },
+        { label: 'Bài viết', link: adminRoutes.blogPosts.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -192,7 +193,7 @@ export function BlogPostForm({ id }: { id?: number }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Đăng bài'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push('/admin/blog-posts')}
+      onCancel={() => router.push(adminRoutes.blogPosts.list)}
     />
   );
 }

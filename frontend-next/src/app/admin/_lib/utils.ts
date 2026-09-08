@@ -1,9 +1,6 @@
-import { clsx, type ClassValue } from 'clsx';
 import { env } from '@/lib/env';
 
-export function cn(...inputs: ClassValue[]): string {
-  return clsx(inputs);
-}
+export { cn } from '@/utils/cn';
 
 export function getErrorMessage(err: unknown, fallback = 'Đã có lỗi xảy ra'): string {
   if (typeof err === 'object' && err !== null) {

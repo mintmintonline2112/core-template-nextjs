@@ -13,6 +13,7 @@ import {
   type Permission,
 } from '@/app/admin/(protected)/permissions/_lib/permission.service';
 import { roleService, ROLE_QUERY_KEY } from '@/app/admin/(protected)/roles/_lib/role.service';
+import { adminRoutes } from '@/config/routes';
 
 /**
  * Form vai trò: name + description + bảng chọn quyền gộp theo module,
@@ -100,7 +101,7 @@ export function RoleForm({ id }: { id?: number }) {
 
       await queryClient.invalidateQueries({ queryKey: ROLE_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật vai trò' : 'Đã tạo vai trò');
-      router.push('/admin/roles');
+      router.push(adminRoutes.roles.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -113,7 +114,7 @@ export function RoleForm({ id }: { id?: number }) {
       <div className="gf-header">
         <button
           type="button"
-          onClick={() => router.push('/admin/roles')}
+          onClick={() => router.push(adminRoutes.roles.list)}
           className="gf-back"
           aria-label="Quay lại"
         >
@@ -126,7 +127,7 @@ export function RoleForm({ id }: { id?: number }) {
           </p>
           <nav className="gf-breadcrumbs">
             <span>
-              <Link href="/admin/roles">Vai trò</Link>
+              <Link href={adminRoutes.roles.list}>Vai trò</Link>
               <span style={{ margin: '0 4px' }}>/</span>
             </span>
             <span>{isEdit ? 'Sửa' : 'Tạo mới'}</span>
@@ -207,7 +208,7 @@ export function RoleForm({ id }: { id?: number }) {
 
       {!isAdminRole && (
         <div className="gf-actions">
-          <button type="button" onClick={() => router.push('/admin/roles')} className="adm-btn">
+          <button type="button" onClick={() => router.push(adminRoutes.roles.list)} className="adm-btn">
             Hủy
           </button>
           <button type="submit" disabled={submitting} className="adm-btn adm-btn--primary">

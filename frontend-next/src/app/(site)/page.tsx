@@ -4,16 +4,22 @@ import { QuoteForm } from "@/app/(site)/_components/forms";
 import { SourcingSlider, type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { getCmsPage, mediaUrl, sectionMap } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("home");
-  return {
+  return buildPageMetadata({
     title: page?.metaTitle ?? "Prime Nuts USA — California Almonds to the World",
+    absoluteTitle: true,
     description:
       page?.metaDescription ??
       "Reliable California almond supply for U.S. and global markets.",
-  };
+    path: siteRoutes.home,
+    image: page?.ogImagePath,
+    canonical: page?.canonicalUrl,
+  });
 }
 
 const ALMOND_GLYPH = (
@@ -401,7 +407,7 @@ export default async function HomePage() {
           <p className="section-note reveal">
             Also available: processed almonds — blanched, sliced, slivered, diced, and almond flour.
             <br />
-            <Link href="/products" className="btn btn-ghost-dark btn-sm" style={{ marginTop: "1rem" }}>
+            <Link href={siteRoutes.products} className="btn btn-ghost-dark btn-sm" style={{ marginTop: "1rem" }}>
               Explore the Full Product Range
             </Link>
           </p>

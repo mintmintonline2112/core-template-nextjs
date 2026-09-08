@@ -8,6 +8,7 @@ import { AdminIcon } from '@/app/admin/_components/AdminIcon';
 import { NotificationsBell } from '@/app/admin/_components/notifications-bell';
 import { AdminSidebar } from './AdminSidebar';
 import { getAdminPageTitle } from './navigation';
+import { adminRoutes } from '@/config/routes';
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -19,7 +20,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     void refreshMe().then((currentUser) => {
-      if (active && !currentUser) router.replace('/admin/login');
+      if (active && !currentUser) router.replace(adminRoutes.login);
     });
     return () => {
       active = false;
@@ -29,7 +30,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const handleLogout = useCallback(async () => {
     setLoggingOut(true);
     await logout();
-    router.replace('/admin/login');
+    router.replace(adminRoutes.login);
     router.refresh();
   }, [logout, router]);
 

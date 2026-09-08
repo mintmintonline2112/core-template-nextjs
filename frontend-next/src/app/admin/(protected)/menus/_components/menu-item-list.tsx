@@ -13,6 +13,7 @@ import type {
 import { confirmAction } from '@/app/admin/_lib/confirm';
 import { ACTIVE_STATUS_CONFIG } from '@/app/admin/_lib/cms-shared';
 import { menuItemService, MENU_ITEM_QUERY_KEY, type MenuItem } from '@/app/admin/(protected)/menus/_lib/menu-item.service';
+import { adminRoutes } from '@/config/routes';
 
 export function MenuItemList() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export function MenuItemList() {
         label: 'Tên menu',
         type: 'text',
         align: 'left',
-        link: (row) => `/admin/menus/edit/${row.id}`,
+        link: (row) => adminRoutes.menus.edit(row.id),
       },
       { key: 'href', label: 'Đường dẫn', type: 'badge', align: 'left' },
       {
@@ -87,10 +88,10 @@ export function MenuItemList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/menus/create');
+        router.push(adminRoutes.menus.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/menus/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.menus.edit(item.id));
         break;
       case 'sort':
         if (item?.id && event.value) {

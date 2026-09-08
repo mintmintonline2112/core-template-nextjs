@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAdminAuth } from '@/app/admin/_auth/AuthProvider';
 import { AdminIcon } from '@/app/admin/_components/AdminIcon';
 import { adminNavigation } from './navigation';
+import { isActivePath } from '@/utils/route';
 
 interface AdminSidebarProps {
   open: boolean;
@@ -47,8 +48,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
               <div className="admin-nav-group" key={group.label}>
                 <p>{group.label}</p>
                 {visibleItems.map((item) => {
-                  const active =
-                    pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  const active = isActivePath(pathname, item.href);
                   return (
                     <Link
                       className={active ? 'is-active' : undefined}

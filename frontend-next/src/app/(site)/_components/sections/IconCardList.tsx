@@ -1,4 +1,3 @@
-#user-client
 import { CARD_ICONS, Head, IconBadge, Shell, items, meta, type SectionProps } from "./shared";
 
 /** Danh sách thẻ có icon — metadata.configurations [{title,text}] (icon xoay vòng theo thiết kế). */

@@ -2,15 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "@/app/(site)/_components/forms";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
+import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("contact");
-  return {
+  return buildPageMetadata({
     title: page?.metaTitle ?? "Contact",
     description:
       page?.metaDescription ??
       "Contact Prime Nuts USA for California almond supply — B2B inquiries, quotations, and distribution partnerships.",
-  };
+    path: siteRoutes.contact,
+    image: page?.ogImagePath,
+    canonical: page?.canonicalUrl,
+  });
 }
 
 const CHECKLIST = [
@@ -153,7 +158,7 @@ export default async function ContactPage() {
 
           <p className="section-note reveal">
             Prefer a structured form? Use the detailed{" "}
-            <Link href="/#quote">B2B quote request form</Link> on our home page.
+            <Link href={siteRoutes.homeSection('quote')}>B2B quote request form</Link> on our home page.
           </p>
         </div>
       </section>

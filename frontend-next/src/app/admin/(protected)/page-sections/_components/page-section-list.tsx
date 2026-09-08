@@ -19,6 +19,7 @@ import {
   SECTION_DEFINITION_QUERY_KEY,
   type PageSection,
 } from '@/app/admin/(protected)/page-sections/_lib/page-section.service';
+import { adminRoutes } from '@/config/routes';
 
 export function PageSectionList() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export function PageSectionList() {
         label: 'Heading',
         type: 'text',
         align: 'left',
-        link: (row) => `/admin/page-sections/edit/${row.id}`,
+        link: (row) => adminRoutes.pageSections.edit(row.id),
       },
       {
         key: 'isActive',
@@ -110,10 +111,10 @@ export function PageSectionList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/page-sections/create');
+        router.push(adminRoutes.pageSections.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/page-sections/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.pageSections.edit(item.id));
         break;
       case 'sort':
         if (item?.id && event.value) {

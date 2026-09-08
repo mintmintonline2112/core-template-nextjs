@@ -2,16 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { NewsletterForm } from "@/app/(site)/_components/forms";
 import { getBlogCategories, getBlogPosts, getCmsPage, mediaUrl } from "@/app/(site)/_lib/cms";
+import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import type { BlogPost } from "@/types/cms";
+import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("news");
-  return {
+  return buildPageMetadata({
     title: page?.metaTitle ?? "News & Insights",
     description:
       page?.metaDescription ??
       "News, market updates, and industry insights from Prime Nuts USA.",
-  };
+    path: siteRoutes.news,
+    image: page?.ogImagePath,
+    canonical: page?.canonicalUrl,
+  });
 }
 
 const POSTS_PER_PAGE = 7;
@@ -67,13 +72,11 @@ export default async function NewsPage({
     pageNumber === 1 && !activeCategory ? posts : [undefined, ...posts];
   const gridPosts = rest.filter(Boolean) as BlogPost[];
 
-  const pageHref = (page: number) => {
-    const query = new URLSearchParams();
-    if (activeCategory) query.set("category", activeCategory.slug);
-    if (page > 1) query.set("page", String(page));
-    const qs = query.toString();
-    return qs ? `/news?${qs}` : "/news";
-  };
+  const pageHref = (page: number) =>
+    siteRoutes.newsFiltered({
+      category: activeCategory?.slug,
+      page: page > 1 ? page : undefined,
+    });
 
   return (
     <>
@@ -92,13 +95,13 @@ export default async function NewsPage({
         <div className="container">
           {categories.length > 0 ? (
             <div className="region-chips reveal" style={{ marginTop: 0 }}>
-              <Link href="/news" className={!activeCategory ? "active chip-link" : "chip-link"}>
+              <Link href={siteRoutes.news} className={!activeCategory ? "active chip-link" : "chip-link"}>
                 All
               </Link>
               {categories.map((category) => (
                 <Link
                   key={category.slug}
-                  href={`/news?category=${category.slug}`}
+                  href={siteRoutes.newsCategory(category.slug)}
                   className={
                     activeCategory?.slug === category.slug ? "active chip-link" : "chip-link"
                   }
@@ -119,7 +122,7 @@ export default async function NewsPage({
                   <span className="news-date">{formatDate(featured.publishedAt)}</span>
                 </div>
                 <h2>
-                  <Link href={`/news/${featured.slug}`} className="news-title-link">
+                  <Link href={siteRoutes.newsPost(featured.slug)} className="news-title-link">
                     {featured.title}
                   </Link>
                 </h2>
@@ -141,7 +144,7 @@ export default async function NewsPage({
             <div className="news-grid">
               {gridPosts.map((post) => (
                 <article className="news-card reveal" key={post.id}>
-                  <Link href={`/news/${post.slug}`} className="news-card-link">
+                  <Link href={siteRoutes.newsPost(post.slug)} className="news-card-link">
                     <Thumb post={post} className="news-card-thumb" />
                     <div className="news-meta">
                       {post.category ? <span className="news-tag">{post.category.name}</span> : null}
@@ -198,8 +201,8 @@ export default async function NewsPage({
           <h2>Looking for California Almond Supply?</h2>
           <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
           <div className="cta-band-actions">
-            <Link href="/contact" className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href="/products" className="btn btn-ghost">Browse Our Products</Link>
+            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
+            <Link href={siteRoutes.products} className="btn btn-ghost">Browse Our Products</Link>
           </div>
         </div>
       </section>

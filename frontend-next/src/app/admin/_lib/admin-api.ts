@@ -1,6 +1,7 @@
 import { env } from '@/lib/env';
 import { clearStoredUser } from './session';
 import type { ApiEnvelope } from './types';
+import { adminRoutes } from '@/config/routes';
 
 export class AdminApiError extends Error {
   constructor(
@@ -73,9 +74,9 @@ function expireSession(): void {
   clearStoredUser();
   if (
     typeof window !== 'undefined' &&
-    !window.location.pathname.startsWith('/admin/login')
+    !window.location.pathname.startsWith(adminRoutes.login)
   ) {
-    window.location.assign('/admin/login');
+    window.location.assign(adminRoutes.login);
   }
 }
 

@@ -15,6 +15,7 @@ import {
   zhTranslationsPayload,
 } from '@/app/admin/_lib/translation-fields';
 import { menuItemService, MENU_ITEM_QUERY_KEY } from '@/app/admin/(protected)/menus/_lib/menu-item.service';
+import { adminRoutes } from '@/config/routes';
 
 interface FormValues {
   label: string;
@@ -120,7 +121,7 @@ export function MenuItemForm({ id }: { id?: number }) {
 
       await queryClient.invalidateQueries({ queryKey: MENU_ITEM_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật menu' : 'Đã tạo menu');
-      router.push('/admin/menus');
+      router.push(adminRoutes.menus.list);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -134,7 +135,7 @@ export function MenuItemForm({ id }: { id?: number }) {
       title={isEdit ? 'Sửa menu' : 'Tạo menu'}
       subtitle={isEdit ? 'Cập nhật mục menu website' : 'Thêm mục menu cho website'}
       breadcrumbs={[
-        { label: 'Menu website', link: '/admin/menus' },
+        { label: 'Menu website', link: adminRoutes.menus.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -143,7 +144,7 @@ export function MenuItemForm({ id }: { id?: number }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push('/admin/menus')}
+      onCancel={() => router.push(adminRoutes.menus.list)}
     />
   );
 }

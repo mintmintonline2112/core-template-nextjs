@@ -7,6 +7,7 @@ import { DataTable } from '@/app/admin/_components/data-table/data-table';
 import type { TableColumn, TableActionEvent } from '@/app/admin/_components/data-table/types';
 import { confirmAction } from '@/app/admin/_lib/confirm';
 import { roleService, ROLE_QUERY_KEY, type Role } from '@/app/admin/(protected)/roles/_lib/role.service';
+import { adminRoutes } from '@/config/routes';
 
 export function RoleList() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export function RoleList() {
         label: 'Tên vai trò',
         type: 'text',
         align: 'left',
-        link: (row) => `/admin/roles/edit/${row.id}`,
+        link: (row) => adminRoutes.roles.edit(row.id),
       },
       { key: 'description', label: 'Mô tả', type: 'text', align: 'left' },
       {
@@ -38,10 +39,10 @@ export function RoleList() {
     const item = event.item;
     switch (event.action) {
       case 'add':
-        router.push('/admin/roles/create');
+        router.push(adminRoutes.roles.create);
         break;
       case 'edit':
-        if (item?.id) router.push(`/admin/roles/edit/${item.id}`);
+        if (item?.id) router.push(adminRoutes.roles.edit(item.id));
         break;
       case 'delete':
         if (item?.id) {

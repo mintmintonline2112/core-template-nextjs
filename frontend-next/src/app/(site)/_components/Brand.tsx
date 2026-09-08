@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteRoutes } from "@/config/routes";
 
 /** Logo + wordmark dùng chung cho header và footer. */
 export function BrandMark({ footer = false }: { footer?: boolean }) {
@@ -30,7 +31,7 @@ export function BrandMark({ footer = false }: { footer?: boolean }) {
 export function Brand({ footer = false }: { footer?: boolean }) {
   return (
     <Link
-      href="/"
+      href={siteRoutes.home}
       className={footer ? "brand brand-footer" : "brand"}
       aria-label="Prime Nuts USA — home"
     >

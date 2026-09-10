@@ -18,6 +18,8 @@ export function getErrorMessage(err: unknown, fallback = 'Đã có lỗi xảy r
 export function resolveImageUrl(path?: string | null): string | null {
   if (!path) return null;
   if (path.startsWith('http') || path.startsWith('data:')) return path;
+  // /images/... là file tĩnh trong frontend-next/public (logo mặc định) — lấy từ site
+  if (path.startsWith('/images/')) return `${env.siteUrl}${path}`;
   const origin = env.apiUrl.replace(/\/api$/, '');
   return `${origin}/${path.replace(/^\//, '')}`;
 }

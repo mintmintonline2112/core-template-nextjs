@@ -11,6 +11,8 @@ const ALLOWED_KEYS = new Set([
   'faviconUrl',
   'logoUrl',
   'logoHeight',
+  'footerLogoUrl', // logo riêng cho footer (nền xanh đậm) — trống dùng logo chính
+  'footerLogoHeight',
   'heroImageUrl',
   'ogImageUrl', // ảnh đại diện khi chia sẻ link (og:image) — trống thì dùng ảnh bìa
   'fontFamily',
@@ -27,6 +29,18 @@ const ALLOWED_KEYS = new Set([
   'postTitleSize',
 ]);
 
+/**
+ * Giá trị mặc định do code sở hữu — trả về khi DB chưa có key (admin mở Cài đặt
+ * là thấy sẵn). Đường dẫn /images/... là file tĩnh của frontend-next/public,
+ * ảnh admin chọn từ Thư viện sẽ là /uploads/... và ghi đè các giá trị này.
+ */
+const DEFAULT_SETTINGS: Record<string, unknown> = {
+  logoUrl: '/images/logo-primenut-main.png',
+  logoHeight: 42,
+  footerLogoUrl: '/images/logo-primenut-footer.png',
+  footerLogoHeight: 44,
+};
+
 @Injectable()
 export class SettingsService {
   constructor(
@@ -36,7 +50,7 @@ export class SettingsService {
 
   async getAll(): Promise<Record<string, unknown>> {
     const rows = await this.settingsRepo.find();
-    const map: Record<string, unknown> = {};
+    const map: Record<string, unknown> = { ...DEFAULT_SETTINGS };
     for (const row of rows) map[row.key] = row.value;
     return map;
   }

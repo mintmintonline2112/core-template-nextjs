@@ -27,6 +27,9 @@ export interface SiteSettings {
   faviconUrl?: string;
   logoUrl?: string;
   logoHeight?: number;
+  /** Logo riêng cho footer (nền tối) — trống dùng logoUrl. */
+  footerLogoUrl?: string;
+  footerLogoHeight?: number;
   heroImageUrl?: string;
   /** Ảnh đại diện khi chia sẻ link (og:image) — trống thì dùng heroImageUrl. */
   ogImageUrl?: string;

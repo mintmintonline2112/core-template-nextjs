@@ -23,7 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   const image = settings.ogImageUrl ?? settings.heroImageUrl ?? DEFAULT_OG_IMAGE;
   // Admin → Cài đặt → Favicon: có thì đè /favicon.svg mặc định.
-  const favicon = mediaUrl(settings.faviconUrl);
+  const favicon = settings.faviconUrl?.startsWith("/images/")
+    ? settings.faviconUrl
+    : mediaUrl(settings.faviconUrl);
   return {
     title: { default: SITE_DEFAULT_TITLE, template: `%s — ${SITE_NAME}` },
     ...(favicon ? { icons: { icon: favicon } } : {}),
@@ -53,12 +55,19 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
   // Admin → Cài đặt → Font chữ: đè --font-main của site; trống = Roboto mặc định.
   const fontStack = settings.fontFamily ? FONT_STACKS[settings.fontFamily] : undefined;
 
-  // Admin → Cài đặt → Logo: ảnh upload (/uploads/...) trỏ về backend qua mediaUrl.
+  // Admin → Cài đặt → Logo. /images/... là file tĩnh của site (logo mặc định),
+  // còn ảnh chọn từ Thư viện (/uploads/...) trỏ về backend qua mediaUrl.
+  const logo = (path?: string | null) =>
+    !path ? null : path.startsWith("/images/") ? path : mediaUrl(path);
   const brand = {
-    logoUrl: mediaUrl(settings.logoUrl),
+    logoUrl: logo(settings.logoUrl),
     logoHeight: settings.logoHeight ?? null,
     brandName: settings.brandName ?? null,
   };
+  // Footer có logo riêng (bản sáng cho nền xanh đậm); để trống thì dùng logo chính.
+  const footerBrand = settings.footerLogoUrl
+    ? { ...brand, logoUrl: logo(settings.footerLogoUrl), logoHeight: settings.footerLogoHeight ?? null }
+    : brand;
 
   return (
     <>
@@ -68,7 +77,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <SiteEffects />
       <Header menu={menu} brand={brand} />
       <main id="main">{children}</main>
-      <Footer brand={brand} />
+      <Footer brand={footerBrand} />
     </>
   );
 }

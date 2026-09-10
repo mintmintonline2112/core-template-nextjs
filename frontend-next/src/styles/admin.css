@@ -2795,6 +2795,9 @@ textarea.gf-control {
 }
 
 .me-json { font-family: Consolas, Menlo, monospace; font-size: 12px; }
+
+/* Ô xem trước logo footer: nền xanh đậm giống footer thật để thấy đúng độ tương phản */
+.st-media-preview-dark { background: #142718; border-color: rgba(217, 180, 95, 0.35); }
 .me-json-error { border-color: var(--admin-danger) !important; }
 .me-error { color: var(--admin-danger); }
 .me-advanced { margin-top: 4px; }

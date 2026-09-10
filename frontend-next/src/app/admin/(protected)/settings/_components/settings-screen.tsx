@@ -17,7 +17,7 @@ import {
   type ThemeColorOverrides,
 } from '@/app/admin/(protected)/settings/_lib/settings.service';
 
-type PickerTarget = 'logo' | 'favicon' | 'hero' | 'og' | null;
+type PickerTarget = 'logo' | 'footerLogo' | 'favicon' | 'hero' | 'og' | null;
 
 export function SettingsScreen() {
   const queryClient = useQueryClient();
@@ -30,7 +30,9 @@ export function SettingsScreen() {
   const [footerText, setFooterText] = useState('');
   const [faviconUrl, setFaviconUrl] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
-  const [logoHeight, setLogoHeight] = useState(34);
+  const [logoHeight, setLogoHeight] = useState(42);
+  const [footerLogoUrl, setFooterLogoUrl] = useState('');
+  const [footerLogoHeight, setFooterLogoHeight] = useState(44);
   const [heroImageUrl, setHeroImageUrl] = useState('');
   const [ogImageUrl, setOgImageUrl] = useState('');
   const [fontFamily, setFontFamily] = useState('');
@@ -58,7 +60,9 @@ export function SettingsScreen() {
     setFooterText(data.footerText ?? '');
     setFaviconUrl(data.faviconUrl ?? '');
     setLogoUrl(data.logoUrl ?? '');
-    setLogoHeight(data.logoHeight ?? 34);
+    setLogoHeight(data.logoHeight ?? 42);
+    setFooterLogoUrl(data.footerLogoUrl ?? '');
+    setFooterLogoHeight(data.footerLogoHeight ?? 44);
     setHeroImageUrl(data.heroImageUrl ?? '');
     setOgImageUrl(data.ogImageUrl ?? '');
     setFontFamily(data.fontFamily ?? '');
@@ -106,6 +110,8 @@ export function SettingsScreen() {
         faviconUrl: faviconUrl || null,
         logoUrl: logoUrl || null,
         logoHeight: logoUrl ? logoHeight : null,
+        footerLogoUrl: footerLogoUrl || null,
+        footerLogoHeight: footerLogoUrl ? footerLogoHeight : null,
         heroImageUrl: heroImageUrl || null,
         ogImageUrl: ogImageUrl || null,
         fontFamily: fontFamily || null,
@@ -155,6 +161,7 @@ export function SettingsScreen() {
   }
 
   const logoPreview = resolveImageUrl(logoUrl);
+  const footerLogoPreview = resolveImageUrl(footerLogoUrl);
   const faviconPreview = resolveImageUrl(faviconUrl);
   const heroPreview = resolveImageUrl(heroImageUrl);
   const ogPreview = resolveImageUrl(ogImageUrl);
@@ -291,7 +298,7 @@ export function SettingsScreen() {
               </button>
               {logoUrl && (
                 <button type="button" className="adm-btn" onClick={() => setLogoUrl('')}>
-                  <X size={14} /> Bỏ logo
+                  <RotateCcw size={14} /> Về logo mặc định
                 </button>
               )}
             </div>
@@ -330,6 +337,43 @@ export function SettingsScreen() {
               )}
             </div>
             <p className="gf-hint">Nên dùng ảnh vuông (PNG), tối thiểu 64×64px.</p>
+          </div>
+        </div>
+
+        <div className="st-media-row">
+          <div className="st-media">
+            <label className="gf-label">Logo footer (nền xanh đậm)</label>
+            <div className="st-media-preview st-media-preview-dark">
+              {footerLogoPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={footerLogoPreview} alt="Logo footer" style={{ height: footerLogoHeight }} />
+              ) : (
+                <span className="st-media-empty">Trống — footer dùng chung logo website</span>
+              )}
+            </div>
+            <div className="st-media-actions">
+              <button type="button" className="adm-btn" onClick={() => setPickerTarget('footerLogo')}>
+                Chọn từ Thư viện
+              </button>
+              {footerLogoUrl && (
+                <button type="button" className="adm-btn" onClick={() => setFooterLogoUrl('')}>
+                  <RotateCcw size={14} /> Về logo mặc định
+                </button>
+              )}
+            </div>
+            {footerLogoUrl && (
+              <div className="st-logo-size">
+                <label className="gf-label">Chiều cao logo footer: {footerLogoHeight}px</label>
+                <input
+                  type="range"
+                  min={20}
+                  max={140}
+                  value={footerLogoHeight}
+                  onChange={(e) => setFooterLogoHeight(Number(e.target.value))}
+                />
+              </div>
+            )}
+            <p className="gf-hint">Nên dùng bản logo màu sáng (PNG trong suốt) để nổi trên nền xanh của footer.</p>
           </div>
         </div>
         <h3 className="st-subsection-title">Ảnh bìa trang chủ</h3>
@@ -572,6 +616,7 @@ export function SettingsScreen() {
         onClose={() => setPickerTarget(null)}
         onSelect={(url) => {
           if (pickerTarget === 'logo') setLogoUrl(url);
+          if (pickerTarget === 'footerLogo') setFooterLogoUrl(url);
           if (pickerTarget === 'favicon') setFaviconUrl(url);
           if (pickerTarget === 'hero') setHeroImageUrl(url);
           if (pickerTarget === 'og') setOgImageUrl(url);

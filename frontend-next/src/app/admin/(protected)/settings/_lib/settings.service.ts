@@ -23,6 +23,8 @@ export interface SiteSettings {
   faviconUrl?: string;
   logoUrl?: string;
   logoHeight?: number;
+  footerLogoUrl?: string;
+  footerLogoHeight?: number;
   heroImageUrl?: string;
   ogImageUrl?: string;
   fontFamily?: string;

@@ -1208,16 +1208,28 @@ body { counter-reset: sect; }
   line-height: 1.45;
 }
 
-.chain-step-highlight {
-  background: rgba(217, 180, 95, 0.1);
-  border-color: rgba(217, 180, 95, 0.55);
+/* Mỗi ô là một nút: bấm vào thì slider nhảy tới ảnh tương ứng */
+.chain-step {
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  width: 100%;
 }
-.chain-step-highlight .chain-num {
+
+/* Ô đang được chọn — sáng vàng rõ hơn cả ô highlight */
+.chain-step-active {
+  background: rgba(217, 180, 95, 0.16);
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 1px rgba(217, 180, 95, 0.35), var(--shadow-lift);
+  transform: translateY(-4px);
+}
+.chain-step-active .chain-num {
   background: var(--gold-400);
   border-color: var(--gold-400);
   color: var(--green-900);
 }
-.chain-step-highlight h3 { color: var(--gold-300); }
+.chain-step-active h3 { color: var(--gold-300); }
 
 /* ============ LOGISTICS ============ */
 
@@ -1402,7 +1414,7 @@ body { counter-reset: sect; }
   inset: 0;
   background-image: url("/images/almonds-table.webp");
   background-size: cover;
-  background-position: center;
+  background-position: var(--product-card-position, center);
   opacity: 0.14;
   pointer-events: none;
 }
@@ -1597,7 +1609,48 @@ body { counter-reset: sect; }
 
 .footer-col a:not(.btn):hover { color: var(--gold-300); }
 
-.footer-address { font-size: 1rem; margin-bottom: 1.2rem; }
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+  color: var(--light-soft);
+  font-size: 0.94rem;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.footer-contact .footer-contact-row,
+.footer-col .footer-contact a.footer-contact-row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 0.72rem;
+  width: 100%;
+  padding: 0;
+  color: var(--light-soft);
+  font-size: inherit;
+}
+
+.footer-contact-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  max-width: 18px;
+  margin-top: 0.18rem;
+  color: var(--gold-300);
+}
+
+.footer-contact-icon svg {
+  width: 18px;
+  height: 18px;
+  max-width: 18px;
+  max-height: 18px;
+  display: block;
+}
+
+.footer-contact a.footer-contact-row:hover { color: var(--gold-300); }
 
 .footer-bottom {
   display: flex;
@@ -2091,26 +2144,206 @@ html.gsap :is(.btn-gold, .btn-primary) {
 .footer-legal a { color: inherit; text-decoration: underline; }
 .footer-legal a:hover { color: var(--gold-300); }
 
-/* ---------- Product cards ---------- */
+/* ---------- Natural product cards ---------- */
 
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 1.1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line-soft);
+.natural-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
 }
 
-.chip-row span {
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.26rem 0.7rem;
+.natural-product-card {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.1fr);
+  overflow: hidden;
+  min-height: 290px;
+  background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 100px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: transform 300ms var(--ease), border-color 300ms var(--ease), box-shadow 300ms var(--ease);
+}
+
+.natural-product-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-400);
+  box-shadow: var(--shadow-lift);
+}
+
+.natural-card-media {
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--green-900);
+}
+
+.natural-card-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 290px;
+  display: block;
+  object-fit: cover;
+  transition: transform 500ms var(--ease);
+}
+
+.natural-product-card:hover .natural-card-media img { transform: scale(1.045); }
+
+.natural-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.7rem 1.6rem;
+}
+
+.natural-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.15rem;
   color: var(--ink-faint);
-  background: var(--cream);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.natural-card-meta .icon-badge {
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.natural-card-body h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1.45rem;
+}
+
+.natural-card-body p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* ---------- Processed format catalogue ---------- */
+
+.processed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.processed-card {
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: transform 300ms var(--ease), border-color 300ms var(--ease), box-shadow 300ms var(--ease);
+}
+
+.processed-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold-400);
+  box-shadow: var(--shadow-lift);
+}
+
+.processed-card-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--cream-2);
+}
+
+.processed-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 39, 24, 0.02) 45%, rgba(20, 39, 24, 0.32) 100%);
+  pointer-events: none;
+}
+
+.processed-card-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 500ms var(--ease);
+}
+
+.processed-card:hover .processed-card-media img { transform: scale(1.045); }
+
+.processed-card-number {
+  position: absolute;
+  z-index: 1;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.42rem 0.72rem;
+  background: rgba(20, 39, 24, 0.9);
+  border: 1px solid rgba(217, 180, 95, 0.48);
+  border-radius: 999px;
+  color: var(--cream);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.processed-card-body {
+  position: relative;
+  min-height: 190px;
+  padding: 1.55rem 1.6rem 1.7rem;
+  border-top: 3px solid var(--gold-400);
+}
+
+.processed-card-icon {
+  position: absolute;
+  top: -1.8rem;
+  right: 1.3rem;
+  margin: 0;
+  background: var(--green-700);
+  border-color: var(--cream);
+  color: var(--cream);
+  box-shadow: 0 8px 18px -10px rgba(20, 39, 24, 0.72);
+}
+
+.processed-card-body h3 {
+  max-width: calc(100% - 3.2rem);
+  margin: 0 0 0.55rem;
+  font-size: 1.4rem;
+}
+
+.processed-card-body p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 1080px) {
+  .processed-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .natural-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .processed-grid { grid-template-columns: 1fr; }
+
+  .natural-product-card { grid-template-columns: 1fr; }
+  .natural-card-media {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+  .natural-card-media img { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .natural-product-card,
+  .natural-card-media img,
+  .processed-card,
+  .processed-card-media img { transition: none; }
 }
 
 .selection-band {
@@ -2759,6 +2992,46 @@ html.gsap :is(.btn-gold, .btn-primary) {
 }
 
 /* --- Orders: blob hữu cơ + badge tròn + hàng cấu hình --- */
+.orders-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(3rem, 6vw, 5.5rem);
+}
+
+.orders-copy { align-self: stretch; }
+
+.orders-warehouse-figure {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 520px;
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: 0 0.75rem 0.75rem 0;
+}
+
+.orders-warehouse-figure::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  width: 72%;
+  height: 72%;
+  background: var(--gold-400);
+  border-radius: 0.5rem 0.5rem 2rem 0.5rem;
+  opacity: 0.72;
+}
+
+.orders-warehouse-figure img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  display: block;
+  object-fit: cover;
+  object-position: center 62%;
+  border: 1px solid var(--line);
+  border-radius: 2rem 0.5rem 2rem 0.5rem;
+  box-shadow: var(--shadow-lift);
+}
+
 .orders-side { display: flex; flex-direction: column; gap: 1.8rem; }
 
 .blob-figure {
@@ -2812,6 +3085,11 @@ html.gsap :is(.btn-gold, .btn-primary) {
 .config-rows .icon-badge { flex-shrink: 0; }
 .config-rows h4 { margin: 0; font-size: 1.08rem; }
 .config-rows p { margin: 0.15rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+@media (max-width: 900px) {
+  .orders-layout { grid-template-columns: 1fr; }
+  .orders-warehouse-figure { margin-top: 2rem; }
+}
 
 /* --- Logistics: chứng từ kẹp ảnh tròn trung tâm --- */
 .doc-features {

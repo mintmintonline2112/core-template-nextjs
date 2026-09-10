@@ -1,0 +1,4 @@
+# Script chạy trên Linux phải giữ xuống dòng LF, nếu bị CRLF của Windows
+# thì bash báo lỗi kiểu: /usr/bin/env: 'bash\r': No such file or directory
+*.sh text eol=lf
+*.sql text eol=lf

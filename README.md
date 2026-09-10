@@ -37,20 +37,52 @@ Sơ đồ trên server:
 
 ### Cập nhật code (deploy bản mới)
 
+**Một lệnh duy nhất:**
+
 ```bash
-cd /www/wwwroot/primenuts.vn && git pull
-cd backend && npm install && npm run build && npm run db:run:prod && npm run db:seed:prod
-cd ../frontend-next && npm install && npm run build
+bash /www/wwwroot/primenuts.vn/deploy.sh
 ```
 
-Rồi **restart cả 2 project**: aaPanel → Website → Node.js Project → Restart
-`primenuts_api` và `primenuts_web` (project dạng Default, KHÔNG dùng `pm2 restart`).
+Script làm hết: `git pull` → build backend → migration + seed → build frontend
+→ restart 2 app → kiểm tra site/api còn sống. Frontend được build ra thư mục tạm
+rồi mới tráo vào `.next`, nên site **không bị trắng trang** giữa lúc build
+(lỗi "Application error: a client-side exception" trước đây là do build đè trực tiếp).
+
+Chạy lần đầu trên máy mới, nếu git báo `dubious ownership` thì cấp phép một lần:
+
+```bash
+git config --global --add safe.directory /www/wwwroot/primenuts.vn
+```
+
+Ghi chú:
 
 - `npm install` chỉ cần khi `package.json` đổi; `db:run:prod`/`db:seed:prod` chạy dư
   vô hại (migration đã chạy bị bỏ qua, seed insert-only không đè dữ liệu admin sửa).
-- Sửa `NEXT_PUBLIC_*` trong `frontend-next/.env.local` → **bắt buộc** `npm run build`
-  lại rồi restart (giá trị bị nhúng vào code lúc build). Sửa `backend/.env` → chỉ cần
-  restart `primenuts_api`.
+- Sửa `NEXT_PUBLIC_*` trong env của frontend → **bắt buộc** build lại rồi restart
+  (giá trị bị nhúng vào code lúc build). Sửa `backend/.env` → chỉ cần restart `primenuts_api`.
+
+### Bật auto-restart (pm2)
+
+Node project dạng **Default Project** của aaPanel không restart được từ dòng lệnh,
+nên `deploy.sh` sẽ báo "không tự restart được" và mình vẫn phải bấm 2 nút trong panel.
+Chuyển sang pm2 một lần là hết phải bấm, lại tự bật lại khi app crash hoặc VPS reboot:
+
+```bash
+# 1. aaPanel → Node.js Project → bấm STOP cả 2 project (TUYỆT ĐỐI không Delete,
+#    xoá là mất luôn cấu hình domain + SSL + reverse proxy của site)
+
+# 2. Cho pm2 quản lý 2 app trên đúng port cũ
+npm install -g pm2   # nếu chưa có
+cd /www/wwwroot/primenuts.vn/backend      && pm2 start npm --name primenuts_api -- run start:prod
+cd /www/wwwroot/primenuts.vn/frontend-next && pm2 start npm --name primenuts_web -- run start
+
+# 3. Ghi nhớ để tự chạy lại sau khi reboot
+pm2 save
+pm2 startup    # chạy tiếp dòng lệnh mà nó in ra
+```
+
+Xong bước này thì `bash deploy.sh` là tự động 100%. Kiểm tra: `pm2 ls`, xem log:
+`pm2 logs primenuts_web`. Nginx không cần đổi gì vì vẫn proxy vào 127.0.0.1:3001/3010.
 
 ### Cache
 

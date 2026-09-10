@@ -30,3 +30,34 @@ and Wikimedia Commons (CC-licensed files require the attribution below).
   https://commons.wikimedia.org/wiki/File:Almonds_-_in_shell,_shell_cracked_open,_shelled,_blanched.jpg
 - **container-ship.jpg** — "Container ship Marianne Schulte at the container terminal Burchardkai, port of Hamburg" by Raimond Spekking · CC BY-SA 4.0
   https://commons.wikimedia.org/wiki/File:Container_ship_Marianne_Schulte_(IMO_9215907)_at_the_container_terminal_Burchardkai,_port_of_Hamburg-4750.jpg
+
+## Product card backgrounds
+
+Pexels photos are free to use under the Pexels license; attribution is included here as a courtesy.
+
+- **bulk-warehouse.jpg** — Pexels photo 10834810 · Ihsan Adityawarman
+  https://www.pexels.com/photo/stacked-boxes-in-a-warehouse-10834810/
+- **products/nonpareil.jpg** — Pexels photo 16706697
+  https://www.pexels.com/photo/close-up-of-a-bowl-with-almonds-16706697/
+- **products/independence.jpg** — Pexels photo 6802627 · cottonbro studio
+  https://www.pexels.com/photo/almonds-in-white-ceramic-bowl-6802627/
+- **products/monterey.jpg** — Pexels photo 5035250 · Abdullah Hussain
+  https://www.pexels.com/photo/almonds-on-a-glass-bowl-5035250/
+- **products/carmel.jpg** — Pexels photo 4051132 · alleksana
+  https://www.pexels.com/photo/close-up-photo-of-almonds-4051132/
+- **products/butte.jpg** — Pexels photo 6003907 · Nixon Johnson
+  https://www.pexels.com/photo/almonds-in-red-bowl-6003907/
+- **products/padre.jpg** — Pexels photo 5959628 · subash c
+  https://www.pexels.com/photo/brown-almonds-in-close-up-shot-5959628/
+- **products/sliced.jpg** — Pexels photo 8951057 · Ivan S
+  https://www.pexels.com/photo/close-up-shot-of-almond-slices-8951057/
+- **products/almond-flour.jpg** — Pexels photo 6824312 · Eva Bronzini
+  https://www.pexels.com/photo/6824312/
+- **products/custom-specifications.jpg** — Pexels photo 34274121 · verolova
+  https://www.pexels.com/photo/34274121/
+- **products/blanched.jpg** — "Blanched almonds" by Nadiatalent · Public domain
+  https://commons.wikimedia.org/wiki/File:Blanched_almonds.jpg
+- **products/diced.jpg** — "Bowl of chopped almonds" by Douglas P Perkins · CC BY-SA 3.0
+  https://commons.wikimedia.org/wiki/File:Bowl_of_chopped_almonds.jpg
+- **products/slivered.jpg** — "Slivered Almond, Jumbo Cashew, Kernel Pistachio and Pecan" by Hedi Aghlara · CC BY-SA 3.0
+  https://commons.wikimedia.org/wiki/File:Slivered_Almond,_Jumbo_Cashew,_Kernel_Pistachio_and_Pecan.JPG

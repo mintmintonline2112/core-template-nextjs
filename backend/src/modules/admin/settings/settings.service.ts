@@ -22,7 +22,7 @@ const ALLOWED_KEYS = new Set([
   'translations', // { vi: { siteTitle, siteDescription } } — merge khi ?lang=vi
   'socialLinks', // { facebook, youtube, instagram, linkedin } — khung social trang Contact
   'contactPage', // cấu hình trang Contact (hero, thông tin công ty, form)
-  'contactInfo', // { email, phone, address, businessHours } hiển thị trên website
+  'contactInfo', // { location, address, email, phone } hiển thị trên website
   // Key kế thừa từ admin UI cũ — site Prime Nuts chưa dùng, giữ để form settings không lỗi.
   'postTitleSize',
 ]);

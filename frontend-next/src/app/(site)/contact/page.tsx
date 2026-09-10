@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ContactForm } from "@/app/(site)/_components/forms";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
+import { SITE_CONTACT } from "@/config/contact";
 import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,24 +27,25 @@ const CHECKLIST = [
 
 type ContactInfo = {
   location: string;
+  address: string;
   email: string;
   phone: string;
-  businessHours: string;
 };
 
 const DEFAULT_INFO: ContactInfo = {
-  location: "California, United States",
-  email: "info@primenutsusa.com",
-  phone: "+1 (209) 000-0000",
-  businessHours: "Monday – Friday · 8:00 AM – 5:00 PM (Pacific Time)",
+  location: SITE_CONTACT.location,
+  address: SITE_CONTACT.address,
+  email: SITE_CONTACT.email,
+  phone: SITE_CONTACT.phone,
 };
 
 export default async function ContactPage() {
   // Nội dung sửa được từ admin; API tắt → fallback hardcode.
   const page = await getCmsPage("contact");
   const sections = sectionMap(page);
-  const meta = (sections.get("contact-info")?.metadata ?? {}) as Partial<ContactInfo>;
-  const info: ContactInfo = { ...DEFAULT_INFO, ...meta };
+  // Thông tin liên hệ chính thức lấy từ cấu hình dùng chung, không để metadata
+  // CMS cũ ghi đè bằng địa chỉ/email/số điện thoại đã hết hiệu lực.
+  const info: ContactInfo = DEFAULT_INFO;
   const checklistSection = sections.get("quotation-checklist");
   const checklist =
     ((checklistSection?.metadata?.checklist as string[] | undefined) ?? CHECKLIST).filter(Boolean);
@@ -88,6 +90,17 @@ export default async function ContactPage() {
               <li>
                 <span className="icon-badge" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 21V8l8-5 8 5v13" /><path d="M8 21v-8h8v8M3 21h18" />
+                  </svg>
+                </span>
+                <div>
+                  <h4>Address</h4>
+                  <p>{info.address}</p>
+                </div>
+              </li>
+              <li>
+                <span className="icon-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 7 8.5-7" />
                   </svg>
                 </span>
@@ -104,18 +117,7 @@ export default async function ContactPage() {
                 </span>
                 <div>
                   <h4>Phone / WhatsApp</h4>
-                  <p>{info.phone}</p>
-                </div>
-              </li>
-              <li>
-                <span className="icon-badge" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />
-                  </svg>
-                </span>
-                <div>
-                  <h4>Business Hours</h4>
-                  <p>{info.businessHours}</p>
+                  <p><a href={`tel:${info.phone.replace(/\D/g, "")}`}>{info.phone}</a></p>
                 </div>
               </li>
             </ul>

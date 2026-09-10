@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { QuoteForm } from "@/app/(site)/_components/forms";
 import { SizeScale } from "@/app/(site)/_components/SizeScale";
-import { SourcingSlider, type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
+import { SourcingBlock } from "@/app/(site)/_components/SourcingBlock";
+import { type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { getCmsPage, mediaUrl, sectionMap } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
@@ -57,7 +58,7 @@ const CHAIN = [
   { title: "Hullers & Shellers", text: "First-stage processing" },
   { title: "Processors", text: "Sizing, sorting & grading" },
   { title: "Packers", text: "Export-ready packaging" },
-  { title: "Prime Nuts USA", text: "Sourcing & trade coordination", highlight: true },
+  { title: "Prime Nuts USA", text: "Sourcing & trade coordination" },
   { title: "Buyers & Distributors", text: "U.S. & global markets" },
 ];
 
@@ -204,7 +205,6 @@ export default async function HomePage() {
       ? cmsChain.map((title, index) => ({
           title,
           text: title === CHAIN[index]?.title ? CHAIN[index].text : "",
-          highlight: /prime nuts/i.test(title),
         }))
       : CHAIN;
 
@@ -422,14 +422,22 @@ export default async function HomePage() {
       {/* ============ BULK & CONTAINER ============ */}
       <section className="section" id="orders">
         <div className="container">
-          <div className="split">
-            <div className="split-copy reveal">
+          <div className="split orders-layout">
+            <div className="split-copy orders-copy reveal">
               <p className="eyebrow">{eyebrow("orders", "Bulk & Container Orders")}</p>
               <h2>{heading("orders", "Built for B2B Supply")}</h2>
               <Intro
                 sectionKey="orders"
                 fallback="From domestic wholesale volumes to international container shipments."
               />
+              <figure className="orders-warehouse-figure">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/bulk-warehouse.jpg"
+                  alt="Palletized cartons stored in a commercial warehouse"
+                  loading="lazy"
+                />
+              </figure>
             </div>
 
             {/* Ảnh blob hữu cơ + badge tròn (tham chiếu Kaffa) và các dòng cấu hình đóng gói */}
@@ -467,17 +475,7 @@ export default async function HomePage() {
             />
           </div>
 
-          <SourcingSlider slides={sourcingSlides} />
-
-          <ol className="chain reveal">
-            {chainSteps.map((step, index) => (
-              <li className={`chain-step${step.highlight ? " chain-step-highlight" : ""}`} key={step.title}>
-                <span className="chain-num">{index + 1}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </li>
-            ))}
-          </ol>
+          <SourcingBlock slides={sourcingSlides} chain={chainSteps} />
 
           <p className="section-note section-note-light reveal">
             This sourcing network allows us to respond to different product specifications,

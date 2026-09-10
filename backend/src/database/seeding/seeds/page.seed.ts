@@ -141,6 +141,7 @@ const PAGES: PageDefinition[] = [
             { image: '/images/green-almond.jpg', caption: 'Checked by hand in the field' },
             { image: '/images/kernels-study.jpg', caption: 'Sized, sorted & graded' },
             { image: '/images/ship-color.webp', caption: 'Export-ready for global markets' },
+            { image: '/images/almonds-ramekin.webp', caption: 'Ready for retail & distribution' },
           ],
         },
         sortOrder: 5,
@@ -297,10 +298,10 @@ const PAGES: PageDefinition[] = [
         content:
           '<p>We work with commercial buyers — importers, distributors, wholesalers, food manufacturers, roasters, and private-label brands. We typically respond to commercial inquiries within 1–2 business days.</p>',
         metadata: {
-          location: 'California, United States',
-          email: 'info@primenutsusa.com',
-          phone: '+1 (209) 000-0000',
-          businessHours: 'Monday – Friday · 8:00 AM – 5:00 PM (Pacific Time)',
+          location: 'Việt Nam',
+          address: 'Tòa Nhà Doji, Lầu 15, Phòng 1505, 81-83-83B-85 Hàm Nghi, Phường Sài Gòn, TP.HCM',
+          email: 'hello@primenuts.vn',
+          phone: '090 119 3378',
         },
         sortOrder: 1,
       },

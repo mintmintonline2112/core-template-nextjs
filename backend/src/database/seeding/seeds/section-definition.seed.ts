@@ -95,7 +95,7 @@ const DEFINITIONS: DefinitionSeed[] = [
       },
       {
         key: 'chain', label: 'Các bước chuỗi cung ứng', type: 'stringList',
-        hint: 'Bước chứa chữ "Prime Nuts" sẽ được tô vàng nổi bật.',
+        hint: 'Mỗi bước là một nút bấm được: bấm bước số N sẽ chuyển slider tới ảnh số N. Nên để số bước bằng số ảnh ở trên.',
       },
     ],
   },
@@ -178,15 +178,15 @@ const DEFINITIONS: DefinitionSeed[] = [
   {
     pageSlug: 'contact', sectionKey: 'contact-info', sortOrder: 1,
     label: 'Thẻ thông tin liên hệ',
-    description: 'Địa chỉ, email, điện thoại và giờ làm việc ở trang Contact.',
+    description: 'Địa điểm, địa chỉ, email và điện thoại ở trang Contact.',
     fields: [
       {
         key: '__self__', label: 'Thông tin liên hệ', type: 'textMap',
         fields: [
           { name: 'location', label: 'Địa điểm' },
+          { name: 'address', label: 'Địa chỉ' },
           { name: 'email', label: 'Email' },
           { name: 'phone', label: 'Điện thoại / WhatsApp' },
-          { name: 'businessHours', label: 'Giờ làm việc' },
         ],
       },
     ],

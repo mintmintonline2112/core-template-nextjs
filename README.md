@@ -44,9 +44,9 @@ bash /www/wwwroot/primenuts.vn/deploy.sh
 ```
 
 Script làm hết: `git pull` → build backend → migration + seed → build frontend
-→ restart 2 app → kiểm tra site/api còn sống. Frontend được build ra thư mục tạm
-rồi mới tráo vào `.next`, nên site **không bị trắng trang** giữa lúc build
-(lỗi "Application error: a client-side exception" trước đây là do build đè trực tiếp).
+trực tiếp vào thư mục chuẩn `.next` → restart 2 app → kiểm tra site/api còn sống.
+Không đổi tên output sau build vì manifest runtime của Next.js phụ thuộc `distDir`;
+đổi `.next-build` thành `.next` có thể khiến `/_next/static` trả 400.
 
 Chạy lần đầu trên máy mới, nếu git báo `dubious ownership` thì cấp phép một lần:
 
@@ -61,28 +61,36 @@ Ghi chú:
 - Sửa `NEXT_PUBLIC_*` trong env của frontend → **bắt buộc** build lại rồi restart
   (giá trị bị nhúng vào code lúc build). Sửa `backend/.env` → chỉ cần restart `primenuts_api`.
 
-### Bật auto-restart (pm2)
+### pm2 là tay quản duy nhất (đã chuyển từ 2026-09-10)
 
-Node project dạng **Default Project** của aaPanel không restart được từ dòng lệnh,
-nên `deploy.sh` sẽ báo "không tự restart được" và mình vẫn phải bấm 2 nút trong panel.
-Chuyển sang pm2 một lần là hết phải bấm, lại tự bật lại khi app crash hoặc VPS reboot:
+2 app chạy bằng **pm2** (`primenuts_api` cổng 3010, `primenuts_web` cổng 3001).
+`deploy.sh` restart qua pm2, tự tạo app nếu pm2 chưa có, và tự kill tiến trình lạ
+đang chiếm cổng trước khi restart.
+
+**Hai project cùng tên trong aaPanel → Node.js Project phải để STOPPED** (không Delete —
+xoá là mất domain + SSL + reverse proxy). Đừng bấm Start ở đó nữa: panel sẽ tranh cổng
+với pm2, app của pm2 crash-loop (cột `↺` trong `pm2 ls` tăng liên tục, status `errored`).
+
+Lệnh hay dùng:
 
 ```bash
-# 1. aaPanel → Node.js Project → bấm STOP cả 2 project (TUYỆT ĐỐI không Delete,
-#    xoá là mất luôn cấu hình domain + SSL + reverse proxy của site)
-
-# 2. Cho pm2 quản lý 2 app trên đúng port cũ
-npm install -g pm2   # nếu chưa có
-cd /www/wwwroot/primenuts.vn/backend      && pm2 start npm --name primenuts_api -- run start:prod
-cd /www/wwwroot/primenuts.vn/frontend-next && pm2 start npm --name primenuts_web -- run start
-
-# 3. Ghi nhớ để tự chạy lại sau khi reboot
-pm2 save
-pm2 startup    # chạy tiếp dòng lệnh mà nó in ra
+pm2 ls                              # trạng thái, cột ↺ phải đứng yên
+pm2 logs primenuts_web --lines 50   # log app (đổi tên app tuỳ ý)
+pm2 restart primenuts_api           # restart tay 1 app
+ss -tlnp | grep -E ':(3001|3010)\b' # ai đang giữ 2 cổng — phải là con của pm2
 ```
 
-Xong bước này thì `bash deploy.sh` là tự động 100%. Kiểm tra: `pm2 ls`, xem log:
-`pm2 logs primenuts_web`. Nginx không cần đổi gì vì vẫn proxy vào 127.0.0.1:3001/3010.
+Lần đầu cài pm2 trên máy mới:
+
+```bash
+npm install -g pm2
+cd /www/wwwroot/primenuts.vn/backend       && pm2 start npm --name primenuts_api -- run start:prod
+cd /www/wwwroot/primenuts.vn/frontend-next && pm2 start npm --name primenuts_web -- run start
+pm2 save
+pm2 startup    # chạy tiếp dòng lệnh nó in ra → tự bật lại sau reboot
+```
+
+Nginx không cần đổi gì vì vẫn proxy vào 127.0.0.1:3001/3010.
 
 ### Cache
 
@@ -108,11 +116,17 @@ rồi restart `primenuts_web` trong panel.
 
 ### Sự cố thường gặp
 
-- **Start báo `EADDRINUSE ... port 3001/3010`**: còn tiến trình cũ chiếm port —
-  `fuser -k 3001/tcp` (hoặc `3010/tcp`) rồi Start lại từ panel.
+- **App pm2 `errored`, cột ↺ tăng liên tục / log báo `EADDRINUSE :::3001|3010`**:
+  cổng đang bị project cùng tên trong aaPanel chiếm. Vào panel bấm **Stop** project đó,
+  rồi `pm2 restart primenuts_web` (hoặc `_api`). `bash deploy.sh` cũng tự dẹp.
+- **502 Bad Gateway ngay sau deploy**: chỉ là vài giây app đang khởi động lại —
+  chờ 10s rồi Ctrl+F5. Kéo dài quá 1 phút thì `pm2 ls` + `pm2 logs`.
 - **Form ngoài site báo lỗi CORS/Network**: kiểm tra `FRONTEND_URL` trong
   `backend/.env` phải chứa `https://primenuts.vn` và 2 block proxy `/api`,
   `/uploads` còn trong config nginx của site.
-- **Sau reboot VPS site chết**: vào panel Start lại 2 project.
+- **Sau reboot VPS site chết**: `pm2 resurrect` (đã `pm2 startup` thì tự lên, không cần).
+  Tuyệt đối không Start từ panel.
+- **Sửa DB bằng SQL trực tiếp mà site không đổi**: backend cache 2 phút, sửa qua admin
+  thì tự xoá cache, sửa bằng SQL thì `pm2 restart primenuts_api` hoặc chờ 2 phút.
 - Test nhanh: `curl -s https://primenuts.vn/api` trả JSON 404 của Nest = proxy OK;
   trả HTML = proxy mất.

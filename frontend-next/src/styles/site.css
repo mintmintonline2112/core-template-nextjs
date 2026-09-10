@@ -322,6 +322,9 @@ body { counter-reset: sect; }
 
 .brand-mark { width: 42px; height: 42px; flex-shrink: 0; }
 
+/* Logo upload từ admin — chiều cao lấy theo slider trong Cài đặt (mặc định 42px) */
+.brand-logo { display: block; height: 42px; width: auto; max-width: 260px; object-fit: contain; }
+
 .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
 
 .brand-name {

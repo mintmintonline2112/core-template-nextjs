@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { Brand } from "./Brand";
+import { Brand, type BrandProps } from "./Brand";
 import { SITE_CONTACT } from "@/config/contact";
 import { siteRoutes } from "@/config/routes";
 
-export function Footer() {
+export function Footer({ brand }: { brand?: BrandProps } = {}) {
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
         <div className="footer-brand">
-          <Brand footer />
+          <Brand footer {...brand} />
           <p className="footer-tagline">
             California Almonds. Global Markets. Reliable Supply.
           </p>

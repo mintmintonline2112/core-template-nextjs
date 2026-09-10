@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { siteRoutes } from "@/config/routes";
 
-/** Logo + wordmark dùng chung cho header và footer. */
+export type BrandProps = {
+  footer?: boolean;
+  /** Admin → Cài đặt → Logo: có ảnh thì thay hẳn SVG + chữ mặc định. */
+  logoUrl?: string | null;
+  logoHeight?: number | null;
+  brandName?: string | null;
+};
+
+/** Logo SVG mặc định của theme (dùng khi admin chưa upload logo). */
 export function BrandMark({ footer = false }: { footer?: boolean }) {
   return (
     <svg className="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
@@ -28,22 +36,36 @@ export function BrandMark({ footer = false }: { footer?: boolean }) {
   );
 }
 
-export function Brand({ footer = false }: { footer?: boolean }) {
+/** Logo + wordmark dùng chung cho header và footer. */
+export function Brand({ footer = false, logoUrl, logoHeight, brandName }: BrandProps) {
+  const name = brandName?.trim() || "Prime Nuts USA";
   return (
     <Link
       href={siteRoutes.home}
       className={footer ? "brand brand-footer" : "brand"}
-      aria-label="Prime Nuts USA — home"
+      aria-label={`${name} — home`}
     >
-      <BrandMark footer={footer} />
-      <span className="brand-text">
-        <span className="brand-name">
-          Prime Nuts <em>USA</em>
-        </span>
-        <span className="brand-tag">
-          {footer ? "California, USA" : "California Almonds"}
-        </span>
-      </span>
+      {logoUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className="brand-logo"
+          src={logoUrl}
+          alt={name}
+          style={logoHeight ? { height: logoHeight } : undefined}
+        />
+      ) : (
+        <>
+          <BrandMark footer={footer} />
+          <span className="brand-text">
+            <span className="brand-name">
+              {brandName?.trim() ? name : (<>Prime Nuts <em>USA</em></>)}
+            </span>
+            <span className="brand-tag">
+              {footer ? "California, USA" : "California Almonds"}
+            </span>
+          </span>
+        </>
+      )}
     </Link>
   );
 }

@@ -4,12 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SiteMenuItem } from "@/app/(site)/_lib/site-menu";
-import { Brand } from "./Brand";
+import { Brand, type BrandProps } from "./Brand";
 import { siteRoutes } from "@/config/routes";
 import { isActivePath } from "@/utils/route";
 
 /** Header dính đầu trang: menu từ CMS, toggle mobile, thu gọn khi cuộn. */
-export function Header({ menu }: { menu: SiteMenuItem[] }) {
+export function Header({ menu, brand }: { menu: SiteMenuItem[]; brand?: BrandProps }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -41,7 +41,7 @@ export function Header({ menu }: { menu: SiteMenuItem[] }) {
       id="site-header"
     >
       <div className="container header-inner">
-        <Brand />
+        <Brand {...brand} />
 
         <nav className="site-nav" id="site-nav" aria-label="Primary">
           {menu.map((item) => (

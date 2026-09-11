@@ -6,6 +6,8 @@ export const LIBRARY_QUERY_KEY = ['admin', 'library'] as const;
 export type LibraryKind = 'image' | 'video';
 
 export interface LibraryImage {
+  /** id trong bảng `media` — dùng để sửa alt. */
+  id: number;
   kind: LibraryKind;
   name: string;
   path: string;
@@ -13,7 +15,19 @@ export interface LibraryImage {
   folder: string;
   extension: string;
   size: number;
+  /** Kích thước ảnh lấy sẵn từ DB (video để null). */
+  width: number | null;
+  height: number | null;
+  /** Mô tả ảnh cho SEO / trình đọc màn hình. */
+  alt: string | null;
   modifiedAt: string;
+}
+
+/** Một nơi đang dùng file — hiện trong hộp thoại xác nhận trước khi xoá. */
+export interface MediaUsage {
+  type: string;
+  title: string;
+  count: number;
 }
 
 export interface LibraryVideo {
@@ -106,6 +120,22 @@ export const libraryService = {
       xhr.onerror = () => reject(new Error('Không thể kết nối máy chủ khi tải video'));
       xhr.send(fd);
     });
+  },
+
+  /** Quét lại uploads/ để bắt file thêm/xoá bằng FTP. */
+  sync(): Promise<{ added: number; removed: number; updated: number }> {
+    return adminApi.post<{ added: number; removed: number; updated: number }>(
+      `${ENDPOINT}/sync`,
+    );
+  },
+
+  /** Liệt kê nội dung đang tham chiếu tới file (gọi trước khi xoá). */
+  usage(path: string): Promise<MediaUsage[]> {
+    return adminApi.get<MediaUsage[]>(`${ENDPOINT}/usage${toQueryString({ path })}`);
+  },
+
+  updateAlt(id: number, alt: string): Promise<LibraryImage> {
+    return adminApi.patch<LibraryImage>(`${ENDPOINT}/${id}`, { alt });
   },
 
   remove(path: string): Promise<{ deleted: boolean }> {

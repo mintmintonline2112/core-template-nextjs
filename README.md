@@ -130,6 +130,9 @@ rồi restart `primenuts_web` trong panel.
   `/uploads` còn trong config nginx của site.
 - **Sau reboot VPS site chết**: `pm2 resurrect` (đã `pm2 startup` thì tự lên, không cần).
   Tuyệt đối không Start từ panel.
+- **Copy ảnh vào `uploads/` bằng FTP mà admin không thấy**: thư viện đọc từ bảng
+  `media` chứ không quét đĩa mỗi lần. Vào Thư viện bấm **Quét lại** (hoặc restart
+  `primenuts_api`, backend tự đồng bộ lúc khởi động).
 - **Sửa DB bằng SQL trực tiếp mà site không đổi**: backend cache 2 phút, sửa qua admin
   thì tự xoá cache, sửa bằng SQL thì `pm2 restart primenuts_api` hoặc chờ 2 phút.
 - Test nhanh: `curl -s https://primenuts.vn/api` trả JSON 404 của Nest = proxy OK;

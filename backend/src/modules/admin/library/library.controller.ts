@@ -4,6 +4,9 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   Query,
   Req,
@@ -76,6 +79,7 @@ export class LibraryController {
     // 'skip' = admin đã xem/chọn mức nén trên trình duyệt → tôn trọng, không nén đè
     return this.libraryService.upload(file, folder, baseUrl, {
       skipOptimize: imageOptimize === 'skip',
+      staffId: (request.user as { id?: string } | undefined)?.id,
     });
   }
 
@@ -98,7 +102,42 @@ export class LibraryController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const baseUrl = `${request.protocol}://${request.get('host')}`;
-    return this.libraryService.registerVideo(file, baseUrl);
+    return this.libraryService.registerVideo(
+      file,
+      baseUrl,
+      (request.user as { id?: string } | undefined)?.id,
+    );
+  }
+
+  @Post('sync')
+  @Permissions('UPDATE')
+  @ApiOperation({
+    summary: 'Quét lại thư mục uploads/ và đồng bộ vào bảng media',
+    description:
+      'Dùng khi có người thêm/xoá file bằng FTP. Trả về số hàng thêm/xoá/cập nhật.',
+  })
+  async sync() {
+    return this.libraryService.sync();
+  }
+
+  @Get('usage')
+  @Permissions('LIST')
+  @ApiOperation({
+    summary: 'Liệt kê nơi đang dùng file này',
+    description: 'Gọi trước khi xoá để cảnh báo nội dung sẽ bị vỡ ảnh.',
+  })
+  async usage(@Query('path') path: string) {
+    return this.libraryService.usage(path);
+  }
+
+  @Patch(':id')
+  @Permissions('UPDATE')
+  @ApiOperation({ summary: 'Cập nhật mô tả ảnh (alt)' })
+  async updateAlt(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('alt') alt?: string,
+  ) {
+    return this.libraryService.updateAlt(id, alt ?? null);
   }
 
   @Delete()

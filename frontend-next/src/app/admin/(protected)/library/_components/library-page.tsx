@@ -3,13 +3,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Copy, ExternalLink, Film, Search, Trash2, Upload, X } from 'lucide-react';
+import {
+  Copy,
+  ExternalLink,
+  Film,
+  RefreshCw,
+  Search,
+  Trash2,
+  Upload,
+  X,
+} from 'lucide-react';
 import {
   libraryService,
   LIBRARY_QUERY_KEY,
   type LibraryImage,
   type LibraryKind,
+  type MediaUsage,
 } from '@/app/admin/_lib/library.service';
+import { getErrorMessage } from '@/app/admin/_lib/utils';
 import { Pagination } from '@/app/admin/_components/data-table/pagination';
 import { confirmAction } from '@/app/admin/_lib/confirm';
 import { useImageCompressConfirm } from '@/app/admin/_components/image-compress-dialog/image-compress-dialog';
@@ -50,6 +61,7 @@ export function LibraryScreen() {
   const [videoProgress, setVideoProgress] = useState<number | null>(null);
   const { confirmCompress, dialog: compressDialog } = useImageCompressConfirm();
   const [selected, setSelected] = useState<LibraryImage | null>(null);
+  const [syncing, setSyncing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
@@ -133,17 +145,52 @@ export function LibraryScreen() {
   }
 
   async function onDelete(item: LibraryImage) {
+    // Hỏi backend xem file còn được dùng ở đâu — xoá ảnh đang dùng là vỡ nội dung
+    // mà không có cảnh báo nào, nên chịu thêm một lượt gọi API cho chắc.
+    let usage: MediaUsage[] = [];
+    try {
+      usage = await libraryService.usage(item.path);
+    } catch {
+      // Không tra được thì vẫn cho xoá, chỉ mất phần cảnh báo.
+    }
+
+    const media = item.kind === 'video' ? 'video' : 'ảnh';
+    const text = usage.length
+      ? `"${item.name}" ĐANG ĐƯỢC DÙNG ở ${usage.length} nơi:\n\n` +
+        usage
+          .slice(0, 8)
+          .map((u) => `• ${u.type}: ${u.title}${u.count > 1 ? ` (${u.count} chỗ)` : ''}`)
+          .join('\n') +
+        (usage.length > 8 ? `\n• …và ${usage.length - 8} nơi khác` : '') +
+        `\n\nXoá thì những chỗ trên sẽ mất ${media}.`
+      : `"${item.name}" sẽ bị xóa vĩnh viễn. Hiện KHÔNG có nội dung nào đang dùng file này.`;
+
     const ok = await confirmAction(
-      {
-        title: 'Xóa file?',
-        text: `"${item.name}" sẽ bị xóa vĩnh viễn. Nội dung đang dùng file này sẽ mất ${item.kind === 'video' ? 'video' : 'ảnh'}.`,
-        confirmButtonText: 'Xóa',
-      },
+      { title: 'Xóa file?', text, confirmButtonText: 'Xóa' },
       () => libraryService.remove(item.path),
     );
     if (ok) {
       setSelected(null);
       queryClient.invalidateQueries({ queryKey: LIBRARY_QUERY_KEY });
+    }
+  }
+
+  /** Quét lại thư mục uploads/ — dùng khi có người thêm/xoá file bằng FTP. */
+  async function onSync() {
+    setSyncing(true);
+    try {
+      const r = await libraryService.sync();
+      const changed = r.added + r.removed + r.updated;
+      toast.success(
+        changed === 0
+          ? 'Thư viện đã khớp với thư mục trên máy chủ'
+          : `Đã cập nhật: thêm ${r.added}, gỡ ${r.removed}, làm mới ${r.updated}`,
+      );
+      queryClient.invalidateQueries({ queryKey: LIBRARY_QUERY_KEY });
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -177,6 +224,16 @@ export function LibraryScreen() {
             className="lib-hidden"
             onChange={(e) => handleUploadVideo(e.target.files)}
           />
+          <button
+            type="button"
+            onClick={onSync}
+            disabled={busy || syncing}
+            className="adm-btn"
+            title="Quét lại thư mục uploads/ trên máy chủ — dùng khi có file được thêm/xoá bằng FTP"
+          >
+            {syncing ? <span className="adm-spin" /> : <RefreshCw size={16} />}
+            Quét lại
+          </button>
           <button
             type="button"
             onClick={() => videoInputRef.current?.click()}
@@ -246,7 +303,7 @@ export function LibraryScreen() {
                     <video src={item.url} preload="metadata" muted playsInline />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.url} alt={item.name} />
+                    <img src={item.url} alt={item.alt || item.name} />
                   )}
                   {item.kind === 'video' && (
                     <span className="lb-kind-badge">
@@ -327,6 +384,7 @@ export function LibraryScreen() {
           item={selected}
           onClose={() => setSelected(null)}
           onDelete={() => onDelete(selected)}
+          onAltSaved={() => queryClient.invalidateQueries({ queryKey: LIBRARY_QUERY_KEY })}
         />
       )}
     </div>
@@ -337,13 +395,35 @@ function DetailModal({
   item,
   onClose,
   onDelete,
+  onAltSaved,
 }: {
   item: LibraryImage;
   onClose: () => void;
   onDelete: () => void;
+  onAltSaved: () => void;
 }) {
-  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+  // Ảnh đã có kích thước sẵn trong DB; video thì đọc lúc phát.
+  const [dims, setDims] = useState<{ w: number; h: number } | null>(
+    item.width && item.height ? { w: item.width, h: item.height } : null,
+  );
+  const [alt, setAlt] = useState(item.alt ?? '');
+  const [savedAlt, setSavedAlt] = useState(item.alt ?? '');
+  const [savingAlt, setSavingAlt] = useState(false);
   const isVideo = item.kind === 'video';
+
+  async function saveAlt() {
+    setSavingAlt(true);
+    try {
+      await libraryService.updateAlt(item.id, alt);
+      setSavedAlt(alt);
+      toast.success('Đã lưu mô tả ảnh');
+      onAltSaved();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setSavingAlt(false);
+    }
+  }
 
   return (
     <div className="lb-overlay" onClick={onClose}>
@@ -363,7 +443,7 @@ function DetailModal({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={item.url}
-              alt={item.name}
+              alt={item.alt || item.name}
               onLoad={(e) =>
                 setDims({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })
               }
@@ -393,6 +473,33 @@ function DetailModal({
             <Row label="Thư mục" value={item.folder} />
             <Row label="Định dạng" value={item.extension.toUpperCase()} />
             <Row label="Sửa lần cuối" value={new Date(item.modifiedAt).toLocaleString('vi-VN')} />
+            {!isVideo && (
+              <div className="lb-detail-alt">
+                <dt>Mô tả ảnh (alt)</dt>
+                <div className="lb-detail-url">
+                  <input
+                    value={alt}
+                    onChange={(e) => setAlt(e.target.value)}
+                    maxLength={300}
+                    placeholder="Ví dụ: Hạnh nhân Nonpareil trong chén sứ trắng"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') void saveAlt();
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={saveAlt}
+                    disabled={savingAlt || alt === savedAlt}
+                    title="Lưu mô tả"
+                  >
+                    {savingAlt ? <span className="adm-spin" /> : 'Lưu'}
+                  </button>
+                </div>
+                <p className="gf-hint">
+                  Hiện khi ảnh lỗi, giúp Google hiểu nội dung ảnh và cho người khiếm thị nghe được.
+                </p>
+              </div>
+            )}
             <div>
               <dt>URL</dt>
               <div className="lb-detail-url">

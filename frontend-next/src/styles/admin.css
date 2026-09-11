@@ -1993,6 +1993,22 @@ textarea.gf-control {
 .lb-detail-url button:hover {
   color: var(--admin-text);
 }
+/* SweetAlert dựng text bằng textContent nên xuống dòng bị nuốt; hộp thoại xoá
+   file cần liệt kê từng nơi đang dùng ảnh trên một dòng riêng. Đặt sau khi swal
+   tự chèn style của nó nên cần thêm `body` cho đủ độ ưu tiên. */
+body .swal2-html-container {
+  white-space: pre-line;
+}
+.lb-detail-alt .gf-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.lb-detail-alt .lb-detail-url button {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--admin-text);
+}
 .lb-detail-actions {
   display: flex;
   gap: 8px;

@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api";
+import { SITE_CONTACT } from "@/config/contact";
 import { DEFAULT_LANG, type Lang } from "@/lib/i18n";
 
 /**
@@ -69,6 +70,26 @@ export const FONT_STACKS: Record<string, string> = {
   times: "'Times New Roman', Times, serif",
   arial: "Arial, Helvetica, sans-serif",
 };
+
+/**
+ * Thông tin liên hệ hiển thị trên site: ưu tiên giá trị admin nhập ở
+ * /admin/contact-page, thiếu ô nào thì lấy mặc định trong src/config/contact.ts.
+ */
+export function resolveContact(settings: SiteSettings) {
+  const company = settings.contactPage?.company ?? {};
+  const phone = company.phone?.trim() || SITE_CONTACT.phone;
+  return {
+    name: company.name?.trim() || "Prime Nuts USA",
+    location: company.location?.trim() || SITE_CONTACT.location,
+    address: company.address?.trim() || SITE_CONTACT.address,
+    email: company.email?.trim() || SITE_CONTACT.email,
+    phone,
+    phoneHref: `tel:${phone.replace(/[^\d+]/g, "")}`,
+    mapUrl: company.mapUrl?.trim() || null,
+  };
+}
+
+export type SiteContact = ReturnType<typeof resolveContact>;
 
 export async function getSiteSettings(
   lang: Lang = DEFAULT_LANG,

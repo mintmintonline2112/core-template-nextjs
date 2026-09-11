@@ -30,6 +30,10 @@ export class MenuItemsController extends BaseController<
     super(menuItemsService, 'MenuItem');
   }
 
+  protected getFilterableFields(): (keyof MenuItem)[] {
+    return ['parentId', 'isActive'];
+  }
+
   protected override getSearchFields(): (keyof MenuItem)[] {
     return ['label', 'href'];
   }

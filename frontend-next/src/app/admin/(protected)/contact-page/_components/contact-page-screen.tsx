@@ -3,39 +3,35 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { ArrowDown, ArrowUp, Plus, Trash2, X } from 'lucide-react';
-import { getErrorMessage, resolveImageUrl } from '@/app/admin/_lib/utils';
+import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react';
+import { getErrorMessage } from '@/app/admin/_lib/utils';
 import { settingsService, SETTINGS_QUERY_KEY } from '@/app/admin/(protected)/settings/_lib/settings.service';
-import { LibraryPicker } from '@/app/admin/_components/library-picker/library-picker';
+import { siteRoutes } from '@/config/routes';
 import type { ContactInterest, ContactPageConfig } from '@/lib/contact-page';
 import { DEFAULT_INTERESTS } from '@/lib/contact-page';
 
 /**
- * Admin → Trang Liên hệ: mọi thứ khách hàng tự chỉnh cho /lien-he gom về một chỗ.
+ * Admin → Trang Liên hệ: mọi thứ khách hàng tự chỉnh cho trang Liên hệ gom về một chỗ.
  * Lưu vào site_settings key `contactPage` (1 JSON) — public đọc qua
  * getSiteSettings().contactPage. Trường trống → website dùng mặc định.
  * Thứ tự khối trùng thứ tự hiển thị ngoài trang: tiêu đề → liên hệ ưu tiên
- * (hotline + Zalo QR) → mạng xã hội → thông tin liên hệ → form.
+ * → mạng xã hội → thông tin công ty → form.
  */
 
 type Hero = { eyebrow: string; title: string; lead: string; zhEyebrow: string; zhTitle: string; zhLead: string };
-type Hotline = { enabled: boolean; phone: string; label: string; note: string; zhLabel: string; zhNote: string };
-type Zalo = { qrUrl: string; url: string };
 type Social = { facebook: string; youtube: string; instagram: string; tiktok: string };
-type Clinic = {
-  enabled: boolean; name: string; address: string; phone: string; email: string; hours: string;
-  mapUrl: string; mapEmbedUrl: string; zhName: string; zhAddress: string; zhHours: string;
+type Company = {
+  name: string; location: string; address: string; phone: string; email: string;
+  mapUrl: string; zhName: string; zhLocation: string; zhAddress: string;
 };
 type FormCfg = { enabled: boolean; kicker: string; title: string; note: string; zhKicker: string; zhTitle: string; zhNote: string };
 type Interest = { value: string; zh: string };
 
 const EMPTY_HERO: Hero = { eyebrow: '', title: '', lead: '', zhEyebrow: '', zhTitle: '', zhLead: '' };
-const EMPTY_HOTLINE: Hotline = { enabled: true, phone: '', label: '', note: '', zhLabel: '', zhNote: '' };
-const EMPTY_ZALO: Zalo = { qrUrl: '', url: '' };
 const EMPTY_SOCIAL: Social = { facebook: '', youtube: '', instagram: '', tiktok: '' };
-const EMPTY_CLINIC: Clinic = {
-  enabled: true, name: '', address: '', phone: '', email: '', hours: '', mapUrl: '', mapEmbedUrl: '',
-  zhName: '', zhAddress: '', zhHours: '',
+const EMPTY_COMPANY: Company = {
+  name: '', location: '', address: '', phone: '', email: '', mapUrl: '',
+  zhName: '', zhLocation: '', zhAddress: '',
 };
 const EMPTY_FORM: FormCfg = { enabled: true, kicker: '', title: '', note: '', zhKicker: '', zhTitle: '', zhNote: '' };
 
@@ -53,11 +49,8 @@ export function ContactPageScreen() {
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [hero, setHero] = useState<Hero>(EMPTY_HERO);
-  const [hotline, setHotline] = useState<Hotline>(EMPTY_HOTLINE);
-  const [zalo, setZalo] = useState<Zalo>(EMPTY_ZALO);
-  const [qrPickerOpen, setQrPickerOpen] = useState(false);
   const [social, setSocial] = useState<Social>(EMPTY_SOCIAL);
-  const [clinic, setClinic] = useState<Clinic>(EMPTY_CLINIC);
+  const [company, setCompany] = useState<Company>(EMPTY_COMPANY);
   const [form, setForm] = useState<FormCfg>(EMPTY_FORM);
   const [interests, setInterests] = useState<Interest[]>([]);
   const [newInterest, setNewInterest] = useState('');
@@ -74,20 +67,14 @@ export function ContactPageScreen() {
       eyebrow: s(cfg.hero?.eyebrow), title: s(cfg.hero?.title), lead: s(cfg.hero?.lead),
       zhEyebrow: s(cfg.hero?.vi?.eyebrow), zhTitle: s(cfg.hero?.vi?.title), zhLead: s(cfg.hero?.vi?.lead),
     });
-    setHotline({
-      enabled: cfg.hotline?.enabled !== false,
-      phone: s(cfg.hotline?.phone), label: s(cfg.hotline?.label), note: s(cfg.hotline?.note),
-      zhLabel: s(cfg.hotline?.vi?.label), zhNote: s(cfg.hotline?.vi?.note),
-    });
-    setZalo({ qrUrl: s(cfg.zalo?.qrUrl), url: s(cfg.zalo?.url) });
     const so = cfg.social ?? data.socialLinks ?? {};
     setSocial({ facebook: s(so.facebook), youtube: s(so.youtube), instagram: s(so.instagram), tiktok: s(so.tiktok) });
-    setClinic({
-      enabled: cfg.clinic?.enabled !== false,
-      name: s(cfg.clinic?.name), address: s(cfg.clinic?.address), phone: s(cfg.clinic?.phone),
-      email: s(cfg.clinic?.email), hours: s(cfg.clinic?.hours), mapUrl: s(cfg.clinic?.mapUrl),
-      mapEmbedUrl: s(cfg.clinic?.mapEmbedUrl),
-      zhName: s(cfg.clinic?.vi?.name), zhAddress: s(cfg.clinic?.vi?.address), zhHours: s(cfg.clinic?.vi?.hours),
+    setCompany({
+      name: s(cfg.company?.name), location: s(cfg.company?.location),
+      address: s(cfg.company?.address), phone: s(cfg.company?.phone),
+      email: s(cfg.company?.email), mapUrl: s(cfg.company?.mapUrl),
+      zhName: s(cfg.company?.vi?.name), zhLocation: s(cfg.company?.vi?.location),
+      zhAddress: s(cfg.company?.vi?.address),
     });
     setForm({
       enabled: cfg.form?.enabled !== false,
@@ -127,18 +114,11 @@ export function ContactPageScreen() {
           eyebrow: hero.eyebrow, title: hero.title, lead: hero.lead,
           vi: clean({ eyebrow: hero.zhEyebrow, title: hero.zhTitle, lead: hero.zhLead }),
         }),
-        hotline: clean({
-          enabled: hotline.enabled,
-          phone: hotline.phone, label: hotline.label, note: hotline.note,
-          vi: clean({ label: hotline.zhLabel, note: hotline.zhNote }),
-        }),
-        zalo: clean({ ...zalo }),
         social: clean({ ...social }),
-        clinic: clean({
-          enabled: clinic.enabled,
-          name: clinic.name, address: clinic.address, phone: clinic.phone, email: clinic.email,
-          hours: clinic.hours, mapUrl: clinic.mapUrl, mapEmbedUrl: clinic.mapEmbedUrl,
-          vi: clean({ name: clinic.zhName, address: clinic.zhAddress, hours: clinic.zhHours }),
+        company: clean({
+          name: company.name, location: company.location, address: company.address,
+          phone: company.phone, email: company.email, mapUrl: company.mapUrl,
+          vi: clean({ name: company.zhName, location: company.zhLocation, address: company.zhAddress }),
         }),
         form: clean({
           enabled: form.enabled,
@@ -184,11 +164,11 @@ export function ContactPageScreen() {
         <div>
           <h1 className="adm-page-title">Trang Liên hệ</h1>
           <p className="adm-page-subtitle">
-            Tiêu đề, mạng xã hội, thông tin liên hệ và form tư vấn hiển thị tại /lien-he
+            Tiêu đề, mạng xã hội, thông tin công ty và form báo giá hiển thị tại trang Liên hệ
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <a className="adm-btn" href="/lien-he" target="_blank" rel="noopener noreferrer">
+          <a className="adm-btn" href={siteRoutes.contact} target="_blank" rel="noopener noreferrer">
             Xem trang ↗
           </a>
           <button type="button" className="adm-btn adm-btn--primary" onClick={handleSave} disabled={saving}>
@@ -217,71 +197,7 @@ export function ContactPageScreen() {
         </details>
       </section>
 
-      {/* 2. Liên hệ ưu tiên: hotline + Zalo QR */}
-      <section className="gf-card st-section">
-        <h2 className="st-section-title">Liên hệ ưu tiên</h2>
-        <p className="gf-hint" style={{ marginTop: -6 }}>
-          Hai khung đứng đầu mục &ldquo;Kết nối với chúng tôi&rdquo;: số điện thoại (khung to nhất — bấm là gọi) và mã QR Zalo.
-        </p>
-        <label className="gf-check st-feature">
-          <input type="checkbox" checked={hotline.enabled} onChange={(e) => setHotline({ ...hotline, enabled: e.target.checked })} />
-          <span>
-            <strong>Hiện khung số điện thoại</strong>
-            <small>Khung lớn &ldquo;Gọi trực tiếp&rdquo; nằm trên cùng. Tắt thì ẩn, các khung khác dồn lên.</small>
-          </span>
-        </label>
-        {field('Số điện thoại', hotline.phone, (v) => setHotline({ ...hotline, phone: v }), {
-          placeholder: '0909881687', type: 'tel',
-          hint: 'Để trống thì dùng số ở khối "Thông tin liên hệ" bên dưới. Nhập 10 số liền, website tự tách "0909 881 687".',
-        })}
-        <div className="st-media-row">
-          <div>{field('Nhãn phía trên số', hotline.label, (v) => setHotline({ ...hotline, label: v }), { placeholder: 'Gọi trực tiếp' })}</div>
-          <div>{field('Ghi chú dưới số', hotline.note, (v) => setHotline({ ...hotline, note: v }), { placeholder: 'Cách liên hệ nhanh nhất — nhấn để gọi ngay' })}</div>
-        </div>
-
-        <div className="st-media-row">
-          <div className="st-media">
-            <label className="gf-label">Ảnh mã QR Zalo</label>
-            <div className="st-media-preview is-square">
-              {zalo.qrUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={resolveImageUrl(zalo.qrUrl) ?? ''} alt="QR Zalo" style={{ height: 140, width: 140 }} />
-              ) : (
-                <span className="st-media-empty">Chưa đặt — chưa hiện khung Zalo</span>
-              )}
-            </div>
-            <div className="st-media-actions">
-              <button type="button" className="adm-btn" onClick={() => setQrPickerOpen(true)}>
-                Chọn từ Thư viện
-              </button>
-              {zalo.qrUrl && (
-                <button type="button" className="adm-btn" onClick={() => setZalo({ ...zalo, qrUrl: '' })}>
-                  <X size={14} /> Bỏ ảnh
-                </button>
-              )}
-            </div>
-            <p className="gf-hint">
-              Lấy trong app Zalo → Cá nhân → mã QR của tôi → Lưu ảnh (ảnh vuông, nền trắng). Trên máy tính khách quét mã; trên điện thoại bấm khung là mở Zalo.
-            </p>
-          </div>
-          <div>
-            {field('Link mở Zalo (tùy chọn)', zalo.url, (v) => setZalo({ ...zalo, url: v }), {
-              placeholder: 'https://zalo.me/0909881687', type: 'url',
-              hint: 'Để trống thì tự dùng zalo.me/<số điện thoại ở trên>. Nhập link OA nếu phòng khám dùng Zalo Official Account.',
-            })}
-          </div>
-        </div>
-
-        <details className="gf-group">
-          <summary className="gf-group-summary"><strong>Bản dịch tiếng Việt</strong><small>Số điện thoại và QR dùng chung.</small></summary>
-          <div className="gf-group-body">
-            {field('Nhãn phía trên số (Tiếng Việt)', hotline.zhLabel, (v) => setHotline({ ...hotline, zhLabel: v }), { placeholder: '直接致电' })}
-            {field('Ghi chú dưới số (Tiếng Việt)', hotline.zhNote, (v) => setHotline({ ...hotline, zhNote: v }), { placeholder: '最快捷的联系方式 — 点击立即拨打' })}
-          </div>
-        </details>
-      </section>
-
-      {/* 3. Mạng xã hội */}
+      {/* 2. Mạng xã hội */}
       <section className="gf-card st-section">
         <h2 className="st-section-title">Mạng xã hội</h2>
         <p className="gf-hint" style={{ marginTop: -6 }}>
@@ -301,36 +217,26 @@ export function ContactPageScreen() {
         ))}
       </section>
 
-      {/* 4. Thông tin liên hệ */}
+      {/* 3. Thông tin công ty */}
       <section className="gf-card st-section">
-        <h2 className="st-section-title">Thông tin liên hệ</h2>
-        <label className="gf-check st-feature">
-          <input type="checkbox" checked={clinic.enabled} onChange={(e) => setClinic({ ...clinic, enabled: e.target.checked })} />
-          <span>
-            <strong>Hiện khối thông tin liên hệ</strong>
-            <small>Địa chỉ, điện thoại, email, giờ làm việc và bản đồ. Tắt thì ẩn cả khối.</small>
-          </span>
-        </label>
-        {field('Tên liên hệ', clinic.name, (v) => setClinic({ ...clinic, name: v }), { placeholder: 'Prime Nuts USA' })}
-        {field('Địa chỉ', clinic.address, (v) => setClinic({ ...clinic, address: v }), { rows: 2, placeholder: 'Số nhà, đường, phường, quận, thành phố' })}
+        <h2 className="st-section-title">Thông tin công ty</h2>
+        <p className="gf-hint" style={{ marginTop: -6 }}>
+          Hiện ở trang Liên hệ và chân trang. Để trống ô nào thì website dùng giá trị mặc định trong code.
+        </p>
+        {field('Tên công ty', company.name, (v) => setCompany({ ...company, name: v }), { placeholder: 'Prime Nuts USA' })}
         <div className="st-media-row">
-          <div style={{ flex: 1 }}>{field('Điện thoại', clinic.phone, (v) => setClinic({ ...clinic, phone: v }), { placeholder: '09xx xxx xxx', type: 'tel', hint: 'Hiện nút "Gọi ngay" trên di động.' })}</div>
-          <div style={{ flex: 1 }}>{field('Email', clinic.email, (v) => setClinic({ ...clinic, email: v }), { placeholder: 'lienhe@phongkham.vn', type: 'email' })}</div>
+          <div style={{ flex: 1 }}>{field('Quốc gia / khu vực', company.location, (v) => setCompany({ ...company, location: v }), { placeholder: 'Việt Nam' })}</div>
+          <div style={{ flex: 1 }}>{field('Điện thoại', company.phone, (v) => setCompany({ ...company, phone: v }), { placeholder: '090 119 3378', type: 'tel' })}</div>
         </div>
-        {field('Giờ làm việc', clinic.hours, (v) => setClinic({ ...clinic, hours: v }), {
-          rows: 3, placeholder: 'Thứ 2 – Thứ 7: 8:00 – 19:00\nChủ nhật: 8:00 – 12:00', hint: 'Mỗi dòng một khung giờ — website giữ nguyên xuống dòng.',
-        })}
-        {field('Link Google Maps (nút "Xem bản đồ")', clinic.mapUrl, (v) => setClinic({ ...clinic, mapUrl: v }), { placeholder: 'https://maps.app.goo.gl/...', type: 'url' })}
-        {field('Link nhúng bản đồ (tùy chọn)', clinic.mapEmbedUrl, (v) => setClinic({ ...clinic, mapEmbedUrl: v }), {
-          placeholder: 'https://www.google.com/maps/embed?pb=...', type: 'url',
-          hint: 'Google Maps → Chia sẻ → Nhúng bản đồ → copy đúng phần src="..." của iframe. Có link này thì bản đồ hiện cạnh thông tin.',
-        })}
+        {field('Địa chỉ', company.address, (v) => setCompany({ ...company, address: v }), { rows: 2, placeholder: 'Số nhà, đường, phường, quận, thành phố' })}
+        {field('Email', company.email, (v) => setCompany({ ...company, email: v }), { placeholder: 'hello@primenuts.vn', type: 'email' })}
+        {field('Link Google Maps (tùy chọn)', company.mapUrl, (v) => setCompany({ ...company, mapUrl: v }), { placeholder: 'https://maps.app.goo.gl/...', type: 'url' })}
         <details className="gf-group">
-          <summary className="gf-group-summary"><strong>Bản dịch tiếng Việt</strong><small>Điện thoại / email dùng chung, chỉ dịch tên, địa chỉ, giờ.</small></summary>
+          <summary className="gf-group-summary"><strong>Bản dịch tiếng Việt</strong><small>Điện thoại / email dùng chung, chỉ dịch tên và địa chỉ.</small></summary>
           <div className="gf-group-body">
-            {field('Tên liên hệ (Tiếng Việt)', clinic.zhName, (v) => setClinic({ ...clinic, zhName: v }))}
-            {field('Địa chỉ (Tiếng Việt)', clinic.zhAddress, (v) => setClinic({ ...clinic, zhAddress: v }), { rows: 2 })}
-            {field('Giờ làm việc (Tiếng Việt)', clinic.zhHours, (v) => setClinic({ ...clinic, zhHours: v }), { rows: 3 })}
+            {field('Tên công ty (Tiếng Việt)', company.zhName, (v) => setCompany({ ...company, zhName: v }))}
+            {field('Quốc gia / khu vực (Tiếng Việt)', company.zhLocation, (v) => setCompany({ ...company, zhLocation: v }))}
+            {field('Địa chỉ (Tiếng Việt)', company.zhAddress, (v) => setCompany({ ...company, zhAddress: v }), { rows: 2 })}
           </div>
         </details>
       </section>
@@ -401,11 +307,6 @@ export function ContactPageScreen() {
         </details>
       </section>
 
-      <LibraryPicker
-        open={qrPickerOpen}
-        onClose={() => setQrPickerOpen(false)}
-        onSelect={(url) => setZalo((prev) => ({ ...prev, qrUrl: url }))}
-      />
     </div>
   );
 }

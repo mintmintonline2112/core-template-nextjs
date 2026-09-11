@@ -42,6 +42,15 @@ export class BaseController<
     return [];
   }
 
+  /**
+   * Cột được phép lọc qua query string (?status=draft&categoryId=3).
+   * Mặc định RỖNG = không cho lọc gì — controller nào cần thì override.
+   * Tham số ngoài danh sách bị bỏ qua im lặng (không ném lỗi).
+   */
+  protected getFilterableFields(): (keyof T)[] {
+    return [];
+  }
+
   protected buildSearchWhere?(search: string): any[] | null;
 
   @Permissions('LIST')
@@ -66,6 +75,12 @@ export class BaseController<
       throw new BadRequestException('orderBy must be valid JSON array');
     }
 
+    const allowed = new Set(this.getFilterableFields().map(String));
+    const safeFilters: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(filters)) {
+      if (allowed.has(key)) safeFilters[key] = value;
+    }
+
     const options = this.getFindAllOptions();
 
     const customWhere =
@@ -81,7 +96,7 @@ export class BaseController<
       limit,
       customWhere ? undefined : search,
       customWhere ? [] : this.getSearchFields(),
-      filters,
+      safeFilters,
       parsedOrderBy,
     );
   }

@@ -162,7 +162,7 @@ export function RichTextEditor({ value, onChange, placeholder, disabled }: Props
           title="Chèn nút bấm"
           fields={[
             { key: 'label', label: 'Chữ trên nút', placeholder: 'Đặt lịch ngay', initial: 'Đặt lịch ngay' },
-            { key: 'href', label: 'Link của nút', placeholder: 'https://… hoặc /lien-he', initial: '' },
+            { key: 'href', label: 'Link của nút', placeholder: 'https://… hoặc /contact', initial: '' },
           ]}
           submitLabel="Chèn nút"
           onClose={() => setButtonOpen(false)}

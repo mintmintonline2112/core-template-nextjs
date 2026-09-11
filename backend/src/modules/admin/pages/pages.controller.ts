@@ -30,6 +30,10 @@ export class PagesController extends BaseController<
     super(pagesService, 'Page');
   }
 
+  protected getFilterableFields(): (keyof Page)[] {
+    return ['status'];
+  }
+
   protected override getSearchFields(): (keyof Page)[] {
     return ['title', 'slug'];
   }

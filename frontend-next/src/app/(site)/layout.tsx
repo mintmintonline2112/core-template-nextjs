@@ -5,7 +5,7 @@ import { Header } from "@/app/(site)/_components/Header";
 import { SiteEffects } from "@/app/(site)/_components/SiteEffects";
 import { mediaUrl } from "@/app/(site)/_lib/cms";
 import { getSiteMenu } from "@/app/(site)/_lib/menu";
-import { FONT_STACKS, getSiteSettings } from "@/lib/settings";
+import { FONT_STACKS, getSiteSettings, resolveContact } from "@/lib/settings";
 import {
   DEFAULT_OG_IMAGE,
   SITE_DEFAULT_DESCRIPTION,
@@ -77,7 +77,11 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <SiteEffects />
       <Header menu={menu} brand={brand} />
       <main id="main">{children}</main>
-      <Footer brand={footerBrand} />
+      <Footer
+        brand={footerBrand}
+        contact={resolveContact(settings)}
+        footerText={settings.footerText ?? null}
+      />
     </>
   );
 }

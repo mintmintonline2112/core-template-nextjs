@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "@/app/(site)/_components/forms";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
+import { getSiteSettings, resolveContact } from "@/lib/settings";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
-import { SITE_CONTACT } from "@/config/contact";
 import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,27 +25,14 @@ const CHECKLIST = [
   "Certifications Required",
 ];
 
-type ContactInfo = {
-  location: string;
-  address: string;
-  email: string;
-  phone: string;
-};
-
-const DEFAULT_INFO: ContactInfo = {
-  location: SITE_CONTACT.location,
-  address: SITE_CONTACT.address,
-  email: SITE_CONTACT.email,
-  phone: SITE_CONTACT.phone,
-};
-
 export default async function ContactPage() {
   // Nội dung sửa được từ admin; API tắt → fallback hardcode.
-  const page = await getCmsPage("contact");
+  const [page, settings] = await Promise.all([getCmsPage("contact"), getSiteSettings()]);
   const sections = sectionMap(page);
-  // Thông tin liên hệ chính thức lấy từ cấu hình dùng chung, không để metadata
-  // CMS cũ ghi đè bằng địa chỉ/email/số điện thoại đã hết hiệu lực.
-  const info: ContactInfo = DEFAULT_INFO;
+  // Admin → Trang Liên hệ (contactPage.company); ô nào trống thì dùng mặc định
+  // trong src/config/contact.ts. Không đọc metadata CMS cũ vì dữ liệu đã hết hiệu lực.
+  const info = resolveContact(settings);
+  const hero = settings.contactPage?.hero ?? {};
   const checklistSection = sections.get("quotation-checklist");
   const checklist =
     ((checklistSection?.metadata?.checklist as string[] | undefined) ?? CHECKLIST).filter(Boolean);
@@ -54,10 +41,11 @@ export default async function ContactPage() {
     <>
       <section className="page-hero">
         <div className="container page-hero-inner">
-          <p className="eyebrow eyebrow-gold reveal">Contact Us</p>
-          <h1 className="reveal">Let&rsquo;s Talk Almonds</h1>
+          <p className="eyebrow eyebrow-gold reveal">{hero.eyebrow?.trim() || "Contact Us"}</p>
+          <h1 className="reveal">{hero.title?.trim() || "Let\u2019s Talk Almonds"}</h1>
           <p className="lead reveal">
-            {page?.lead ??
+            {hero.lead?.trim() ??
+              page?.lead ??
               "Whether you are an established importer or developing a new market for California almonds, our team is ready to review your requirements and respond with current availability."}
           </p>
         </div>
@@ -69,7 +57,12 @@ export default async function ContactPage() {
             <p className="eyebrow">
               {sections.get("contact-info")?.subheading ?? "Get in Touch"}
             </p>
-            <h2>{sections.get("contact-info")?.heading ?? "Prime Nuts USA"}</h2>
+            {/* Tên công ty ở Admin → Trang Liên hệ ưu tiên hơn tiêu đề section CMS cũ. */}
+            <h2>
+              {settings.contactPage?.company?.name?.trim() ||
+                sections.get("contact-info")?.heading ||
+                info.name}
+            </h2>
             <p className="section-intro">
               We work with commercial buyers — importers, distributors, wholesalers, food
               manufacturers, roasters, and private-label brands.
@@ -117,7 +110,7 @@ export default async function ContactPage() {
                 </span>
                 <div>
                   <h4>Phone / WhatsApp</h4>
-                  <p><a href={`tel:${info.phone.replace(/\D/g, "")}`}>{info.phone}</a></p>
+                  <p><a href={info.phoneHref}>{info.phone}</a></p>
                 </div>
               </li>
             </ul>

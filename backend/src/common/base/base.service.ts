@@ -180,15 +180,18 @@ export class BaseService<
         : [options.where]
       : [{}];
 
+    // Thứ tự gộp: filter (client gửi) → search → điều kiện gốc của service.
+    // Trải sau thì thắng, nên baseCondition LUÔN đè filter: `?status=draft`
+    // không thể lật điều kiện `status = PUBLISHED` của danh sách bài viết public.
     whereConditions = baseConditions.flatMap((baseCondition) => {
       if (!searchConditions) {
-        return [{ ...baseCondition, ...filterCondition }];
+        return [{ ...filterCondition, ...baseCondition }];
       }
 
       return searchConditions.map((searchCondition) => ({
-        ...baseCondition,
-        ...searchCondition,
         ...filterCondition,
+        ...searchCondition,
+        ...baseCondition,
       }));
     });
 
@@ -197,9 +200,22 @@ export class BaseService<
     const order: any = {};
 
     if (orderBy && orderBy.length > 0) {
+      const sortable = this.columnNames();
       for (const item of orderBy) {
+        if (!item || typeof item !== 'object') {
+          throw new BadRequestException('orderBy must be an array of objects');
+        }
         for (const key in item) {
-          order[key] = (item[key] as string).toUpperCase();
+          if (!sortable.has(key)) {
+            throw new BadRequestException(`Cannot sort by unknown column "${key}"`);
+          }
+          const direction = String(item[key]).toUpperCase();
+          if (direction !== 'ASC' && direction !== 'DESC') {
+            throw new BadRequestException(
+              `Sort direction for "${key}" must be ASC or DESC`,
+            );
+          }
+          order[key] = direction;
         }
       }
     } else {
@@ -224,10 +240,19 @@ export class BaseService<
     };
   }
 
+  /** Tên các cột thật của entity — dùng để lọc tham số rác trước khi đưa cho TypeORM. */
+  protected columnNames(): Set<string> {
+    return new Set(this.repo.metadata.columns.map((c) => c.propertyName));
+  }
+
   protected applyFilters(filters: Record<string, any>): FindOptionsWhere<T> {
     const condition: any = {};
+    const columns = this.columnNames();
 
     Object.keys(filters).forEach((key) => {
+      // Tham số lạ (?foo=1) trước đây được đẩy thẳng vào TypeORM và ném
+      // EntityPropertyNotFoundError → 500. Giờ bỏ qua im lặng.
+      if (!columns.has(key)) return;
       const value = filters[key];
       if (value !== undefined && value !== null && value !== '') {
         condition[key] = value;

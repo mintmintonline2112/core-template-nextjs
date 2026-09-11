@@ -10,6 +10,7 @@ import {
   QuoteRequest,
   QuoteRequestStatus,
 } from './entities/quote-request.entity';
+import { NOTIFICATION_MODULE } from 'src/common/constants/notification-modules';
 
 @Injectable()
 export class QuoteRequestsService extends BaseService<QuoteRequest, number> {
@@ -44,7 +45,7 @@ export class QuoteRequestsService extends BaseService<QuoteRequest, number> {
       await this.notificationRepo.save(
         this.notificationRepo.create({
           type: 'quote-request',
-          module: 'quoterequests',
+          module: NOTIFICATION_MODULE.quoteRequest,
           title: `New quote request from ${data.company}`,
           message: `${data.variety} — ${data.volume} → ${data.destination}`,
           metadata: { link: '/admin/quote-requests', quoteRequestId: quote.id },

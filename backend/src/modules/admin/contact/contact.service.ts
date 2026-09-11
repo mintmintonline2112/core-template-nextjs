@@ -10,6 +10,7 @@ import { contactTemplate } from '../mail/templates/contact.template';
 import { AppNotification } from '../notifications/notification.entity';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { ContactEntity } from './entities/contact.entity';
+import { NOTIFICATION_MODULE } from 'src/common/constants/notification-modules';
 
 @Injectable()
 export class ContactService {
@@ -40,7 +41,7 @@ export class ContactService {
       await this.notificationRepo.save(
         this.notificationRepo.create({
           type: 'contact',
-          module: 'admincontact',
+          module: NOTIFICATION_MODULE.contact,
           title: `Liên hệ mới từ ${data.fullname}`,
           message: data.subject || data.message.slice(0, 120),
           metadata: { link: '/admin/contacts', contactId: contact.id },

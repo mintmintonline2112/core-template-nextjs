@@ -42,6 +42,10 @@ export class BlogPostsController extends BaseController<
     super(postsService, 'BlogPost');
   }
 
+  protected getFilterableFields(): (keyof BlogPost)[] {
+    return ['status', 'categoryId'];
+  }
+
   protected override getSearchFields(): (keyof BlogPost)[] {
     return ['title', 'excerpt'];
   }

@@ -6,7 +6,7 @@ import type { SocialLinks } from "@/lib/settings";
  * quản trị tại /admin/contact-page. Mọi trường đều tùy chọn: thiếu thì trang
  * public dùng từ điển i18n / mặc định trong code (không bao giờ trống).
  *
- * Bản dịch tiếng Trung nằm ngay trong từng nhóm dưới key `zh` (đơn giản hơn
+ * Bản dịch tiếng Việt nằm ngay trong từng nhóm dưới key `vi` (đơn giản hơn
  * cột translations vì đây là 1 object cấu hình, không phải bảng nội dung).
  */
 
@@ -24,33 +24,18 @@ export type ContactPageConfig = {
     lead?: string;
     vi?: { eyebrow?: string; title?: string; lead?: string };
   };
-  /** Khung "Gọi trực tiếp" — to nhất, đứng đầu danh sách kênh liên hệ. */
-  hotline?: {
-    enabled?: boolean;
-    /** Số hiển thị — trống thì dùng clinic.phone. */
-    phone?: string;
-    label?: string;
-    note?: string;
-    vi?: { label?: string; note?: string };
-  };
-  /** Khung Zalo (ảnh QR + link mở Zalo) nằm ngay trên Facebook. */
-  zalo?: {
-    qrUrl?: string;
-    /** Link zalo.me/... — trống thì suy từ số hotline. */
-    url?: string;
-  };
   social?: SocialLinks;
-  clinic?: {
-    enabled?: boolean;
+  /** Thông tin công ty — hiện ở trang Liên hệ và chân trang. */
+  company?: {
     name?: string;
+    /** Quốc gia / khu vực, hiện ở dòng "Location". */
+    location?: string;
     address?: string;
     phone?: string;
     email?: string;
-    hours?: string;
+    /** Link Google Maps cho nút "Xem bản đồ" (tùy chọn). */
     mapUrl?: string;
-    /** Link nhúng Google Maps (iframe src) — tùy chọn, có thì hiện bản đồ. */
-    mapEmbedUrl?: string;
-    vi?: { name?: string; address?: string; hours?: string };
+    vi?: { name?: string; location?: string; address?: string };
   };
   form?: {
     enabled?: boolean;

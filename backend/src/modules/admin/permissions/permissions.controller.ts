@@ -31,6 +31,10 @@ export class PermissionsController extends BaseController<
     super(permissionsService, 'PERMISSION');
   }
 
+  protected getFilterableFields(): (keyof Permission)[] {
+    return ['module'];
+  }
+
   @Post()
   @Permissions('CREATE')
   @ApiBody({ type: CreatePermissionDto })

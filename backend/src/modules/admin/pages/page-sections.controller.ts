@@ -30,6 +30,10 @@ export class PageSectionsController extends BaseController<
     super(sectionsService, 'PageSection');
   }
 
+  protected getFilterableFields(): (keyof PageSection)[] {
+    return ['pageId', 'isActive'];
+  }
+
   protected override getSearchFields(): (keyof PageSection)[] {
     return ['sectionKey', 'heading'];
   }

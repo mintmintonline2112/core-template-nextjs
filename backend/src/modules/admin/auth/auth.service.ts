@@ -10,15 +10,35 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { createHash, randomUUID, timingSafeEqual } from 'crypto';
 import { Request, Response } from 'express';
 import { JwtConfig } from 'src/config/jwt.config';
 import { Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { RefreshToken } from '../refresh-token/refresh-token.entity';
+import { Staff } from '../staffs/staffs.entity';
 import { StaffLoginDto } from '../staffs/dto/StaffLoginDto';
 import { StaffsService } from '../staffs/staffs.service';
 import { UpdateProfileDto } from '../staffs/dto/UpdateProfileDto';
 import { UploadImageService } from 'src/modules/upload-image/upload-image.service';
+
+/**
+ * Số phiên đăng nhập giữ lại cho mỗi nhân viên. Vượt quá thì phiên cũ nhất bị xoá,
+ * nên bảng có trần cứng dù ai đó đăng nhập lại bao nhiêu lần đi nữa.
+ */
+const MAX_SESSIONS_PER_STAFF = 10;
+
+/** Băm refresh token để lưu: SHA-256 phủ toàn bộ chuỗi và tra tức thì. */
+function hashToken(token: string): string {
+  return createHash('sha256').update(token).digest('hex');
+}
+
+/** So hai chuỗi băm mà không để lộ vị trí ký tự lệch qua thời gian chạy. */
+function sameHash(a: string, b: string): boolean {
+  const left = Buffer.from(a, 'hex');
+  const right = Buffer.from(b, 'hex');
+  return left.length === right.length && timingSafeEqual(left, right);
+}
 
 @Injectable()
 export class AuthService {
@@ -59,21 +79,101 @@ export class AuthService {
     };
   }
 
-  // Generate tokens from payload
-  private async generateTokens(payload: any) {
+  private signAccessToken(payload: any): Promise<string> {
     const jwt = this.configService.getOrThrow<JwtConfig>('jwt');
 
-    const accessToken = await this.jwtService.signAsync(payload, {
+    return this.jwtService.signAsync(payload, {
       secret: jwt.accessTokenSecret,
       expiresIn: jwt.accessTokenExpiresIn,
     } as JwtSignOptions);
+  }
 
-    const refreshToken = await this.jwtService.signAsync(payload, {
+  /**
+   * Refresh token chỉ mang id nhân viên và mã phiên — không kèm danh sách quyền
+   * như access token, vừa nhẹ cookie vừa không nhân đôi chỗ lộ quyền.
+   */
+  private signRefreshToken(
+    staffId: string,
+    sessionId: string,
+  ): Promise<string> {
+    const jwt = this.configService.getOrThrow<JwtConfig>('jwt');
+
+    return this.jwtService.signAsync({ id: staffId, sid: sessionId }, {
       secret: jwt.refreshTokenSecret,
       expiresIn: jwt.refreshTokenExpiresIn,
     } as JwtSignOptions);
+  }
 
-    return { accessToken, refreshToken };
+  /**
+   * Dọn bảng phiên: xoá hàng đã hết hạn của mọi người, rồi cắt bớt phiên cũ của
+   * riêng nhân viên sắp đăng nhập. Chạy ngay trong luồng đăng nhập nên không cần
+   * cài thêm tác vụ định kỳ.
+   */
+  private async pruneSessions(staffId: string): Promise<void> {
+    try {
+      await this.refreshTokenRepo
+        .createQueryBuilder()
+        .delete()
+        .where('expiresAt < NOW()')
+        .execute();
+
+      const stale = await this.refreshTokenRepo
+        .createQueryBuilder('token')
+        .select('token.id', 'id')
+        .where('token.staff_id = :staffId', { staffId })
+        .orderBy('token.createdAt', 'DESC')
+        .offset(MAX_SESSIONS_PER_STAFF - 1)
+        .limit(100)
+        .getRawMany<{ id: number }>();
+
+      if (stale.length) {
+        await this.refreshTokenRepo.delete(stale.map((row) => row.id));
+      }
+    } catch {
+      // Dọn dẹp là việc phụ — hỏng thì vẫn phải cho người ta đăng nhập.
+    }
+  }
+
+  /**
+   * Cấp cookie cho một phiên mới và ghi phiên đó xuống DB.
+   * Dùng chung cho cả đăng nhập admin lẫn đăng nhập nhân viên.
+   */
+  private async issueSession(staff: Staff, req: Request, res: Response) {
+    const jwt = this.configService.getOrThrow<JwtConfig>('jwt');
+    const accessMaxAge = this.parseExpiresIn(jwt.accessTokenExpiresIn);
+    const refreshMaxAge = this.parseExpiresIn(jwt.refreshTokenExpiresIn);
+
+    const payload = this.buildPayload(staff);
+    const sessionId = randomUUID();
+
+    const accessToken = await this.signAccessToken(payload);
+    const refreshToken = await this.signRefreshToken(staff.id, sessionId);
+
+    await this.pruneSessions(staff.id);
+
+    const userAgent = req.headers['user-agent'] || '';
+    const parser = new UAParser(userAgent);
+
+    await this.refreshTokenRepo.save({
+      staff,
+      sessionId,
+      tokenHash: hashToken(refreshToken),
+      expiresAt: new Date(Date.now() + refreshMaxAge),
+      ipAddress: req.ip,
+      userAgent,
+      device: parser.getDevice().model || 'PC',
+      browser: parser.getBrowser().name || 'Unknown',
+      os: parser.getOS().name || 'Unknown',
+    });
+
+    res.cookie('accessToken', accessToken, this.getCookieOptions(accessMaxAge));
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      this.getCookieOptions(refreshMaxAge),
+    );
+
+    return payload;
   }
 
   // Build JWT payload — permissions stored as flat string array (e.g. ["PRODUCT_LIST", ...])
@@ -111,14 +211,6 @@ export class AuthService {
   // LOGIN ADMIN
   async login(dto: StaffLoginDto, req: Request, res: Response) {
     try {
-      const userAgent = req.headers['user-agent'] || '';
-      const ip = req.ip;
-
-      const parser = new UAParser(userAgent);
-      const device = parser.getDevice().model || 'PC';
-      const browser = parser.getBrowser().name || 'Unknown';
-      const os = parser.getOS().name || 'Unknown';
-
       const email = dto.email.trim();
 
       const staff = await this.staffsService.findOne({
@@ -144,40 +236,7 @@ export class AuthService {
         throw new InternalServerErrorException('Invalid email or password');
       }
 
-      const payload = this.buildPayload(staff);
-      const { accessToken, refreshToken } = await this.generateTokens(payload);
-
-      const jwt = this.configService.getOrThrow<JwtConfig>('jwt');
-
-      const accessMaxAge = this.parseExpiresIn(jwt.accessTokenExpiresIn);
-      const refreshMaxAge = this.parseExpiresIn(jwt.refreshTokenExpiresIn);
-
-      await this.refreshTokenRepo.save({
-        staff,
-        token: await bcrypt.hash(refreshToken, 10),
-        expiresAt: new Date(Date.now() + refreshMaxAge),
-        ipAddress: ip,
-        userAgent,
-        device,
-        browser,
-        os,
-      });
-
-      res.cookie(
-        'accessToken',
-        accessToken,
-        this.getCookieOptions(accessMaxAge),
-      );
-
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        this.getCookieOptions(refreshMaxAge),
-      );
-
-      return {
-        user: payload,
-      };
+      return { user: await this.issueSession(staff, req, res) };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -192,14 +251,6 @@ export class AuthService {
   //LOGIN STAFF
   async loginStaff(dto: StaffLoginDto, req: Request, res: Response) {
     try {
-      const userAgent = req.headers['user-agent'] || '';
-      const ip = req.ip;
-
-      const parser = new UAParser(userAgent);
-      const device = parser.getDevice().model || 'PC';
-      const browser = parser.getBrowser().name || 'Unknown';
-      const os = parser.getOS().name || 'Unknown';
-
       const email = dto.email.trim();
 
       const staff = await this.staffsService.findOne({
@@ -221,40 +272,7 @@ export class AuthService {
         throw new InternalServerErrorException('Invalid email or password');
       }
 
-      const payload = this.buildPayload(staff);
-      const { accessToken, refreshToken } = await this.generateTokens(payload);
-
-      const jwt = this.configService.getOrThrow<JwtConfig>('jwt');
-
-      const accessMaxAge = this.parseExpiresIn(jwt.accessTokenExpiresIn);
-      const refreshMaxAge = this.parseExpiresIn(jwt.refreshTokenExpiresIn);
-
-      await this.refreshTokenRepo.save({
-        staff,
-        token: await bcrypt.hash(refreshToken, 10),
-        expiresAt: new Date(Date.now() + refreshMaxAge),
-        ipAddress: ip,
-        userAgent,
-        device,
-        browser,
-        os,
-      });
-
-      res.cookie(
-        'accessToken',
-        accessToken,
-        this.getCookieOptions(accessMaxAge),
-      );
-
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        this.getCookieOptions(refreshMaxAge),
-      );
-
-      return {
-        user: payload,
-      };
+      return { user: await this.issueSession(staff, req, res) };
     } catch (error) {
       if (error.message) {
         throw new InternalServerErrorException(error.message);
@@ -276,8 +294,9 @@ export class AuthService {
       const accessMaxAge = this.parseExpiresIn(jwt.accessTokenExpiresIn);
       const refreshMaxAge = this.parseExpiresIn(jwt.refreshTokenExpiresIn);
 
+      let decoded: { id?: string; sid?: string };
       try {
-        await this.jwtService.verifyAsync(oldRefreshToken, {
+        decoded = await this.jwtService.verifyAsync(oldRefreshToken, {
           secret: jwt.refreshTokenSecret,
           clockTolerance: 5,
         });
@@ -285,38 +304,40 @@ export class AuthService {
         throw new UnauthorizedException('Session expired');
       }
 
-      const decoded = this.jwtService.decode(oldRefreshToken) as any;
+      if (!decoded?.sid) {
+        throw new UnauthorizedException('Invalid session');
+      }
 
-      const tokens = await this.refreshTokenRepo.find({
-        where: { staff: { id: decoded.id } },
+      // Tra thẳng bằng mã phiên: đúng một hàng, đúng một phép so bcrypt, thay vì
+      // duyệt mọi phiên của nhân viên như trước.
+      const session = await this.refreshTokenRepo.findOne({
+        where: { sessionId: decoded.sid },
         relations: ['staff', 'staff.role', 'staff.role.permissions'],
       });
 
-      let validToken: RefreshToken | null = null;
-
-      for (const t of tokens) {
-        const isMatch = await bcrypt.compare(oldRefreshToken, t.token);
-        if (isMatch) {
-          validToken = t;
-          break;
-        }
-      }
-
-      if (
-        !validToken ||
-        validToken.isRevoked ||
-        validToken.expiresAt < new Date()
-      ) {
+      if (!session || session.expiresAt < new Date()) {
         throw new UnauthorizedException('Invalid or expired token');
       }
 
-      const { accessToken, refreshToken: newRefreshToken } =
-        await this.generateTokens(this.buildPayload(validToken.staff));
+      if (!sameHash(session.tokenHash, hashToken(oldRefreshToken))) {
+        // Đúng mã phiên nhưng sai token = token cũ bị dùng lại sau khi đã xoay.
+        // Coi như phiên bị lộ và huỷ luôn.
+        await this.refreshTokenRepo.delete(session.id);
+        throw new UnauthorizedException('Invalid or expired token');
+      }
 
-      validToken.token = await bcrypt.hash(newRefreshToken, 10);
-      validToken.expiresAt = new Date(Date.now() + refreshMaxAge);
+      const newRefreshToken = await this.signRefreshToken(
+        session.staff.id,
+        session.sessionId,
+      );
+      const accessToken = await this.signAccessToken(
+        this.buildPayload(session.staff),
+      );
 
-      await this.refreshTokenRepo.save(validToken);
+      session.tokenHash = hashToken(newRefreshToken);
+      session.expiresAt = new Date(Date.now() + refreshMaxAge);
+
+      await this.refreshTokenRepo.save(session);
 
       res.cookie(
         'accessToken',
@@ -342,37 +363,31 @@ export class AuthService {
     }
   }
 
+  /** Đọc mã phiên trong refresh token mà không cần token còn hạn. */
+  private readSessionId(refreshToken?: string): string | null {
+    if (!refreshToken) return null;
+    try {
+      const decoded = this.jwtService.decode(refreshToken);
+      return decoded?.sid ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   // LOGOUT
   async logout(req: Request, res: Response) {
     const refreshToken = req.cookies?.refreshToken;
 
-    if (!refreshToken) {
-      throw new InternalServerErrorException('Token not found');
-    }
-
-    const tokens = await this.refreshTokenRepo.find({
-      relations: ['staff'],
-    });
-
-    let validToken: RefreshToken | null = null;
-
-    for (const t of tokens) {
-      const isMatch = await bcrypt.compare(refreshToken, t.token);
-      if (isMatch) {
-        validToken = t;
-        break;
-      }
-    }
-
-    if (!validToken) {
-      throw new InternalServerErrorException('Invalid token');
-    }
-
-    validToken.isRevoked = true;
-    await this.refreshTokenRepo.save(validToken);
-
+    // Cookie dọn trước và luôn dọn: cookie hỏng hay hết hạn thì vẫn phải đăng
+    // xuất được, trước đây chỗ này trả lỗi 500.
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
+
+    // Xoá hẳn hàng thay vì đánh dấu đã thu hồi — hàng chỉ tồn tại khi phiên còn sống.
+    const sessionId = this.readSessionId(refreshToken);
+    if (sessionId) {
+      await this.refreshTokenRepo.delete({ sessionId });
+    }
 
     return { message: 'Logout successful' };
   }

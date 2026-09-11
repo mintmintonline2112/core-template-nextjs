@@ -133,6 +133,9 @@ rồi restart `primenuts_web` trong panel.
 - **Copy ảnh vào `uploads/` bằng FTP mà admin không thấy**: thư viện đọc từ bảng
   `media` chứ không quét đĩa mỗi lần. Vào Thư viện bấm **Quét lại** (hoặc restart
   `primenuts_api`, backend tự đồng bộ lúc khởi động).
+- **Đang dùng admin thì bị đá ra đăng nhập lại**: mỗi tài khoản giữ tối đa 10
+  phiên; đăng nhập ở máy thứ 11 sẽ đẩy phiên cũ nhất ra. Phiên cũng tự hết hạn
+  sau 7 ngày.
 - **Sửa DB bằng SQL trực tiếp mà site không đổi**: backend cache 2 phút, sửa qua admin
   thì tự xoá cache, sửa bằng SQL thì `pm2 restart primenuts_api` hoặc chờ 2 phút.
 - Test nhanh: `curl -s https://primenuts.vn/api` trả JSON 404 của Nest = proxy OK;

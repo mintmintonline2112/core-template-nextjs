@@ -12,7 +12,6 @@ import { UpdateStaffDto } from './dto/UpdateStaffDto';
 import * as bcrypt from 'bcrypt';
 import { AccountStatus } from 'src/common/enums/account-status.enum';
 import { AccountType } from 'src/common/enums/account-type.enum';
-import { User } from '../users/user.entity';
 import { isAdmin } from 'src/common/helpers/isAdmin.helper';
 
 @Injectable()
@@ -21,8 +20,6 @@ export class StaffsService extends BaseService<Staff, string> {
     @InjectRepository(Staff)
     private readonly staffRepository: Repository<Staff>,
 
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {
     super(staffRepository);
   }
@@ -47,13 +44,12 @@ export class StaffsService extends BaseService<Staff, string> {
   }
 
   async createStaff(data: CreateStaffDto): Promise<Staff> {
-    const [existingStaff, existingUser] = await Promise.all([
-      this.staffRepository.findOne({ where: { email: data.email } }),
-      this.userRepository.findOne({ where: { email: data.email } }),
-    ]);
+    const existingStaff = await this.staffRepository.findOne({
+      where: { email: data.email },
+    });
 
-    if (existingStaff || existingUser) {
-      throw new BadRequestException('Email is empty');
+    if (existingStaff) {
+      throw new BadRequestException('Email đã được sử dụng');
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -74,14 +70,11 @@ export class StaffsService extends BaseService<Staff, string> {
     const staff = await this.checkAdminProtection(id, 'update');
 
     if (data.email) {
-      const [existingStaff, existingUser] = await Promise.all([
-        this.staffRepository.findOne({
-          where: { email: data.email, id: Not(id) },
-        }),
-        this.userRepository.findOne({ where: { email: data.email } }),
-      ]);
+      const existingStaff = await this.staffRepository.findOne({
+        where: { email: data.email, id: Not(id) },
+      });
 
-      if (existingStaff || existingUser) {
+      if (existingStaff) {
         throw new BadRequestException('Email already exists');
       }
     }

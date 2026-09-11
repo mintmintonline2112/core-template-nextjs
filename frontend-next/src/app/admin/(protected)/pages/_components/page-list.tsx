@@ -86,7 +86,7 @@ export function PageList() {
   return (
     <DataTable<SitePage>
       title="Trang nội dung"
-      subtitle="Các trang tĩnh của website (giới thiệu, giải pháp, liên hệ...)"
+      subtitle="Các trang tĩnh của website (giới thiệu, sản phẩm, liên hệ...)"
       queryKey={[...PAGE_QUERY_KEY]}
       columns={COLUMNS}
       fetcher={(params) => pageService.paginate(params)}

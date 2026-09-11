@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PermissionSeed } from './seeds/permission.seed';
 import { RoleSeed } from './seeds/role.seed';
 import { StaffSeed } from './seeds/staff.seed';
-import { UserSeed } from './seeds/user.seed';
 import { BlogSeed } from './seeds/blog.seed';
 import { PageSeed } from './seeds/page.seed';
 import { SectionDefinitionSeed } from './seeds/section-definition.seed';
@@ -14,7 +13,6 @@ export class SeedingService {
     private readonly permissionSeed: PermissionSeed,
     private readonly roleSeed: RoleSeed,
     private readonly staffSeed: StaffSeed,
-    private readonly userSeed: UserSeed,
     private readonly blogSeed: BlogSeed,
     private readonly pageSeed: PageSeed,
     private readonly sectionDefinitionSeed: SectionDefinitionSeed,
@@ -26,7 +24,6 @@ export class SeedingService {
     await this.permissionSeed.run();
     await this.roleSeed.run();
     await this.staffSeed.run();
-    await this.userSeed.run();
     await this.blogSeed.run();
     await this.pageSeed.run();
     await this.sectionDefinitionSeed.run();

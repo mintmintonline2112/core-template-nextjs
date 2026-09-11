@@ -7,10 +7,14 @@ Website for Prime Nuts USA — California almond supply for U.S. and global mark
 ```
 primenutsvn/
 ├── frontend-next/    # Website + admin CMS (Next.js 15) — bản chính thức, nối backend
-├── backend/          # NestJS + TypeORM/MySQL CMS API — see backend/README.md
-├── frontend/         # Bản demo tĩnh ban đầu (HTML/CSS/JS) — tham chiếu thiết kế
-└── skills/, tools/   # Local Claude/dev tooling — not part of the website
+├── backend/          # NestJS + TypeORM/MySQL CMS API — xem backend/README.md
+└── deploy.sh         # Deploy lên VPS bằng một lệnh
 ```
+
+Trên máy dev còn `frontend/` (bản demo tĩnh ban đầu, giữ làm tham chiếu thiết kế)
+và `skills/`, `tools/` (công cụ Claude). Ba thư mục này **cố ý không đưa vào git**
+— chúng không thuộc sản phẩm và trước đây khiến mỗi lần VPS `git pull` phải kéo
+thêm ~10 MB. Xem `.gitignore` ở gốc.
 
 ## Quick start
 

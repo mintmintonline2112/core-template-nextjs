@@ -3,3 +3,6 @@ node_modules/
 out/
 .env*.local
 *.tsbuildinfo
+
+# File .env thật (tạo trên từng máy) — chỉ commit .env.example
+.env

@@ -4,10 +4,9 @@ import { StaffsController } from './staffs.controller';
 import { Staff } from './staffs.entity';
 import { StaffsService } from './staffs.service';
 import { RefreshToken } from '../refresh-token/refresh-token.entity';
-import { User } from '../users/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Staff, RefreshToken, User])],
+  imports: [TypeOrmModule.forFeature([Staff, RefreshToken])],
   providers: [StaffsService],
   controllers: [StaffsController],
   exports: [StaffsService],

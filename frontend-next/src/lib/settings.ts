@@ -21,7 +21,7 @@ export type ThemeColorOverrides = Partial<{
 export interface SiteSettings {
   siteTitle?: string;
   siteDescription?: string;
-  /** Chữ hiển thị cạnh logo góc trên trái — trống dùng mặc định theme ("Dr. Đỗ Long"). */
+  /** Chữ hiển thị cạnh logo góc trên trái — trống dùng mặc định theme ("Prime Nuts USA"). */
   brandName?: string;
   /** Dòng chữ cuối trang, hiện sau "© <năm> " — trống dùng mặc định i18n. */
   footerText?: string;

@@ -1,6 +1,6 @@
 # Prime Nuts USA — Frontend (Next.js)
 
-Website + trang quản trị CMS cho Prime Nuts USA, dựng theo kiến trúc dentis-next
+Website + trang quản trị CMS cho Prime Nuts USA, dựng theo kiến trúc Next.js App Router
 (Next.js 15 App Router, React 19) và nối với `backend/` (NestJS).
 
 ## Chạy

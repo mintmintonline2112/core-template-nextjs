@@ -3,7 +3,6 @@ import { AuthModule } from './auth/auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { StaffsModule } from './staffs/staffs.module';
-import { UsersModule } from './users/user.module';
 import { NotificationModule } from './notifications/notification.module';
 import { BlogPostsModule } from './blog-posts/blog-posts.module';
 import { BlogCategoriesModule } from './blog-categories/blog-categories.module';
@@ -22,7 +21,6 @@ import { SettingsModule } from './settings/settings.module';
     RolesModule,
     PermissionsModule,
     StaffsModule,
-    UsersModule,
     NotificationModule,
     BlogPostsModule,
     BlogCategoriesModule,
@@ -40,7 +38,6 @@ import { SettingsModule } from './settings/settings.module';
     RolesModule,
     PermissionsModule,
     StaffsModule,
-    UsersModule,
   ],
 })
 export class AdminModule {}

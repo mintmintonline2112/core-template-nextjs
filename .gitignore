@@ -1,0 +1,19 @@
+# ============================================================
+# .gitignore cấp gốc — chỉ theo dõi mã nguồn sản phẩm.
+# Mỗi app còn .gitignore riêng (node_modules, .next, dist, logs…).
+# ============================================================
+
+# Công cụ dev của Claude — không thuộc website, không cần đưa lên VPS
+skills/
+tools/
+
+# Bản demo tĩnh ban đầu (HTML/CSS/JS) — giữ trên máy làm tham chiếu thiết kế,
+# ảnh trong đó trùng hệt frontend-next/public/images nên không đẩy lên git
+frontend/
+
+# Chỉ mục CodeGraph
+.codegraph/
+
+# Hệ điều hành
+Thumbs.db
+.DS_Store

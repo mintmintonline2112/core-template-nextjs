@@ -386,7 +386,7 @@ export class AuthService {
     }
 
     const staff = await this.staffsService.findOne({
-      where: { id: req.user['id'] },
+      where: { id: (req.user as { id: string }).id },
     });
 
     return {

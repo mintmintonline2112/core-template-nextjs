@@ -6,7 +6,6 @@ import { Permission } from 'src/modules/admin/permissions/permissions.entity';
 import { StaffsController } from 'src/modules/admin/staffs/staffs.controller';
 import { RolesController } from 'src/modules/admin/roles/roles.controller';
 import { PermissionsController } from 'src/modules/admin/permissions/permissions.controller';
-import { UsersController } from 'src/modules/admin/users/user.controller';
 import { BlogPostsController } from 'src/modules/admin/blog-posts/blog-posts.controller';
 import { BlogCategoriesController } from 'src/modules/admin/blog-categories/blog-categories.controller';
 import { PagesController } from 'src/modules/admin/pages/pages.controller';
@@ -38,7 +37,6 @@ export class PermissionSeed {
       StaffsController,
       RolesController,
       PermissionsController,
-      UsersController,
       BlogPostsController,
       BlogCategoriesController,
       PagesController,
@@ -60,8 +58,6 @@ export class PermissionSeed {
       DETAIL: 'Detail',
       SORT: 'Sort',
       BLOCK: 'Block/Unblock',
-      ORDER_CONFIRM: 'Confirm',
-      ORDER_CANCEL: 'Cancel',
       UPDATE_STATUS: 'Update Status',
       EXPORT: 'Export Data',
       IMPORT: 'Import Data',
@@ -71,7 +67,6 @@ export class PermissionSeed {
       STAFF: 'Staff',
       ROLE: 'Role',
       PERMISSION: 'Permission',
-      USER: 'User',
       BLOG_POST: 'Blog Post',
       BLOG_CATEGORY: 'Blog Category',
       PAGE: 'Page',
@@ -93,7 +88,10 @@ export class PermissionSeed {
     ];
 
     for (const controllerClass of controllers) {
-      const controllerProto = controllerClass.prototype;
+      const controllerProto = controllerClass.prototype as unknown as Record<
+        string,
+        unknown
+      >;
       const entity = this.reflector.get<string>(
         ENTITY_METADATA_KEY,
         controllerClass,
@@ -105,7 +103,10 @@ export class PermissionSeed {
         this.metadataScanner.getAllMethodNames(controllerProto);
 
       methodNames.forEach((methodName) => {
-        const methodRef = controllerProto[methodName];
+        // Reflector.get nhận hàm handler; prototype đã ép kiểu nên khai lại cho đúng.
+        const methodRef = controllerProto[methodName] as
+          | ((...args: unknown[]) => unknown)
+          | undefined;
         if (!methodRef) return;
 
         const rawPermissions: string[] =

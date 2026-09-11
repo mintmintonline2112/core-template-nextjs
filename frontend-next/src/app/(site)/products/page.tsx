@@ -5,6 +5,7 @@ import { SizeScale } from "@/app/(site)/_components/SizeScale";
 import { getCmsPage, sectionMap } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import { KERNEL_SIZES } from "@/config/products";
 import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -45,7 +46,7 @@ const PROCESSED = [
   { name: "Custom Specifications", text: "Other cuts, grades, and preparations can be evaluated according to your application and destination market.", image: "/images/products/custom-specifications.jpg", icon: <><path d="M4 21v-4M4 13v-2M4 7V3M12 21v-8M12 9V3M20 21v-2M20 15V3" /><circle cx="4" cy="15" r="2" /><circle cx="12" cy="11" r="2" /><circle cx="20" cy="17" r="2" /></> },
 ];
 
-const SIZES = ["18/20", "20/22", "23/25", "25/27", "27/30", "30/32", "32/34"];
+const SIZES = [...KERNEL_SIZES];
 
 function ProductIcon({ icon }: { icon: ReactNode }) {
   return (

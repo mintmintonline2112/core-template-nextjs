@@ -80,7 +80,7 @@ export class AuthController {
     @Body() dto: UpdateProfileDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    const staffId = req.user['id'];
+    const staffId = (req.user as { id: string }).id;
     return this.authService.updateProfile(staffId, dto, file);
   }
 }

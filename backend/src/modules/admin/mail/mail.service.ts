@@ -4,8 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { MailConfig } from 'src/config/mail.config';
 import { getOtpTemplate } from './templates/otp.template';
 import { getPasswordResetTemplate } from './templates/reset-password.template';
-import { getOrderConfirmationTemplate } from './templates/order-confirmation.template';
-import { getPaymentOtpTemplate } from './templates/payment-otp.template';
 
 @Injectable()
 export class MailService implements OnModuleInit {
@@ -31,7 +29,7 @@ export class MailService implements OnModuleInit {
       console.log('Mail is not configured (MAIL_HOST/MAIL_USER/MAIL_PASS) — skipping SMTP.');
       return;
     }
-    this.transporter.verify((error, success) => {
+    this.transporter.verify((error: Error | null, success: boolean) => {
       if (error) {
         console.error('SMTP connection failed:', error);
       } else {
@@ -90,23 +88,4 @@ export class MailService implements OnModuleInit {
     });
   }
 
-  async sendPaymentOtpEmail(to: string, otp: string) {
-    const mail = this.configService.get<MailConfig>('mail');
-    return this.deliver({
-      from: `"Prime Nuts USA" <${mail.from}>`,
-      to,
-      subject: '[Prime Nuts USA] Mã xác nhận thanh toán',
-      html: getPaymentOtpTemplate(otp),
-    });
-  }
-
-  async sendOrderConfirmationEmail(to: string, order: Parameters<typeof getOrderConfirmationTemplate>[0]) {
-    const mail = this.configService.get<MailConfig>('mail');
-    return this.deliver({
-      from: `"Prime Nuts USA" <${mail.from}>`,
-      to,
-      subject: `[Prime Nuts USA] Đặt hàng thành công - Mã đơn ${order.order_code}`,
-      html: getOrderConfirmationTemplate(order),
-    });
-  }
 }

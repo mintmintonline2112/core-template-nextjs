@@ -182,7 +182,7 @@ export function BlogPostForm({ id }: { id?: number }) {
     <GenericForm<FormValues>
       key={formKey}
       title={isEdit ? 'Sửa bài viết' : 'Viết bài mới'}
-      subtitle={isEdit ? 'Cập nhật nội dung bài viết' : 'Thêm bài viết kiến thức nha khoa'}
+      subtitle={isEdit ? 'Cập nhật nội dung bài viết' : 'Thêm bài viết mới'}
       breadcrumbs={[
         { label: 'Bài viết', link: adminRoutes.blogPosts.list },
         { label: isEdit ? 'Sửa' : 'Tạo mới' },

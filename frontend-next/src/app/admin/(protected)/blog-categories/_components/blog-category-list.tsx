@@ -85,7 +85,7 @@ export function BlogCategoryList() {
   return (
     <DataTable<BlogCategory>
       title="Danh mục blog"
-      subtitle="Phân loại bài viết kiến thức nha khoa"
+      subtitle="Phân loại bài viết trên website"
       queryKey={[...BLOG_CATEGORY_QUERY_KEY]}
       columns={COLUMNS}
       fetcher={(params) => blogCategoryService.paginate(params)}

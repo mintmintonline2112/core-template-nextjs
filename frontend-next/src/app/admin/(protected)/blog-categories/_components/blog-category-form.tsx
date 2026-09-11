@@ -93,7 +93,7 @@ export function BlogCategoryForm({ id }: { id?: number }) {
 
   const FIELDS: GenericFormField[] = useMemo(
     () => [
-      { key: 'name', label: 'Tên danh mục', type: 'text', required: true, placeholder: 'VD: Niềng răng' },
+      { key: 'name', label: 'Tên danh mục', type: 'text', required: true, placeholder: 'VD: Thị trường xuất khẩu' },
       {
         key: 'displayName',
         label: 'Tên hiển thị ngoài website',

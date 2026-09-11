@@ -13,8 +13,6 @@ import { DiscoveryModule } from '@nestjs/core';
 import { RolesModule } from 'src/modules/admin/roles/roles.module';
 import { PermissionsModule } from 'src/modules/admin/permissions/permissions.module';
 import { StaffsModule } from 'src/modules/admin/staffs/staffs.module';
-import { User } from 'src/modules/admin/users/user.entity';
-import { UserSeed } from './seeds/user.seed';
 import { BlogCategory } from 'src/modules/admin/blog-categories/entities/blog-category.entity';
 import { BlogPost } from 'src/modules/admin/blog-posts/entities/blog-post.entity';
 import { Page } from 'src/modules/admin/pages/entities/page.entity';
@@ -34,7 +32,6 @@ import { MenuSeed } from './seeds/menu.seed';
       Permission,
       Role,
       Staff,
-      User,
       BlogCategory,
       BlogPost,
       Page,
@@ -52,7 +49,6 @@ import { MenuSeed } from './seeds/menu.seed';
     RoleSeed,
     StaffSeed,
     SeedingService,
-    UserSeed,
     BlogSeed,
     PageSeed,
     SectionDefinitionSeed,

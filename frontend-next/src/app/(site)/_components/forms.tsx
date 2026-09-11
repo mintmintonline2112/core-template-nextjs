@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { env } from "@/lib/env";
+import { ALMOND_VARIETIES, KERNEL_SIZES } from "@/config/products";
 
 /** Các form public nối API backend: báo giá B2B, liên hệ, newsletter. */
 
@@ -141,13 +142,9 @@ export function QuoteForm() {
             <label htmlFor="qf-variety">Almond Variety <span className="req" aria-hidden="true">*</span></label>
             <select id="qf-variety" name="variety" required defaultValue="">
               <option value="" disabled>Select a variety</option>
-              <option>Nonpareil</option>
-              <option>Independence</option>
-              <option>Carmel</option>
-              <option>Monterey</option>
-              <option>Butte</option>
-              <option>Padre</option>
-              <option>California Varieties</option>
+              {ALMOND_VARIETIES.map((v) => (
+                <option key={v}>{v}</option>
+              ))}
               <option>Mixed / To be discussed</option>
             </select>
           </div>
@@ -155,9 +152,10 @@ export function QuoteForm() {
             <label htmlFor="qf-size">Size &amp; Grade</label>
             <select id="qf-size" name="sizeGrade" defaultValue="">
               <option value="" disabled>Select a size</option>
-              <option>18/20</option><option>20/22</option><option>23/25</option>
-              <option>25/27</option><option>27/30</option><option>30/32</option>
-              <option>32/34</option><option>Other / Custom</option>
+              {KERNEL_SIZES.map((size) => (
+                <option key={size}>{size}</option>
+              ))}
+              <option>Other / Custom</option>
             </select>
           </div>
         </div>

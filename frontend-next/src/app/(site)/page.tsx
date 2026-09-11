@@ -8,6 +8,7 @@ import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { getCmsPage, mediaUrl, sectionMap } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import { KERNEL_SIZES } from "@/config/products";
 import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -83,7 +84,7 @@ const VARIETIES = [
   { name: "California Varieties", text: "Interchangeable varieties, ideal for processing and blanching." },
 ];
 
-const SIZES = ["18/20", "20/22", "23/25", "25/27", "27/30", "30/32", "32/34"];
+const SIZES = [...KERNEL_SIZES];
 
 // Ảnh tròn cho dàn varieties (tham chiếu Kaffa) — lặp vòng khi CMS thêm giống mới.
 const VARIETY_PHOTOS = [

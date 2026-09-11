@@ -114,7 +114,7 @@ export function BlogPostList() {
   return (
     <DataTable<BlogPost>
       title="Bài viết"
-      subtitle="Kiến thức nha khoa trên website"
+      subtitle="Tin tức & bài viết trên website"
       queryKey={[...BLOG_POST_QUERY_KEY]}
       columns={columns}
       fetcher={(params) => blogPostService.paginate(params)}

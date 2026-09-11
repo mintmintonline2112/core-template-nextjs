@@ -72,7 +72,27 @@ wait_port() { local i; for i in $(seq 1 40); do [ -n "$(port_pid "$1")" ] && ret
 say "1/6  Kéo code mới từ GitHub"
 git config --global --get-all safe.directory 2>/dev/null | grep -qx "$ROOT" \
   || git config --global --add safe.directory "$ROOT"
+# frontend-next/.env từng bị commit nhầm rồi gỡ khỏi git. Trên máy đã deploy,
+# file này là bản production ĐÃ SỬA nên `git pull` sẽ từ chối
+# ("local changes would be overwritten"). Cất bản thật ra ngoài, trả working
+# tree về sạch, pull xong đặt lại — chạy lần nào cũng an toàn.
+ENV_FILES="frontend-next/.env backend/.env"
+BACKED_UP=""
+for f in $ENV_FILES; do
+  if [ -f "$ROOT/$f" ] && git -C "$ROOT" ls-files --error-unmatch "$f" >/dev/null 2>&1; then
+    warn "$f đang được git theo dõi — tạm cất bản trên máy để pull không gãy."
+    cp "$ROOT/$f" "$ROOT/$f.deploy-backup"
+    git -C "$ROOT" checkout -- "$f" 2>/dev/null || true
+    BACKED_UP="$BACKED_UP $f"
+  fi
+done
+
 git -C "$ROOT" pull --ff-only
+
+for f in $BACKED_UP; do
+  mv -f "$ROOT/$f.deploy-backup" "$ROOT/$f"
+  echo "    ✔ đã đặt lại $f (bản cấu hình thật trên máy)"
+done
 
 say "2/6  Backend: cài gói + build"
 cd "$ROOT/backend"

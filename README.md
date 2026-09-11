@@ -134,8 +134,12 @@ rồi restart `primenuts_web` trong panel.
   `media` chứ không quét đĩa mỗi lần. Vào Thư viện bấm **Quét lại** (hoặc restart
   `primenuts_api`, backend tự đồng bộ lúc khởi động).
 - **Đang dùng admin thì bị đá ra đăng nhập lại**: mỗi tài khoản giữ tối đa 10
-  phiên; đăng nhập ở máy thứ 11 sẽ đẩy phiên cũ nhất ra. Phiên cũng tự hết hạn
-  sau 7 ngày.
+  phiên; đăng nhập ở máy thứ 11 sẽ đẩy phiên cũ nhất ra. Phiên hết hạn sau 7 ngày
+  không dùng, và tối đa 30 ngày kể từ lúc đăng nhập dù dùng liên tục. Khoá một
+  nhân viên trong admin thì họ mất quyền ngay lần gia hạn phiên kế tiếp, chậm nhất
+  là sau 60 phút.
+- **Cookie đăng nhập không có cờ bảo mật**: kiểm tra `NODE_ENV=production` trong
+  `backend/.env` trên VPS, rồi `pm2 restart primenuts_api`.
 - **Sửa DB bằng SQL trực tiếp mà site không đổi**: backend cache 2 phút, sửa qua admin
   thì tự xoá cache, sửa bằng SQL thì `pm2 restart primenuts_api` hoặc chờ 2 phút.
 - Test nhanh: `curl -s https://primenuts.vn/api` trả JSON 404 của Nest = proxy OK;

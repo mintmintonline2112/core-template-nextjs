@@ -42,6 +42,28 @@ export class RefreshToken {
   @Column({ name: 'token_hash', type: 'varchar', length: 64 })
   tokenHash: string;
 
+  /**
+   * Chuỗi băm của token ngay trước lần xoay gần nhất. Trong ít giây sau khi xoay
+   * thì token này vẫn được chấp nhận, để hai tab cùng làm mới một lúc không bị
+   * hiểu nhầm là token bị đánh cắp.
+   */
+  @Column({
+    name: 'previous_token_hash',
+    type: 'varchar',
+    length: 64,
+    nullable: true,
+  })
+  previousTokenHash: string | null;
+
+  /** Thời điểm xoay gần nhất — mốc tính khoảng đệm ở trên. */
+  @Column({
+    name: 'rotated_at',
+    type: 'datetime',
+    precision: 6,
+    nullable: true,
+  })
+  rotatedAt: Date | null;
+
   @Column({ type: 'timestamp' })
   expiresAt: Date;
 

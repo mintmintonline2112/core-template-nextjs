@@ -14,6 +14,8 @@ import { createHash, randomUUID, timingSafeEqual } from 'crypto';
 import { Request, Response } from 'express';
 import { JwtConfig } from 'src/config/jwt.config';
 import { Repository } from 'typeorm';
+import { AccountStatus } from 'src/common/enums/account-status.enum';
+import { AccountType } from 'src/common/enums/account-type.enum';
 import { UAParser } from 'ua-parser-js';
 import { RefreshToken } from '../refresh-token/refresh-token.entity';
 import { Staff } from '../staffs/staffs.entity';
@@ -27,6 +29,21 @@ import { UploadImageService } from 'src/modules/upload-image/upload-image.servic
  * nên bảng có trần cứng dù ai đó đăng nhập lại bao nhiêu lần đi nữa.
  */
 const MAX_SESSIONS_PER_STAFF = 10;
+
+/**
+ * Hạn cứng của một phiên, tính từ lúc đăng nhập. Hạn 7 ngày của refresh token
+ * được đẩy lùi mỗi lần làm mới nên tự nó không bao giờ tới; mốc này bảo đảm dù
+ * dùng liên tục thì cũng phải đăng nhập lại sau một tháng.
+ */
+const MAX_SESSION_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * Khoảng thời gian sau khi xoay mà token cũ vẫn được chấp nhận. Cần có vì hai tab
+ * admin cùng hết hạn access token một lúc sẽ cùng gọi làm mới, và tab chạy sau
+ * gửi token vừa bị thay — không có khoảng đệm thì cả hai bị đá ra dù không ai
+ * tấn công. Để ngắn để kẻ trộm token gần như không kịp dùng.
+ */
+const ROTATION_GRACE_MS = 10_000;
 
 /** Băm refresh token để lưu: SHA-256 phủ toàn bộ chuỗi và tra tức thì. */
 function hashToken(token: string): string {
@@ -158,6 +175,8 @@ export class AuthService {
       staff,
       sessionId,
       tokenHash: hashToken(refreshToken),
+      previousTokenHash: null,
+      rotatedAt: null,
       expiresAt: new Date(Date.now() + refreshMaxAge),
       ipAddress: req.ip,
       userAgent,
@@ -222,11 +241,11 @@ export class AuthService {
         throw new InternalServerErrorException('Invalid email or password');
       }
 
-      if (staff.status?.toString().toLowerCase() !== 'active') {
+      if (staff.status !== AccountStatus.ACTIVE) {
         throw new InternalServerErrorException('Account is not activated');
       }
 
-      if (staff.type !== 'admin') {
+      if (staff.type !== AccountType.ADMIN) {
         throw new UnauthorizedException('Unauthorized access');
       }
 
@@ -262,7 +281,7 @@ export class AuthService {
         throw new InternalServerErrorException('Invalid email or password');
       }
 
-      if (staff.status?.toString().toLowerCase() !== 'active') {
+      if (staff.status !== AccountStatus.ACTIVE) {
         throw new InternalServerErrorException('Account is not activated');
       }
 
@@ -308,8 +327,8 @@ export class AuthService {
         throw new UnauthorizedException('Invalid session');
       }
 
-      // Tra thẳng bằng mã phiên: đúng một hàng, đúng một phép so bcrypt, thay vì
-      // duyệt mọi phiên của nhân viên như trước.
+      // Tra thẳng bằng mã phiên: đúng một hàng, đúng một phép so chuỗi băm, thay
+      // vì duyệt mọi phiên của nhân viên như trước.
       const session = await this.refreshTokenRepo.findOne({
         where: { sessionId: decoded.sid },
         relations: ['staff', 'staff.role', 'staff.role.permissions'],
@@ -319,9 +338,34 @@ export class AuthService {
         throw new UnauthorizedException('Invalid or expired token');
       }
 
-      if (!sameHash(session.tokenHash, hashToken(oldRefreshToken))) {
-        // Đúng mã phiên nhưng sai token = token cũ bị dùng lại sau khi đã xoay.
-        // Coi như phiên bị lộ và huỷ luôn.
+      const now = new Date();
+
+      if (now.getTime() - session.createdAt.getTime() > MAX_SESSION_AGE_MS) {
+        await this.refreshTokenRepo.delete(session.id);
+        throw new UnauthorizedException('Session expired');
+      }
+
+      // Đăng nhập có chặn tài khoản chưa kích hoạt, nhưng phiên sống tới 30 ngày
+      // nên phải kiểm lại: khoá một nhân viên thì họ mất quyền ngay lần gia hạn kế.
+      if (session.staff?.status !== AccountStatus.ACTIVE) {
+        await this.refreshTokenRepo.delete(session.id);
+        throw new UnauthorizedException('Account is not activated');
+      }
+
+      const presented = hashToken(oldRefreshToken);
+      const isCurrent = sameHash(session.tokenHash, presented);
+
+      // Token vừa bị xoay vẫn nhận trong ít giây — đây là hai tab cùng làm mới,
+      // không phải token bị đánh cắp.
+      const withinGrace =
+        !isCurrent &&
+        session.previousTokenHash !== null &&
+        session.rotatedAt !== null &&
+        sameHash(session.previousTokenHash, presented) &&
+        now.getTime() - session.rotatedAt.getTime() <= ROTATION_GRACE_MS;
+
+      if (!isCurrent && !withinGrace) {
+        // Token cũ dùng lại ngoài khoảng đệm: coi như phiên bị lộ và huỷ luôn.
         await this.refreshTokenRepo.delete(session.id);
         throw new UnauthorizedException('Invalid or expired token');
       }
@@ -334,6 +378,8 @@ export class AuthService {
         this.buildPayload(session.staff),
       );
 
+      session.previousTokenHash = session.tokenHash;
+      session.rotatedAt = now;
       session.tokenHash = hashToken(newRefreshToken);
       session.expiresAt = new Date(Date.now() + refreshMaxAge);
 

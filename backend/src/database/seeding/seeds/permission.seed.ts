@@ -16,6 +16,7 @@ import { AdminContactController } from 'src/modules/admin/contact/admin-contact.
 import { AdminQuoteRequestsController } from 'src/modules/admin/quote-requests/admin-quote-requests.controller';
 import { MenuItemsController } from 'src/modules/admin/menu-items/menu-items.controller';
 import { SettingsController } from 'src/modules/admin/settings/settings.controller';
+import { NotificationController } from 'src/modules/admin/notifications/notification.controller';
 
 const PERMISSIONS_METADATA_KEY = 'permissions';
 const ENTITY_METADATA_KEY = 'entity';
@@ -47,6 +48,8 @@ export class PermissionSeed {
       AdminQuoteRequestsController,
       MenuItemsController,
       SettingsController,
+      // Thiếu ở đây = quyền của controller đó không bao giờ được tạo → guard chặn hết.
+      NotificationController,
     ];
 
     const actionLabels: Record<string, string> = {
@@ -76,6 +79,7 @@ export class PermissionSeed {
       LIBRARY: 'Library',
       CONTACT: 'Contact',
       QUOTE_REQUEST: 'Quote Request',
+      NOTIFICATION: 'Notification',
     };
 
     const permissionsToInsert: Partial<Permission>[] = [];

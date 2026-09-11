@@ -20,7 +20,6 @@ import { User } from './user.entity';
 import { Permissions } from 'src/common/decorators/permission.decorator';
 import { JwtAdminAuthGuard } from 'src/common/guard/jwt-auth/jwt-auth-admin.guard';
 import { PermissionGuard } from 'src/common/guard/admin/permission.guard';
-import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Users')
 @UseGuards(JwtAdminAuthGuard, PermissionGuard)
@@ -71,12 +70,14 @@ export class UsersController extends BaseController<
     return await this.usersService.updateUser(id, dto, actorId);
   }
 
-  @Public()
+  // Trả IP + user-agent từ user_refresh_tokens → KHÔNG được để @Public().
+  @Permissions('LIST')
   @Get('analytics/traffic')
   async getTraffic() {
     return await this.usersService.getTrafficStats();
   }
 
+  @Permissions('LIST')
   @Get('analytics/dashboard')
   async getDashboardStats() {
     return await this.usersService.getDashboardStats();

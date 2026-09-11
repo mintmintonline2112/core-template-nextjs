@@ -73,7 +73,10 @@ export class PermissionGuard {
         return userPermissions.includes(fallbackCode);
       }
 
-      return true;
+      // Handler tên riêng (không phải CRUD chuẩn) mà quên gắn @Permissions:
+      // TỪ CHỐI thay vì cho qua. Trước đây trả true nên POST /admin/library/upload
+      // ai đăng nhập cũng gọi được. Thêm route mới → nhớ gắn @Permissions('...').
+      return false;
     }
 
     return false;

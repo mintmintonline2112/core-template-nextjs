@@ -8,6 +8,25 @@ import {
 import { Request, Response } from 'express';
 import { LoggerService } from '../logger/logger.service';
 
+/**
+ * Khoá chứa thông tin nhạy cảm — KHÔNG được ghi vào file log.
+ * Sai mật khẩu khi đăng nhập cũng ném exception, nên nếu log nguyên body thì
+ * mật khẩu dạng chữ thường nằm trong logs/error-*.log, ai đọc được file là đọc được.
+ */
+const SENSITIVE_KEYS =
+  /^(password|currentPassword|newPassword|confirmPassword|oldPassword|token|accessToken|refreshToken|secret|otp|code|authorization|apiKey)$/i;
+
+/** Thay giá trị của các khoá nhạy cảm bằng '[ĐÃ CHE]', giữ nguyên cấu trúc còn lại. */
+function redact(value: unknown, depth = 0): unknown {
+  if (depth > 4 || value === null || typeof value !== 'object') return value;
+  if (Array.isArray(value)) return value.map((item) => redact(item, depth + 1));
+  const out: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+    out[key] = SENSITIVE_KEYS.test(key) ? '[ĐÃ CHE]' : redact(val, depth + 1);
+  }
+  return out;
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
@@ -51,8 +70,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         status,
         path: request.url,
         method: request.method,
-        body: request.body,
-        query: request.query,
+        body: redact(request.body),
+        query: redact(request.query),
         message,
         error,
         stack: exception?.stack,

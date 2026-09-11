@@ -62,6 +62,7 @@ export class LibraryController {
   }
 
   @Post('upload')
+  @Permissions('CREATE')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload a new image to the library' })
@@ -79,6 +80,7 @@ export class LibraryController {
   }
 
   @Post('upload-video')
+  @Permissions('CREATE')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: videoStorage,

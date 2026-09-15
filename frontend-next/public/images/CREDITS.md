@@ -1,63 +1,67 @@
 # Image Credits
 
-Stock photos via Openverse (rawpixel.com, CC0 — no attribution required, credited as a courtesy)
-and Wikimedia Commons (CC-licensed files require the attribution below).
+All photos below were replaced in September 2026 with CC0 / public-domain images found via
+Openverse (rawpixel.com, WordPress Photo Directory, Flickr/USDA). No attribution is required;
+sources are listed as a courtesy.
 
-## CC0 / Public domain
+## Site photos
 
-- **almonds-table.webp** — "Bunch of almonds on wooden table" · rawpixel.com · CC0
-- **almonds-ramekin.webp** — "Ramekin of raw almonds healthy snack" · rawpixel.com · CC0
-- **almond-tart.webp** — "Homemade poppy seed almond cake" · rawpixel.com · CC0
-- **ship-color.webp** — "Container ship port" · rawpixel.com · CC0
-- **flatlay.webp** — "Overhead shot of bowl of almonds and book" · rawpixel.com · CC0
-- **blossom-sky.jpg** — "Almond Blossom (Unsplash)" · via Wikimedia Commons · CC0
-  https://commons.wikimedia.org/wiki/File:Almond_Blossom_(Unsplash).jpg
-- **hero-branch.jpg** — "20150723-USDA-OC-PSD-0073 Agriculture in the United States" · USDAgov · Public domain
-  https://commons.wikimedia.org/wiki/File:20150723-USDA-OC-PSD-0073_Agriculture_in_the_United_States.jpg
-- **green-almond.jpg** — "20150722-USDA-OC-PSD-0070 Agriculture in the United States" · USDAgov · Public domain
-  https://commons.wikimedia.org/wiki/File:20150722-USDA-OC-PSD-0070_Agriculture_in_the_United_States.jpg
+- **orchard-rows.jpg** — "The Mota Ranch’s 36 acre" by U.S. Department of Agriculture · rawpixel.com · CC0
+  https://www.rawpixel.com/image/3261902/free-photo-image-almond-apple-buried
+- **hero-branch.jpg** — "Almonds on the tree" by zebulon.walton · Flickr · Public domain
+  https://www.flickr.com/photos/129869996@N05/15608280063
+- **green-almond.jpg** — "20150722-NRCS-LSC-0127" by USDAgov · Flickr · Public domain
+  https://www.flickr.com/photos/41284017@N08/20540446291
+- **orchard-aerial.jpg** — "A road to almond field" by kahone85 · WordPress Photo Directory · CC0
+  https://wordpress.org/photos/photo/4446213cb5/
+- **blossom-sky.jpg** — "Almond blossoms" by Javier Casares · WordPress Photo Directory · CC0
+  https://wordpress.org/photos/photo/7976407749/
+- **kernels-study.jpg** — "Free pile almonds, white background" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5910917/image-background-public-domain-white
+- **almonds-ramekin.webp** — "Free bunch almonds white background" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5905344/photo-image-public-domain-plant-food
+- **almonds-table.webp** — "Free pile almonds background" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5908242/image-background-public-domain-free
+- **flatlay.webp** — "Free bunch almonds wooden table" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5902148/photo-image-public-domain-plant-food
+- **almond-tart.webp** — "Free almond cake image" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5912698/free-almond-cake-image-public-domain-cc0-photo
+- **ship-color.webp** — "Cargo ship, logistics industry" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/6037185/photo-image-public-domain-free
+- **container-ship.jpg** — "Free container terminal Port Melbourne" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/4026120/container-terminal
+- **bulk-warehouse.jpg** — "Untitled" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5959469/free-public-domain-cc0-photo
 
 - **world-map.svg** — "World location map" · via Wikimedia Commons · Public domain (recolored)
   https://commons.wikimedia.org/wiki/File:World_location_map.svg
 
-## Attribution required (Creative Commons)
+## Product cards
 
-- **orchard-rows.jpg** — "AlmondorchardWintonCA08" by Nehrams2020 · CC BY-SA 3.0
-  https://commons.wikimedia.org/wiki/File:AlmondorchardWintonCA08.jpg
-- **orchard-aerial.jpg** — "San Martín de Pusa (2024) 03" by LBM1948 · CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:San_Mart%C3%ADn_de_Pusa_(2024)_03.jpg
-- **kernels-study.jpg** — "Almonds - in shell, shell cracked open, shelled, blanched" by Ivar Leidus · CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:Almonds_-_in_shell,_shell_cracked_open,_shelled,_blanched.jpg
-- **container-ship.jpg** — "Container ship Marianne Schulte at the container terminal Burchardkai, port of Hamburg" by Raimond Spekking · CC BY-SA 4.0
-  https://commons.wikimedia.org/wiki/File:Container_ship_Marianne_Schulte_(IMO_9215907)_at_the_container_terminal_Burchardkai,_port_of_Hamburg-4750.jpg
+- **products/nonpareil.jpg** — "Free bunch almonds white background" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5908146/image-public-domain-plant-food
+- **products/independence.jpg** — "Almonds in a grocery store" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5974815/almonds-grocery-store
+- **products/monterey.jpg** — "Bowl almonds figs fennel" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/3301855/free-photo-image-nuts-almond-bean
+- **products/carmel.jpg** — "Untitled" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/5955900/free-public-domain-cc0-photo
+- **products/butte.jpg** — "Untitled" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/6072629/free-public-domain-cc0-photo
+- **products/padre.jpg** — "Almond nuts" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/6041372/almond-nuts-free-public-domain-cc0-photo
+- **products/sliced.jpg** — "A delicious waffle topped with sliced almonds and drizzled with rich chocolate." by Faisal Ahammad · WordPress Photo Directory · CC0
+  https://wordpress.org/photos/photo/92165dbb51/
+- **products/custom-specifications.jpg** — "Small bowls nuts, cashews, dates" · rawpixel.com · CC0
+  https://www.rawpixel.com/image/3304233/free-photo-image-almond-bean-bowl
 
-## Product card backgrounds
+## Product cards kept from the previous set (no suitable CC0 replacement found yet)
 
-Pexels photos are free to use under the Pexels license; attribution is included here as a courtesy.
-
-- **bulk-warehouse.jpg** — Pexels photo 10834810 · Ihsan Adityawarman
-  https://www.pexels.com/photo/stacked-boxes-in-a-warehouse-10834810/
-- **products/nonpareil.jpg** — Pexels photo 16706697
-  https://www.pexels.com/photo/close-up-of-a-bowl-with-almonds-16706697/
-- **products/independence.jpg** — Pexels photo 6802627 · cottonbro studio
-  https://www.pexels.com/photo/almonds-in-white-ceramic-bowl-6802627/
-- **products/monterey.jpg** — Pexels photo 5035250 · Abdullah Hussain
-  https://www.pexels.com/photo/almonds-on-a-glass-bowl-5035250/
-- **products/carmel.jpg** — Pexels photo 4051132 · alleksana
-  https://www.pexels.com/photo/close-up-photo-of-almonds-4051132/
-- **products/butte.jpg** — Pexels photo 6003907 · Nixon Johnson
-  https://www.pexels.com/photo/almonds-in-red-bowl-6003907/
-- **products/padre.jpg** — Pexels photo 5959628 · subash c
-  https://www.pexels.com/photo/brown-almonds-in-close-up-shot-5959628/
-- **products/sliced.jpg** — Pexels photo 8951057 · Ivan S
-  https://www.pexels.com/photo/close-up-shot-of-almond-slices-8951057/
-- **products/almond-flour.jpg** — Pexels photo 6824312 · Eva Bronzini
+- **products/almond-flour.jpg** — Pexels photo 6824312 · Eva Bronzini · Pexels license
   https://www.pexels.com/photo/6824312/
-- **products/custom-specifications.jpg** — Pexels photo 34274121 · verolova
-  https://www.pexels.com/photo/34274121/
 - **products/blanched.jpg** — "Blanched almonds" by Nadiatalent · Public domain
   https://commons.wikimedia.org/wiki/File:Blanched_almonds.jpg
-- **products/diced.jpg** — "Bowl of chopped almonds" by Douglas P Perkins · CC BY-SA 3.0
+- **products/diced.jpg** — "Bowl of chopped almonds" by Douglas P Perkins · CC BY-SA 3.0 (attribution required)
   https://commons.wikimedia.org/wiki/File:Bowl_of_chopped_almonds.jpg
-- **products/slivered.jpg** — "Slivered Almond, Jumbo Cashew, Kernel Pistachio and Pecan" by Hedi Aghlara · CC BY-SA 3.0
+- **products/slivered.jpg** — "Slivered Almond, Jumbo Cashew, Kernel Pistachio and Pecan" by Hedi Aghlara · CC BY-SA 3.0 (attribution required)
   https://commons.wikimedia.org/wiki/File:Slivered_Almond,_Jumbo_Cashew,_Kernel_Pistachio_and_Pecan.JPG

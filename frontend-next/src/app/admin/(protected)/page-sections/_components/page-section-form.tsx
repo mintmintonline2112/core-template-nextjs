@@ -29,9 +29,16 @@ import { adminRoutes } from '@/config/routes';
  * metadata của từng loại) nằm ở bảng `section_definitions`, seed đồng bộ theo
  * code. Form đọc danh mục đó để: (1) chọn loại section từ dropdown thay vì gõ
  * tay, (2) hiện khu chỉnh sửa metadata trực quan (slider, danh sách, số liệu…).
+ *
+ * Section luôn gắn với MỘT trang cố định (khoá ô "Thuộc trang"):
+ * - Sửa: trang của section.
+ * - Tạo: trang chọn ở bước 1 (PageSectionPagePicker → ?pageId=).
+ * Dropdown component chỉ liệt kê component dành cho trang đó (pageSlug khớp slug
+ * trang); trang tự tạo chưa có component riêng thì liệt kê Thư viện (pageSlug shared).
  */
 
 const CUSTOM_KEY = '__custom';
+const LIBRARY_SLUG = 'shared';
 
 interface FormValues {
   pageId: string;
@@ -65,13 +72,19 @@ const EMPTY: FormValues = {
   zh_content: '',
 };
 
-export function PageSectionForm({ id }: { id?: number }) {
+/** Nhãn danh mục có tiền tố "Home · " / "Thư viện · " — bỏ khi đã lọc theo trang. */
+const shortLabel = (label: string) => label.replace(/^[^·]*·\s*/, '');
+
+export function PageSectionForm({ id, presetPageId }: { id?: number; presetPageId?: number }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const isEdit = id != null;
 
   const [submitting, setSubmitting] = useState(false);
-  const [initialValues, setInitialValues] = useState<FormValues>(EMPTY);
+  const [initialValues, setInitialValues] = useState<FormValues>(() => ({
+    ...EMPTY,
+    pageId: presetPageId ? String(presetPageId) : '',
+  }));
   const [formKey, setFormKey] = useState(0);
   const [metaObj, setMetaObj] = useState<Record<string, unknown>>({});
 
@@ -86,27 +99,53 @@ export function PageSectionForm({ id }: { id?: number }) {
     staleTime: 5 * 60_000,
   });
 
-  const pageOptions: GenericSelectOption[] = useMemo(
-    () => (pages?.data ?? []).map((p) => ({ label: p.title, value: p.id })),
-    [pages],
-  );
-
-  const keyOptions: GenericSelectOption[] = useMemo(
-    () => [
-      ...(definitions ?? []).map((definition) => ({
-        label: `${definition.label} (${definition.sectionKey})`,
-        value: definition.sectionKey,
-      })),
-      { label: 'Không dùng component — khối generic (tự nhập key)', value: CUSTOM_KEY },
-    ],
-    [definitions],
-  );
-
   const { data } = useQuery({
     queryKey: [...PAGE_SECTION_QUERY_KEY, 'detail', id],
     queryFn: () => pageSectionService.getById(id!),
     enabled: isEdit,
   });
+
+  // Trang cố định của form: trang của section (sửa) hoặc trang chọn ở bước 1 (tạo).
+  const lockedPageId = isEdit ? data?.pageId : presetPageId;
+  const lockedPage = useMemo(
+    () => (pages?.data ?? []).find((p) => p.id === lockedPageId),
+    [pages, lockedPageId],
+  );
+
+  const pageOptions: GenericSelectOption[] = useMemo(
+    () => (pages?.data ?? []).map((p) => ({ label: `${p.title} (/${p.slug})`, value: p.id })),
+    [pages],
+  );
+
+  // Component đang lưu của section (khi sửa) — luôn có mặt trong dropdown.
+  const savedComponentKey = useMemo(() => {
+    if (!data) return null;
+    const meta = (data.metadata as Record<string, unknown> | null) ?? {};
+    return typeof meta._component === 'string' ? meta._component : data.sectionKey;
+  }, [data]);
+
+  const { pageDefinitions, usesLibrary } = useMemo(() => {
+    const all = definitions ?? [];
+    if (!lockedPage) return { pageDefinitions: [], usesLibrary: false };
+    const own = all.filter((d) => d.pageSlug === lockedPage.slug);
+    const list = own.length > 0 ? own : all.filter((d) => d.pageSlug === LIBRARY_SLUG);
+    const saved = savedComponentKey ? all.find((d) => d.sectionKey === savedComponentKey) : undefined;
+    return {
+      pageDefinitions: saved && !list.includes(saved) ? [...list, saved] : list,
+      usesLibrary: own.length === 0,
+    };
+  }, [definitions, lockedPage, savedComponentKey]);
+
+  const keyOptions: GenericSelectOption[] = useMemo(
+    () => [
+      ...pageDefinitions.map((definition) => ({
+        label: `${shortLabel(definition.label)} (${definition.sectionKey})`,
+        value: definition.sectionKey,
+      })),
+      { label: 'Không dùng component — khối generic (tự nhập key)', value: CUSTOM_KEY },
+    ],
+    [pageDefinitions],
+  );
 
   useEffect(() => {
     if (!data) return;
@@ -134,9 +173,21 @@ export function PageSectionForm({ id }: { id?: number }) {
     setFormKey((k) => k + 1);
   }, [data, definitions]);
 
+  const pageTitle = lockedPage?.title ?? '';
+
   const FIELDS: GenericFormField[] = useMemo(
     () => [
-      { key: 'pageId', label: 'Thuộc trang', type: 'select', required: true, placeholder: 'Chọn trang', options: pageOptions },
+      {
+        key: 'pageId',
+        label: 'Thuộc trang',
+        type: 'select',
+        disabled: true,
+        placeholder: 'Đang tải trang…',
+        options: pageOptions,
+        hint: isEdit
+          ? 'Section đã gắn với trang này nên không đổi được. Muốn đưa khối sang trang khác thì tạo section mới ở trang đó.'
+          : 'Trang đã chọn ở bước 1 — muốn đổi trang thì quay lại bước chọn trang.',
+      },
       {
         key: 'sectionKey',
         label: 'Component (kiểu khối)',
@@ -144,7 +195,13 @@ export function PageSectionForm({ id }: { id?: number }) {
         required: true,
         placeholder: 'Chọn component',
         options: keyOptions,
-        hint: 'Thư viện component dùng chung (bảng section_definitions) — TRANG NÀO cũng gắn được, nội dung chỉnh riêng cho từng trang. Không chọn component thì khối hiển thị dạng generic (heading + nội dung + ảnh).',
+        hint: `${
+          !pageTitle
+            ? 'Đang tải danh sách component…'
+            : usesLibrary
+              ? `Trang "${pageTitle}" chưa có component riêng — đang liệt kê Thư viện component dùng chung.`
+              : `Chỉ liệt kê component dành cho trang "${pageTitle}".`
+        } Không chọn component thì khối hiển thị dạng generic (heading + nội dung + ảnh).`,
       },
       {
         key: 'sectionKeyCustom',
@@ -173,17 +230,24 @@ export function PageSectionForm({ id }: { id?: number }) {
       },
       { key: 'mediaPath', label: 'Ảnh minh họa', type: 'imageUrl', hint: 'Hiển thị trên trang tự tạo (khối generic). Riêng 4 trang chuẩn dùng ảnh cố định theo thiết kế / metadata.' },
       { key: 'sortOrder', label: 'Thứ tự', type: 'number', rules: { min: { value: 1, message: 'Tối thiểu là 1' } } },
-      { key: 'isActive', label: 'Hiển thị', type: 'checkbox', hint: 'Tắt thì website dùng nội dung mặc định (hardcode) của khối này' },
+      { key: 'isActive', label: 'Hiển thị', type: 'checkbox', hint: 'Tắt thì khối này ẩn khỏi website (bật lại là hiện). Xoá section cũng làm khối biến mất.' },
       ...zhFields([
         { key: 'heading', label: 'Heading', type: 'text' },
         { key: 'subheading', label: 'Eyebrow', type: 'text' },
         { key: 'content', label: 'Nội dung', type: 'richtext' },
       ]),
     ],
-    [pageOptions, keyOptions, definitions, metaObj],
+    [pageOptions, keyOptions, definitions, metaObj, isEdit, pageTitle, usesLibrary],
   );
 
+  // Tạo từ trang Page (có presetPageId) → xong / huỷ quay về trang đó.
+  const backHref = !isEdit && presetPageId ? adminRoutes.pages.edit(presetPageId) : adminRoutes.pageSections.list;
+
   async function handleSubmit(values: FormValues) {
+    if (!lockedPageId) {
+      toast.error('Chưa xác định được trang của section');
+      return;
+    }
     const component = values.sectionKey === CUSTOM_KEY ? null : values.sectionKey;
     const sectionKey = values.sectionKeyCustom.trim() || component || '';
     if (!sectionKey) {
@@ -208,7 +272,8 @@ export function PageSectionForm({ id }: { id?: number }) {
 
       const payload = buildPayload(
         {
-          pageId: values.pageId ? Number(values.pageId) : undefined,
+          // Ô "Thuộc trang" bị khoá (không gửi giá trị) — lấy từ trang cố định của form.
+          pageId: lockedPageId,
           sectionKey,
           // Xóa trắng field = gửi null tường minh (buildPayload bỏ qua chuỗi rỗng,
           // nếu không gửi null thì backend sẽ giữ nguyên giá trị cũ).
@@ -232,7 +297,7 @@ export function PageSectionForm({ id }: { id?: number }) {
       await queryClient.invalidateQueries({ queryKey: PAGE_SECTION_QUERY_KEY });
       await queryClient.invalidateQueries({ queryKey: PAGE_QUERY_KEY });
       toast.success(isEdit ? 'Đã cập nhật section' : 'Đã tạo section');
-      router.push(adminRoutes.pageSections.list);
+      router.push(backHref);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -243,14 +308,15 @@ export function PageSectionForm({ id }: { id?: number }) {
   return (
     <GenericForm<FormValues>
       key={formKey}
-      title={isEdit ? 'Sửa section' : 'Tạo section'}
+      title={`${isEdit ? 'Sửa section' : 'Tạo section'}${pageTitle ? ` · ${pageTitle}` : ''}`}
       subtitle={
         isEdit
           ? 'Cập nhật khối nội dung của trang — website render theo loại section'
-          : 'Thêm khối nội dung cho một trang'
+          : 'Bước 2/2 — chọn component và nhập nội dung cho khối'
       }
       breadcrumbs={[
         { label: 'Section trang', link: adminRoutes.pageSections.list },
+        ...(pageTitle && lockedPageId ? [{ label: pageTitle, link: adminRoutes.pages.edit(lockedPageId) }] : []),
         { label: isEdit ? 'Sửa' : 'Tạo mới' },
       ]}
       fields={FIELDS}
@@ -259,7 +325,7 @@ export function PageSectionForm({ id }: { id?: number }) {
       loading={submitting}
       submitLabel={isEdit ? 'Cập nhật' : 'Tạo mới'}
       onSubmit={handleSubmit}
-      onCancel={() => router.push(adminRoutes.pageSections.list)}
+      onCancel={() => router.push(backHref)}
     />
   );
 }

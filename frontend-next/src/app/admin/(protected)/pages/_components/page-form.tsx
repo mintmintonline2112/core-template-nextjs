@@ -156,10 +156,18 @@ export function PageForm({ id }: { id?: number }) {
         onCancel={() => router.push(adminRoutes.pages.list)}
       />
 
-      {isEdit && sections.length > 0 && (
+      {isEdit && (
         <div className="gf-card" style={{ marginTop: 24 }}>
           <div>
-            <label className="gf-label">Section thuộc trang này ({sections.length})</label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
+              <label className="gf-label" style={{ margin: 0 }}>Section thuộc trang này ({sections.length})</label>
+              <Link
+                href={`${adminRoutes.pageSections.create}?pageId=${id}`}
+                className="adm-btn adm-btn--primary adm-btn--sm"
+              >
+                + Thêm section cho trang này
+              </Link>
+            </div>
             <table className="dt-table">
               <thead>
                 <tr>

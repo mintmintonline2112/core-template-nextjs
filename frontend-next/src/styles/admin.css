@@ -5,16 +5,16 @@
 .admin-login-page,
 .admin-auth-loading {
   /* Palette đồng bộ với :root của site (styles/site.css) — brand Prime Nuts */
-  --admin-bg: #f4f0e2;                     /* --cream-2 */
+  --admin-bg: #f3efe6;                     /* --cream-2 */
   --admin-surface: rgba(255, 255, 255, 0.78);
-  --admin-surface-solid: #faf7ee;          /* --cream */
-  --admin-sidebar: #142718;                /* --green-900 */
-  --admin-sidebar-muted: #c4cfbb;          /* --light-soft */
-  --admin-text: #1f2b1d;                   /* --ink */
-  --admin-muted: #6c7563;                  /* --ink-faint */
-  --admin-brass: #295328;                  /* --green-700 (màu chủ đạo) */
-  --admin-brass-dark: #1b3a20;             /* --green-800 */
-  --admin-line: rgba(31, 43, 29, 0.13);
+  --admin-surface-solid: #faf8f3;          /* --cream */
+  --admin-sidebar: #0f1729;                /* --navy-900 */
+  --admin-sidebar-muted: #c3cadb;          /* --light-soft */
+  --admin-text: #1a2236;                   /* --ink */
+  --admin-muted: #6b7385;                  /* --ink-faint */
+  --admin-brass: #1a2744;                  /* --navy-700 (màu chủ đạo) */
+  --admin-brass-dark: #141f38;             /* --navy-800 */
+  --admin-line: rgba(26, 34, 54, 0.13);
   --admin-danger: #a33b2e;
   color: var(--admin-text);
   font-family: var(--font-barlow), "Barlow", system-ui, sans-serif;
@@ -51,7 +51,7 @@
 .admin-root {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 88% 0%, rgba(41, 83, 40, 0.12), transparent 28rem),
+    radial-gradient(circle at 88% 0%, rgba(26, 39, 68, 0.12), transparent 28rem),
     var(--admin-bg);
 }
 
@@ -139,7 +139,7 @@
 
 .admin-nav-group > p {
   margin: 0 12px 8px;
-  color: #93a58c;
+  color: #8e98b0;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.17em;
@@ -392,7 +392,7 @@
   bottom: -48px;
   width: 110px;
   height: 110px;
-  border: 1px solid rgba(41, 83, 40, 0.17);
+  border: 1px solid rgba(26, 39, 68, 0.17);
   border-radius: 50%;
 }
 
@@ -403,9 +403,9 @@
   flex: 0 0 auto;
   place-items: center;
   color: var(--admin-brass-dark);
-  border: 1px solid rgba(41, 83, 40, 0.23);
+  border: 1px solid rgba(26, 39, 68, 0.23);
   border-radius: 8px;
-  background: rgba(41, 83, 40, 0.09);
+  background: rgba(26, 39, 68, 0.09);
 }
 
 .admin-stat-icon svg { width: 19px; height: 19px; }
@@ -580,7 +580,7 @@
   flex: 0 0 auto;
   padding: 7px 11px;
   color: var(--admin-brass-dark);
-  border: 1px solid rgba(41, 83, 40, 0.25);
+  border: 1px solid rgba(26, 39, 68, 0.25);
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.48);
   font-size: 11px;
@@ -675,7 +675,7 @@
   color: #f5f1e3;
   background:
     radial-gradient(circle at 15% 80%, rgba(217, 180, 95, 0.17), transparent 30rem),
-    linear-gradient(145deg, #1b3a20, #142718 70%);
+    linear-gradient(145deg, #141f38, #0f1729 70%);
 }
 
 .admin-login-intro::after {
@@ -706,11 +706,11 @@
 .admin-login-intro > div:nth-child(2) > p:last-child {
   max-width: 510px;
   margin-top: 22px;
-  color: #c4cfbb;
+  color: #c3cadb;
   font-size: 14px;
 }
 
-.admin-login-intro > small { color: #93a58c; font-size: 10px; letter-spacing: 0.08em; }
+.admin-login-intro > small { color: #8e98b0; font-size: 10px; letter-spacing: 0.08em; }
 
 .admin-login-panel {
   display: grid;
@@ -718,7 +718,7 @@
   place-items: center;
   padding: 35px;
   background:
-    radial-gradient(circle at 90% 10%, rgba(41, 83, 40, 0.14), transparent 24rem),
+    radial-gradient(circle at 90% 10%, rgba(26, 39, 68, 0.14), transparent 24rem),
     var(--admin-bg);
 }
 
@@ -789,8 +789,8 @@
 
 .admin-field > input:focus,
 .admin-password-field:focus-within {
-  border-color: rgba(41, 83, 40, 0.62);
-  box-shadow: 0 0 0 3px rgba(41, 83, 40, 0.09);
+  border-color: rgba(26, 39, 68, 0.62);
+  box-shadow: 0 0 0 3px rgba(26, 39, 68, 0.09);
 }
 
 .admin-form-error {
@@ -810,12 +810,12 @@
   margin-top: 4px;
   padding: 11px 16px;
   color: #f4f1e8 !important;
-  border: 1px solid #142718;
-  background: #142718;
+  border: 1px solid #0f1729;
+  background: #0f1729;
   font-size: 12px;
 }
 
-.admin-primary-button:hover { background: #3d3e3a; }
+.admin-primary-button:hover { background: #25375e; border-color: #25375e; }
 .admin-primary-button span { color: #d9b45f; font-size: 18px; }
 
 .admin-login-note {
@@ -841,7 +841,7 @@
   display: inline-block;
   width: 22px;
   height: 22px;
-  border: 2px solid rgba(41, 83, 40, 0.25);
+  border: 2px solid rgba(26, 39, 68, 0.25);
   border-top-color: var(--admin-brass-dark);
   border-radius: 50%;
   animation: admin-spin 0.75s linear infinite;
@@ -1484,7 +1484,7 @@ textarea.gf-control {
   align-items: center;
   gap: 4px;
   border-radius: 8px;
-  background: rgba(41, 83, 40, 0.14);
+  background: rgba(26, 39, 68, 0.14);
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
@@ -1600,7 +1600,7 @@ textarea.gf-control {
 }
 .gf-video-orient-opt.is-active {
   border-color: var(--admin-brass);
-  background: rgba(41, 83, 40, 0.1);
+  background: rgba(26, 39, 68, 0.1);
 }
 .gf-video-orient-opt input {
   accent-color: var(--admin-brass);
@@ -1708,7 +1708,7 @@ textarea.gf-control {
   background: rgba(49, 49, 45, 0.04);
 }
 .ntf-item.is-unread {
-  background: rgba(41, 83, 40, 0.08);
+  background: rgba(26, 39, 68, 0.08);
 }
 .ntf-icon {
   display: flex;
@@ -2373,7 +2373,7 @@ body .swal2-html-container {
   padding: 14px 16px;
   border: 1px dashed var(--admin-line);
   border-radius: 12px;
-  background: rgba(41, 83, 40, 0.05);
+  background: rgba(26, 39, 68, 0.05);
 }
 .gzp--empty {
   font-size: 13px;
@@ -2447,7 +2447,7 @@ body .swal2-html-container {
   max-width: 100%;
   display: block;
   object-fit: contain;
-  border: 3px solid rgba(41, 83, 40, 0.45);
+  border: 3px solid rgba(26, 39, 68, 0.45);
   outline: 1px solid var(--admin-line);
   border-radius: 6px;
   background: #fff;
@@ -2489,7 +2489,7 @@ body .swal2-html-container {
   padding: 18px 20px;
   border: 1px dashed var(--admin-line);
   border-radius: 12px;
-  background: #494946; /* nền theme tối của site để xem trước đúng cảm giác */
+  background: #1a2744; /* nền theme tối của site (navy) để xem trước đúng cảm giác */
   overflow: hidden;
 }
 .st-title-preview span {
@@ -2498,7 +2498,7 @@ body .swal2-html-container {
   font-weight: 600;
   line-height: 0.98;
   text-transform: uppercase;
-  color: #c2ad76; /* --heading mặc định của site */
+  color: #c9a25e; /* --heading mặc định của site */
   transition: font-size 0.15s ease;
 }
 
@@ -2548,7 +2548,7 @@ body .swal2-html-container {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background: rgba(250, 247, 238, 0.82);
-  border-bottom: 1px solid rgba(31, 43, 29, 0.08);
+  border-bottom: 1px solid rgba(26, 34, 54, 0.08);
 }
 
 .admin-eyebrow { color: #9a7326; }
@@ -2563,10 +2563,10 @@ body .swal2-html-container {
 .admin-panel,
 .gf-card {
   border-radius: 16px;
-  border: 1px solid rgba(31, 43, 29, 0.1);
+  border: 1px solid rgba(26, 34, 54, 0.1);
   box-shadow:
-    0 1px 2px rgba(20, 39, 24, 0.04),
-    0 16px 40px -24px rgba(20, 39, 24, 0.25);
+    0 1px 2px rgba(15, 23, 41, 0.04),
+    0 16px 40px -24px rgba(15, 23, 41, 0.25);
 }
 
 .dt-table th {
@@ -2574,7 +2574,7 @@ body .swal2-html-container {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--admin-muted);
-  border-bottom: 2px solid rgba(41, 83, 40, 0.14);
+  border-bottom: 2px solid rgba(26, 39, 68, 0.14);
   padding-top: 14px;
   padding-bottom: 12px;
 }
@@ -2582,7 +2582,7 @@ body .swal2-html-container {
 .dt-table td {
   padding-top: 13px;
   padding-bottom: 13px;
-  border-bottom: 1px solid rgba(31, 43, 29, 0.07);
+  border-bottom: 1px solid rgba(26, 34, 54, 0.07);
 }
 
 .dt-table tbody tr {
@@ -2590,16 +2590,16 @@ body .swal2-html-container {
 }
 
 .dt-table tbody tr:hover {
-  background: rgba(41, 83, 40, 0.05);
+  background: rgba(26, 39, 68, 0.05);
 }
 
 .dt-table tbody tr:last-child td { border-bottom: none; }
 
 /* Chip section-key / badge */
 .dt-badge {
-  background: #eff3e8;
-  border: 1px solid #e4ecdd;
-  color: #1b3a20;
+  background: #eef1f7;
+  border: 1px solid #dde3ee;
+  color: #141f38;
   border-radius: 7px;
   font-weight: 500;
 }
@@ -2616,8 +2616,8 @@ body .swal2-html-container {
   background: currentColor;
   vertical-align: 1px;
 }
-.dt-status.is-success { background: rgba(41, 83, 40, 0.12); color: #1e4023; }
-.dt-status.is-muted { background: rgba(31, 43, 29, 0.08); color: var(--admin-muted); }
+.dt-status.is-success { background: rgba(63, 125, 78, 0.14); color: #2f6b3e; } /* xanh lá = trạng thái thành công, không theo màu brand */
+.dt-status.is-muted { background: rgba(26, 34, 54, 0.08); color: var(--admin-muted); }
 
 /* Toolbar: ô tìm kiếm + filter */
 .dt-search input,
@@ -2631,24 +2631,40 @@ body .swal2-html-container {
 .dt-search input:focus,
 .dt-filter select:focus,
 .admin-search input:focus {
-  border-color: rgba(41, 83, 40, 0.55);
-  box-shadow: 0 0 0 3px rgba(41, 83, 40, 0.12);
+  border-color: rgba(26, 39, 68, 0.55);
+  box-shadow: 0 0 0 3px rgba(26, 39, 68, 0.12);
 }
 
 /* ---------- Nút ---------- */
 
 .adm-btn { border-radius: 10px; }
 
-.adm-btn--primary {
-  background: linear-gradient(180deg, #35672f 0%, #295328 100%);
-  box-shadow: 0 10px 20px -10px rgba(41, 83, 40, 0.6);
-  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+/* Nút chính: nền trắng, chữ + viền navy — nổi rõ trên nền kem.
+   Kèm .admin-root để thắng rule `.admin-root button { color: inherit }`
+   (trước đây rule đó làm chữ nút tối, gần như không đọc được). */
+.admin-root .adm-btn--primary {
+  background: #fff;
+  border: 1px solid var(--admin-brass);
+  color: var(--admin-brass);
+  box-shadow: 0 10px 20px -12px rgba(26, 39, 68, 0.45);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease;
 }
 
-.adm-btn--primary:hover {
+.admin-root .adm-btn--primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  filter: brightness(1.06);
-  box-shadow: 0 14px 24px -10px rgba(41, 83, 40, 0.65);
+  background: var(--admin-brass);
+  color: #fff;
+  box-shadow: 0 14px 24px -10px rgba(26, 39, 68, 0.55);
+}
+
+/* Vòng xoay lúc đang lưu: navy trên nền trắng, trắng khi hover nền navy */
+.admin-root .adm-btn--primary .adm-spin {
+  border-color: rgba(26, 39, 68, 0.2);
+  border-top-color: var(--admin-brass);
+}
+.admin-root .adm-btn--primary:hover:not(:disabled) .adm-spin {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
 }
 
 .adm-btn--primary:active { transform: translateY(0); }
@@ -2659,8 +2675,8 @@ body .swal2-html-container {
 }
 
 .adm-icon-btn:hover {
-  background: rgba(41, 83, 40, 0.09);
-  color: #1e4023;
+  background: rgba(26, 39, 68, 0.09);
+  color: #141f38;
 }
 
 /* ---------- Thẻ thống kê dashboard ---------- */
@@ -2671,7 +2687,7 @@ body .swal2-html-container {
 
 .admin-stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 18px 36px -20px rgba(20, 39, 24, 0.35);
+  box-shadow: 0 18px 36px -20px rgba(15, 23, 41, 0.35);
 }
 
 .admin-stat-icon { color: #9a7326; }
@@ -2679,26 +2695,26 @@ body .swal2-html-container {
 /* ---------- Phân trang ---------- */
 
 .pg-page { border-radius: 9px; transition: background-color 140ms ease, color 140ms ease; }
-.pg-page:hover { background: rgba(41, 83, 40, 0.1); }
-.pg-page.is-active { box-shadow: 0 6px 14px -6px rgba(41, 83, 40, 0.55); }
+.pg-page:hover { background: rgba(26, 39, 68, 0.1); }
+.pg-page.is-active { box-shadow: 0 6px 14px -6px rgba(26, 39, 68, 0.55); }
 
 /* ---------- Login ---------- */
 
 .admin-login-page {
   background:
-    radial-gradient(120% 90% at 85% 0%, rgba(41, 83, 40, 0.16) 0%, transparent 55%),
+    radial-gradient(120% 90% at 85% 0%, rgba(26, 39, 68, 0.16) 0%, transparent 55%),
     var(--admin-bg);
 }
 
 .admin-login-card {
   border-radius: 18px;
-  border: 1px solid rgba(31, 43, 29, 0.1);
-  box-shadow: 0 30px 70px -35px rgba(20, 39, 24, 0.45);
+  border: 1px solid rgba(26, 34, 54, 0.1);
+  box-shadow: 0 30px 70px -35px rgba(15, 23, 41, 0.45);
 }
 
 /* ---------- Chi tiết chung ---------- */
 
-.admin-root ::selection { background: #295328; color: #faf7ee; }
+.admin-root ::selection { background: #1a2744; color: #faf8f3; }
 
 .admin-root :focus-visible {
   outline: 2px solid rgba(201, 162, 94, 0.9);
@@ -2715,7 +2731,7 @@ body .swal2-html-container {
 .dt-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
 .admin-main::-webkit-scrollbar-thumb,
 .dt-scroll::-webkit-scrollbar-thumb {
-  background: rgba(20, 39, 24, 0.2);
+  background: rgba(15, 23, 41, 0.2);
   border-radius: 100px;
 }
 
@@ -2730,7 +2746,7 @@ body .swal2-html-container {
   color: var(--admin-muted);
   margin: 22px 0 12px;
   padding-top: 18px;
-  border-top: 1px dashed rgba(31, 43, 29, 0.16);
+  border-top: 1px dashed rgba(26, 34, 54, 0.16);
 }
 
 .st-soon { color: #9a7326; }
@@ -2744,16 +2760,16 @@ body .swal2-html-container {
 }
 
 .st-savebar .adm-btn--primary {
-  box-shadow: 0 14px 30px -10px rgba(41, 83, 40, 0.7);
+  box-shadow: 0 14px 30px -10px rgba(26, 39, 68, 0.7);
 }
 
 /* ---------- Khu chỉnh metadata trực quan (page section) ---------- */
 
 .me-wrap {
   margin-top: 16px;
-  border: 1px solid rgba(41, 83, 40, 0.18);
+  border: 1px solid rgba(26, 39, 68, 0.18);
   border-radius: 12px;
-  background: rgba(41, 83, 40, 0.035);
+  background: rgba(26, 39, 68, 0.035);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -2766,7 +2782,7 @@ body .swal2-html-container {
   font-size: 15px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #1e4023;
+  color: #141f38;
 }
 .me-head small { color: var(--admin-muted); font-size: 12px; }
 
@@ -2790,7 +2806,7 @@ body .swal2-html-container {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid rgba(31, 43, 29, 0.12);
+  border: 1px solid rgba(26, 34, 54, 0.12);
   border-radius: 10px;
   background: #fff;
   padding: 12px;
@@ -2806,14 +2822,14 @@ body .swal2-html-container {
   height: 38px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid rgba(31, 43, 29, 0.15);
+  border: 1px solid rgba(26, 34, 54, 0.15);
   flex-shrink: 0;
 }
 
 .me-json { font-family: Consolas, Menlo, monospace; font-size: 12px; }
 
 /* Ô xem trước logo footer: nền xanh đậm giống footer thật để thấy đúng độ tương phản */
-.st-media-preview-dark { background: #142718; border-color: rgba(217, 180, 95, 0.35); }
+.st-media-preview-dark { background: #0f1729; border-color: rgba(217, 180, 95, 0.35); }
 .me-json-error { border-color: var(--admin-danger) !important; }
 .me-error { color: var(--admin-danger); }
 .me-advanced { margin-top: 4px; }

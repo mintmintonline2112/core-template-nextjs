@@ -63,15 +63,16 @@ export const COLOR_TOKENS: Array<{
   darkDefault: string;
   lightDefault: string;
 }> = [
-  { key: 'bg', label: 'Nền trang', darkDefault: '#494946', lightDefault: '#cbc9c3' },
-  { key: 'surface', label: 'Nền card', darkDefault: '#53524f', lightDefault: '#dfddd7' },
-  { key: 'ink', label: 'Chữ chính', darkDefault: '#f0efeb', lightDefault: '#17171a' },
-  { key: 'muted', label: 'Chữ phụ', darkDefault: '#bbb9b2', lightDefault: '#55544f' },
-  { key: 'accent', label: 'Điểm nhấn', darkDefault: '#d9d9dc', lightDefault: '#2a2a30' },
-  { key: 'heading', label: 'Heading (vàng đồng)', darkDefault: '#c2ad76', lightDefault: '#786238' },
+  // Mặc định theo bảng màu site (src/styles/site.css): navy #1A2744 + vàng hạnh nhân.
+  { key: 'bg', label: 'Nền trang', darkDefault: '#1a2744', lightDefault: '#faf8f3' },
+  { key: 'surface', label: 'Nền card', darkDefault: '#25375e', lightDefault: '#ffffff' },
+  { key: 'ink', label: 'Chữ chính', darkDefault: '#f5f1e3', lightDefault: '#1a2236' },
+  { key: 'muted', label: 'Chữ phụ', darkDefault: '#c3cadb', lightDefault: '#4a5468' },
+  { key: 'accent', label: 'Điểm nhấn', darkDefault: '#d9b45f', lightDefault: '#1a2744' },
+  { key: 'heading', label: 'Heading (vàng đồng)', darkDefault: '#c9a25e', lightDefault: '#9a7326' },
   // Mặc định ăn theo "Chữ phụ" (--menu-fg: var(--muted)); default hiển thị
   // trong ô màu phải khớp giá trị đó để chưa đổi thì thấy đúng màu đang dùng.
-  { key: 'menuFg', label: 'Chữ menu (vòng cung)', darkDefault: '#bbb9b2', lightDefault: '#55544f' },
+  { key: 'menuFg', label: 'Chữ menu (vòng cung)', darkDefault: '#c3cadb', lightDefault: '#4a5468' },
 ];
 
 /** Giới hạn slider cỡ chữ tiêu đề bài viết (px) — khớp POST_TITLE_* ở lib/settings.ts. */

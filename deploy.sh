@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 # Deploy Prime Nuts lên VPS bằng MỘT lệnh:
-#     bash /www/wwwroot/primenuts.vn/deploy.sh
+#     bash /www/wwwroot/primenutusa.com/deploy.sh
 #
 # Tuần tự: git pull → build backend → migration + seed → build frontend
 # → giải phóng cổng nếu bị tiến trình lạ chiếm → restart 2 app bằng pm2
@@ -10,7 +10,7 @@
 #
 # QUY TẮC: 2 app CHỈ do pm2 quản. Hai project cùng tên trong aaPanel
 # phải để STOPPED (không Delete — xoá là mất domain + SSL + proxy).
-# Nếu panel bật lên, nó tranh cổng 3001/3010 với pm2 → app crash-loop
+# Nếu panel bật lên, nó tranh cổng 3005/3012 với pm2 → app crash-loop
 # (cột ↺ trong `pm2 ls` tăng liên tục). Script tự kill tiến trình
 # không thuộc pm2 đang giữ cổng, nhưng panel phải Stop thì nó mới
 # không bật lại.
@@ -18,8 +18,10 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-API_NAME="${API_NAME:-primenuts_api}"; API_PORT="${API_PORT:-3010}"
-WEB_NAME="${WEB_NAME:-primenuts_web}"; WEB_PORT="${WEB_PORT:-3001}"
+# VPS dùng chung với site primenuts.vn (pm2 primenuts_api:3010, primenuts_web:3001)
+# → site này dùng tên app + cổng RIÊNG. Đừng đổi về tên/cổng của site kia.
+API_NAME="${API_NAME:-primenutusa_api}"; API_PORT="${API_PORT:-3012}"
+WEB_NAME="${WEB_NAME:-primenutusa_web}"; WEB_PORT="${WEB_PORT:-3005}"
 APP_USER="${APP_USER:-www}"
 
 say()  { printf '\n\033[1;32m==> %s\033[0m\n' "$1"; }
@@ -27,6 +29,16 @@ warn() { printf '\033[1;33m!!  %s\033[0m\n' "$1"; }
 die()  { printf '\033[1;31mXX  %s\033[0m\n' "$1"; exit 1; }
 
 command -v pm2 >/dev/null 2>&1 || die "Chưa có pm2 → npm install -g pm2 rồi chạy lại."
+
+# Chốt an toàn: cổng khai báo ở trên phải đúng là cổng app mở. Lệch là free_port
+# có thể kill nhầm tiến trình của site khác trên cùng VPS.
+grep -q "next start -p $WEB_PORT\"" "$ROOT/frontend-next/package.json" \
+  || die "frontend-next/package.json: script start phải là 'next start -p $WEB_PORT' (khớp WEB_PORT)."
+[ -f "$ROOT/backend/.env" ] || die "Chưa có backend/.env — tạo từ backend/.env.example trước."
+grep -qE "^PORT=${API_PORT}[[:space:]]*$" "$ROOT/backend/.env" \
+  || die "backend/.env phải có dòng PORT=$API_PORT (khớp API_PORT)."
+{ [ -f "$ROOT/frontend-next/.env.local" ] || [ -f "$ROOT/frontend-next/.env" ]; } \
+  || die "Chưa có frontend-next/.env.local — tạo từ frontend-next/.env.example trước."
 
 # PID đang giữ cổng TCP (rỗng nếu cổng trống)
 port_pid() { ss -tlnpH "sport = :$1" 2>/dev/null | grep -oP 'pid=\K[0-9]+' | head -1 || true; }

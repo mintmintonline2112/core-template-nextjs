@@ -31,7 +31,7 @@ export function SiteEffects() {
         });
       });
     document
-      .querySelectorAll(".doc-grid.reveal, .chain.reveal, .config-list.reveal, .photo-strip.reveal")
+      .querySelectorAll(".doc-grid.reveal, .chain.reveal, .config-list.reveal, .photo-strip.reveal, .ps-steps.reveal")
       .forEach((group) => {
         Array.from(group.children).forEach((el, i) => {
           (el as HTMLElement).style.setProperty("--reveal-delay", `${i * 70}ms`);

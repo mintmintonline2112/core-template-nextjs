@@ -82,7 +82,11 @@ export function QuoteForm() {
         packaging: data.packaging || undefined,
         destination: data.destination,
         incoterm: data.incoterm || undefined,
-        message: data.message || undefined,
+        // Backend chưa có cột ngày giao hàng → gộp vào message.
+        message:
+          [data.shipmentDate && `Target shipment date: ${data.shipmentDate}`, data.message]
+            .filter(Boolean)
+            .join("\n\n") || undefined,
       });
       setSuccess(
         `We received your request for ${data.variety}${data.volume ? ` — ${data.volume}` : ""}${
@@ -113,7 +117,7 @@ export function QuoteForm() {
   return (
     <div className="quote-form-wrap reveal">
       <form className="quote-form" onSubmit={onSubmit}>
-        <h3 className="quote-form-title">Request a B2B Quote</h3>
+        <h3 className="quote-form-title">Request a Quote</h3>
 
         <div className="form-row">
           <div className="form-field">
@@ -139,13 +143,13 @@ export function QuoteForm() {
 
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="qf-variety">Almond Variety <span className="req" aria-hidden="true">*</span></label>
+            <label htmlFor="qf-variety">Product / Variety <span className="req" aria-hidden="true">*</span></label>
             <select id="qf-variety" name="variety" required defaultValue="">
               <option value="" disabled>Select a variety</option>
               {ALMOND_VARIETIES.map((v) => (
                 <option key={v}>{v}</option>
               ))}
-              <option>Mixed / To be discussed</option>
+              <option>Other / Custom specification</option>
             </select>
           </div>
           <div className="form-field">
@@ -163,24 +167,27 @@ export function QuoteForm() {
         <div className="form-row">
           <div className="form-field">
             <label htmlFor="qf-volume">Required Volume <span className="req" aria-hidden="true">*</span></label>
-            <input type="text" id="qf-volume" name="volume" placeholder="e.g. 1 × 40′ FCL / 20 MT" required />
+            <input type="text" id="qf-volume" name="volume" placeholder="e.g. Pallet, truckload, or 1 × 40′ container" required />
           </div>
           <div className="form-field">
             <label htmlFor="qf-packaging">Packaging</label>
             <select id="qf-packaging" name="packaging" defaultValue="">
               <option value="" disabled>Select packaging</option>
               <option>50 lb cartons</option>
-              <option>Palletized shipment</option>
-              <option>Bulk packaging</option>
-              <option>Custom packaging</option>
+              <option>Other commercial packaging</option>
             </select>
           </div>
         </div>
 
+        <div className="form-field">
+          <label htmlFor="qf-destination">Destination Country &amp; Port <span className="req" aria-hidden="true">*</span></label>
+          <input type="text" id="qf-destination" name="destination" placeholder="e.g. Vietnam — Cat Lai Port" required />
+        </div>
+
         <div className="form-row">
           <div className="form-field">
-            <label htmlFor="qf-destination">Destination Country &amp; Port <span className="req" aria-hidden="true">*</span></label>
-            <input type="text" id="qf-destination" name="destination" placeholder="e.g. Vietnam — Cat Lai Port" required />
+            <label htmlFor="qf-shipment">Target Shipment Date</label>
+            <input type="text" id="qf-shipment" name="shipmentDate" placeholder="e.g. November 2026" />
           </div>
           <div className="form-field">
             <label htmlFor="qf-incoterm">Preferred Incoterm</label>
@@ -192,8 +199,8 @@ export function QuoteForm() {
         </div>
 
         <div className="form-field">
-          <label htmlFor="qf-message">Additional Requirements</label>
-          <textarea id="qf-message" name="message" rows={4} placeholder="Certifications, target shipment window, other specifications…" />
+          <label htmlFor="qf-message">Special Specifications</label>
+          <textarea id="qf-message" name="message" rows={4} placeholder="Grade, crop year, certifications, packing or labeling requirements…" />
         </div>
 
         {error ? (
@@ -201,11 +208,11 @@ export function QuoteForm() {
         ) : null}
 
         <button type="submit" className="btn btn-gold btn-block" disabled={sending}>
-          {sending ? "Sending…" : "Submit Quote Request"}
+          {sending ? "Sending…" : "Request a Quote"}
         </button>
         <p className="form-privacy">
-          Fields marked <span className="req">*</span> are required. Your information is only
-          used to prepare your quotation.
+          Fields marked <span className="req">*</span> are required. Wholesale and trade
+          inquiries only.
         </p>
       </form>
     </div>

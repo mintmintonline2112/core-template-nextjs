@@ -50,11 +50,11 @@ const CONTACT = '/contact';
 
 export const siteRoutes = {
   home: HOME,
-  /** Neo tới 1 section trên trang chủ: /#markets, /#sourcing, /#quote… */
+  /** Neo tới 1 section trên trang chủ: /#about-map, /#how-it-works, /#request-quote… */
   homeSection: (anchor: string) => withHash(HOME, anchor),
 
   products: PRODUCTS,
-  /** Neo tới 1 nhóm sản phẩm: /products#natural, /products#sizes… */
+  /** Neo tới 1 nhóm sản phẩm: /products#natural-almonds, /products#kernel-sizes… */
   productsSection: (anchor: string) => withHash(PRODUCTS, anchor),
 
   news: NEWS,

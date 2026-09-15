@@ -13,9 +13,9 @@ import { mediaUrl } from "./cms";
  */
 
 export const SITE_NAME = "Prime Nuts USA";
-export const SITE_DEFAULT_TITLE = "Prime Nuts USA — California Almonds to the World";
+export const SITE_DEFAULT_TITLE = "Prime Nuts USA — California Almonds. Sourced with Confidence.";
 export const SITE_DEFAULT_DESCRIPTION =
-  "Prime Nuts USA connects California almond supply with importers, distributors, wholesalers, food manufacturers, roasters and retailers in the U.S. and global markets.";
+  "Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.";
 /** Ảnh chia sẻ mặc định khi CMS và Cài đặt đều không có ảnh (public/images). */
 export const DEFAULT_OG_IMAGE = "/images/hero-branch.jpg";
 export const SITE_LOCALE = "en_US";

@@ -52,6 +52,7 @@ export function SourcingBlock({
       {chain.length > 0 ? (
         <div
           className="chain reveal"
+          style={{ ["--chain-cols" as string]: chain.length } as React.CSSProperties}
           onMouseEnter={() => setChainHover(true)}
           onMouseLeave={() => setChainHover(false)}
         >

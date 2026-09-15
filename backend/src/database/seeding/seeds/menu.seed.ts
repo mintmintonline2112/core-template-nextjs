@@ -27,19 +27,19 @@ const MENU_TREE: SeedMenuItem[] = [
     label: 'Products',
     href: '/products',
     children: [
-      { label: 'Natural Almonds', href: '/products#natural' },
-      { label: 'Processed Almonds', href: '/products#processed' },
-      { label: 'Kernel Sizes', href: '/products#sizes' },
+      { label: 'Natural Almonds', href: '/products#natural-almonds' },
+      { label: 'Processed Almonds', href: '/products#processed-almonds' },
+      { label: 'Kernel Sizes', href: '/products#kernel-sizes' },
     ],
   },
   {
-    label: 'Markets',
-    href: '/#markets',
+    label: 'About',
+    href: '/#about-map',
     showSubmenu: false,
   },
   {
-    label: 'Sourcing',
-    href: '/#sourcing',
+    label: 'How It Works',
+    href: '/#how-it-works',
     showSubmenu: false,
   },
   {

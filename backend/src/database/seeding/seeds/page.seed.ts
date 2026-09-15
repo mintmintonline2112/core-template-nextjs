@@ -11,8 +11,8 @@ type PageDefinition = {
 };
 
 /**
- * Nội dung mặc định của website Prime Nuts USA — khớp các trang tĩnh trong
- * frontend/ (index, products, news, contact). Insert-only theo slug/sectionKey:
+ * Nội dung mặc định của website Prime Nuts USA. sectionKey = tên component trong
+ * frontend/src/app/(site)/_components/sections (VD product-specs ↔ ProductSpecs.tsx). Insert-only theo slug/sectionKey:
  * trang đã tồn tại (kể cả admin đã sửa) giữ nguyên, chạy lại db:seed an toàn.
  */
 const PAGES: PageDefinition[] = [
@@ -20,37 +20,59 @@ const PAGES: PageDefinition[] = [
     page: {
       title: 'Home',
       slug: 'home',
-      eyebrow: 'California Almonds to the World',
-      lead: 'Reliable California almond supply for U.S. & global markets.',
+      eyebrow: 'California Almond Sourcing',
+      lead: 'Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.',
       templateKey: 'home',
       status: PublishStatus.PUBLISHED,
       sortOrder: 1,
-      metaTitle: 'Prime Nuts USA — California Almonds to the World',
+      metaTitle: 'Prime Nuts USA — California Almonds. Sourced with Confidence.',
       metaDescription:
-        'Prime Nuts USA connects California almond supply with importers, distributors, wholesalers, food manufacturers, roasters and retailers in the U.S. and global markets.',
+        'Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.',
     },
     sections: [
       {
-        sectionKey: 'hero',
-        heading: 'Reliable California Almond Supply for U.S. & Global Markets',
-        subheading: 'California Almonds to the World',
+        sectionKey: 'hero-slider',
+        heading: 'California Almonds. Sourced with Confidence.',
+        subheading: 'California Almond Sourcing',
         content:
-          '<p>Prime Nuts USA connects California almond supply with commercial buyers in the U.S. and worldwide &mdash; reliable supply, consistent quality, competitive B2B pricing.</p>',
+          '<p>Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.</p>' +
+          '<p>Prime Nuts USA connects international buyers with established growers, handlers, processors, and logistics partners throughout California. Tell us your required variety, grade, size, volume, packaging, and destination&mdash;we will identify suitable supply options and coordinate the purchasing process through shipment.</p>',
         metadata: {
+          // Mô tả slide: văn bản thường, xuống dòng 2 lần để tách đoạn.
+          slides: [
+            {
+              image: '/images/orchard-rows.jpg',
+              title: 'California Almonds. Sourced with Confidence.',
+              text: 'Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.\n\nPrime Nuts USA connects international buyers with established growers, handlers, processors, and logistics partners throughout California. Tell us your required variety, grade, size, volume, packaging, and destination—we will identify suitable supply options and coordinate the purchasing process through shipment.',
+            },
+            {
+              image: '/images/hero-branch.jpg',
+              title: 'Sourced from California. Supplied to Your Requirements.',
+              text: 'California is the center of the global almond industry, supported by an extensive network of experienced growers, handlers, processors, and exporters.',
+            },
+            {
+              image: '/images/container-ship.jpg',
+              title: 'A Local Point of Contact for Your Almond Purchases',
+              text: 'You send us your purchasing requirements, and our team identifies suitable supply options, coordinates commercial details, and follows the order through export preparation and cargo dispatch.',
+            },
+          ],
           stats: [
-            { label: 'Export Markets', value: '30+' },
-            { label: 'Kernel Sizes', value: '7' },
-            { label: 'FCL Containers', value: '20′ & 40′' },
+            { label: 'California Varieties', value: '4+' },
+            { label: 'Kernel Sizes', value: '6' },
+            { label: 'Steps to Shipment', value: '5' },
           ],
         },
         sortOrder: 1,
       },
       {
-        sectionKey: 'markets',
-        heading: 'From California to Global Markets',
-        subheading: 'Global Distribution',
+        sectionKey: 'about-map',
+        heading: 'Connecting California Supply with Global Demand',
+        subheading: 'About Prime Nuts USA',
         content:
-          '<p>California sits at the center of the global almond industry &mdash; we give B2B buyers direct access to it, at home and abroad.</p>',
+          '<p>Prime Nuts USA is a California-based sourcing and trading company focused on connecting qualified international buyers with the California almond supply chain.</p>' +
+          '<p>We simplify procurement by providing buyers with a local sourcing partner who understands supplier communication, product specifications, commercial requirements, logistics, and international trade.</p>' +
+          '<p>Our team works with established industry participants to identify almond supply according to each customer&rsquo;s required variety, grade, size, packaging, volume, destination, and shipment schedule.</p>' +
+          '<p>Our business is built on straightforward communication, responsible sourcing, and long-term commercial relationships.</p>',
         metadata: {
           regions: [
             { key: 'us', name: 'United States', countries: ['United States'] },
@@ -90,14 +112,26 @@ const PAGES: PageDefinition[] = [
         sortOrder: 2,
       },
       {
-        sectionKey: 'products-overview',
-        heading: 'Almonds for Wholesale, Distribution & Food Manufacturing',
-        subheading: 'Our California Almonds',
+        // Phiên bản khác của about-map — mặc định TẮT; bật trong admin (và tắt about-map) để dùng.
+        sectionKey: 'about-map-regions',
+        heading: 'Connecting California Supply with Global Demand',
+        subheading: 'About Prime Nuts USA',
         content:
-          '<p>Natural almond kernels in the varieties, sizes, and grades your market requires.</p>',
+          '<p>Prime Nuts USA is a California-based sourcing and trading company focused on connecting qualified international buyers with the California almond supply chain.</p>' +
+          '<p>We simplify procurement by providing buyers with a local sourcing partner who understands supplier communication, product specifications, commercial requirements, logistics, and international trade.</p>',
+        isActive: false,
+        sortOrder: 2,
+      },
+      {
+        sectionKey: 'almond-varieties',
+        heading: 'Sourced from California. Supplied to Your Requirements.',
+        subheading: 'California Almonds',
+        content:
+          '<p>California is the center of the global almond industry, supported by an extensive network of experienced growers, handlers, processors, and exporters.</p>' +
+          '<p>Prime Nuts USA helps wholesale buyers source California almonds according to their specific commercial requirements, including variety, grade, size, crop year, packaging, order volume, destination, and preferred shipping schedule.</p>',
         metadata: {
-          varieties: ['Nonpareil', 'Carmel', 'Monterey', 'California Varieties'],
-          sizes: ['18/20', '20/22', '23/25', '25/27', '27/30', '30/32', '32/34'],
+          varieties: ['Nonpareil', 'Independence', 'Carmel-Type Almonds', 'California-Type Almonds'],
+          sizes: ['20/22', '22/24', '23/25', '25/27', '27/30', '30/32'],
           photos: [
             { image: '/images/kernels-study.jpg', caption: 'In-shell, natural & blanched kernels' },
             { image: '/images/almonds-ramekin.webp', caption: 'Ready for snacking & retail' },
@@ -107,102 +141,138 @@ const PAGES: PageDefinition[] = [
         sortOrder: 3,
       },
       {
-        sectionKey: 'orders',
-        heading: 'Built for B2B Supply',
-        subheading: 'Bulk & Container Orders',
+        sectionKey: 'product-specs',
+        heading: 'Almonds Matched to Your Market',
+        subheading: 'Product Specifications',
         content:
-          '<p>From domestic wholesale volumes to international container shipments.</p>',
+          '<p>Every buyer and destination market has different requirements. We source almonds according to the specifications provided with each inquiry.</p>' +
+          '<p>Other sizes, private specifications, and custom packing requirements may be discussed for qualified volume orders.</p>',
         metadata: {
           configurations: [
-            { title: 'Full Container Load — FCL', text: '20′ & 40′ ocean containers.' },
-            { title: '50 lb Cartons', text: 'The industry-standard export carton.' },
-            { title: 'Palletized Shipments', text: 'Stretch-wrapped, export-ready.' },
-            { title: 'Bulk Packaging', text: 'Totes & bins for manufacturing lines.' },
-            { title: 'Custom Commercial Packaging', text: 'Tailored on request.' },
+            { title: 'Product', text: 'Natural California Almond Kernels' },
+            { title: 'Origin', text: 'California, USA' },
+            { title: 'Varieties', text: 'Nonpareil, Independence, Carmel-Type, California-Type, and other available varieties' },
+            { title: 'Sizes', text: '20/22, 22/24, 23/25, 25/27, 27/30, 30/32' },
+            { title: 'Grades', text: 'USDA grades and commercial specifications available upon request' },
+            { title: 'Crop', text: 'Current crop and other available crop positions' },
+            { title: 'Packaging', text: '50 lb cartons or other commercial packaging upon request' },
+            { title: 'Volume', text: 'Pallet, truckload, and container quantities, subject to availability' },
           ],
         },
         sortOrder: 4,
       },
       {
-        sectionKey: 'sourcing',
-        heading: "Access to California's Almond Supply Network",
-        subheading: 'California Sourcing',
-        content:
-          '<p>Our California location plugs us straight into the world&rsquo;s most established almond supply chain.</p>',
+        sectionKey: 'how-it-works',
+        heading: 'How It Works',
+        subheading: 'How It Works',
         metadata: {
           chain: [
-            'Growers', 'Hullers & Shellers', 'Processors', 'Packers',
-            'Prime Nuts USA', 'Buyers & Distributors',
+            'Send Your Requirements', 'We Source in California', 'Review the Offer',
+            'Confirm the Order', 'Coordinate Shipment',
           ],
           // Ảnh /images/... là ảnh tĩnh của frontend; ảnh upload từ Thư viện dùng /uploads/...
           slides: [
-            { image: '/images/orchard-rows.jpg', caption: 'Established California orchards' },
-            { image: '/images/hero-branch.jpg', caption: 'New crop ripening on the tree' },
-            { image: '/images/green-almond.jpg', caption: 'Checked by hand in the field' },
-            { image: '/images/kernels-study.jpg', caption: 'Sized, sorted & graded' },
-            { image: '/images/ship-color.webp', caption: 'Export-ready for global markets' },
-            { image: '/images/almonds-ramekin.webp', caption: 'Ready for retail & distribution' },
+            { image: '/images/almonds-ramekin.webp', caption: 'Tell us your variety, size, grade & volume' },
+            { image: '/images/orchard-rows.jpg', caption: 'Sourced from established California suppliers' },
+            { image: '/images/kernels-study.jpg', caption: 'Specifications, pricing & availability' },
+            { image: '/images/green-almond.jpg', caption: 'Order, documentation & arrangements' },
+            { image: '/images/ship-color.webp', caption: 'Export preparation & cargo dispatch' },
           ],
         },
         sortOrder: 5,
       },
       {
-        sectionKey: 'logistics',
-        heading: 'More Than Almond Supply',
-        subheading: 'Export & Logistics Support',
-        content:
-          '<p>Depending on the transaction and destination, we coordinate or support:</p>',
+        sectionKey: 'working-process',
+        heading: 'From Requirements to Shipment',
+        subheading: 'Working Process',
         metadata: {
-          incoterms: ['FOB', 'CFR', 'CIF'],
+          steps: [
+            { title: 'Send Your Requirements', text: 'Provide the variety, size, grade, quantity, packaging, destination port, preferred shipment date, and Incoterm.' },
+            { title: 'We Source in California', text: 'Our team reviews available supply and identifies options that match your product and commercial requirements.' },
+            { title: 'Review the Offer', text: 'You receive the applicable product specifications, pricing, packing details, commercial terms, and estimated availability.' },
+            { title: 'Confirm the Order', text: 'Once the terms are agreed upon, we coordinate the order, documentation, and required arrangements with the appropriate suppliers and logistics partners.' },
+            { title: 'Coordinate Shipment', text: 'Prime Nuts USA follows the order through export preparation, container coordination, and cargo dispatch.' },
+          ],
+        },
+        sortOrder: 5,
+      },
+      {
+        sectionKey: 'sourcing-services',
+        heading: 'A Local Point of Contact for Your Almond Purchases',
+        subheading: 'California-Based Sourcing & Procurement',
+        content:
+          '<p>Working with suppliers from overseas can involve multiple parties, delayed communication, and unclear product availability.</p>' +
+          '<p>Prime Nuts USA provides international buyers with a California-based sourcing contact. You send us your purchasing requirements, and our team identifies suitable supply options, coordinates commercial details, and follows the order through export preparation and cargo dispatch.</p>',
+        metadata: {
+          incoterms: [],
           documents: [
-            'Commercial Invoice', 'Packing List', 'Certificate of Origin',
-            'Phytosanitary Certificate', 'Bill of Lading', 'Product Specifications',
-            'Food Safety Documentation',
-            { label: 'Laboratory Testing Documentation', note: 'when applicable' },
+            'Supplier sourcing and quotation', 'Product and specification matching',
+            'Commercial negotiation support', 'Procurement coordination',
+            'Packing and documentation coordination', 'Export preparation',
+            'Freight and container coordination', 'Shipment follow-up',
           ],
         },
         sortOrder: 6,
       },
       {
-        sectionKey: 'who-we-serve',
-        heading: 'Who We Serve',
+        sectionKey: 'buyers-marquee',
+        heading: 'International Buyers',
         metadata: {
           audiences: [
             'Importers', 'Distributors', 'Wholesalers', 'Food Manufacturers',
-            'Roasters', 'Retail Suppliers', 'Private-Label Brands',
-            'Food-Service Companies',
+            'Nut Processors & Roasters', 'Retail & Private-Label Operators',
+            'Food-Service Suppliers',
           ],
         },
         content:
-          '<p>Established buyers and new-market developers alike are welcome.</p>',
+          '<p>We welcome inquiries for recurring supply programs as well as spot purchases based on current California market availability.</p>',
         sortOrder: 7,
       },
       {
         sectionKey: 'why-us',
-        heading: 'A Partner Built Around Commercial Buyers',
-        subheading: 'Why Prime Nuts USA?',
+        heading: 'Why Prime Nuts USA?',
+        subheading: 'Why Choose Us',
+        // Đã chuyển sang dạng FAQ (section faq) — giữ để bật lại khi cần.
+        isActive: false,
         metadata: {
           reasons: [
-            { title: 'California Based', text: "At the source of the world's leading almond industry." },
-            { title: 'Reliable Sourcing', text: 'Established growers, handlers, processors, and packers.' },
-            { title: 'B2B Focus', text: 'Built for commercial buyers and wholesale volumes.' },
-            { title: 'Flexible Specifications', text: 'Varieties, sizes, grades, and packaging to your spec.' },
-            { title: 'Global Trade Support', text: 'We move California almonds into international markets.' },
-            { title: 'Long-Term Partnerships', text: 'Consistency, transparency, and reliable execution.' },
+            { title: 'California-Based Sourcing', text: 'Our location in California allows us to communicate efficiently with suppliers, processors, and logistics partners operating within the almond supply chain.' },
+            { title: 'Multiple Supply Options', text: 'We are not limited to a single variety or supply source. This allows us to evaluate different options according to each buyer’s specifications, volume, destination, and commercial requirements.' },
+            { title: 'Buyer-Focused Procurement', text: 'We begin with your requirements and source accordingly. Our goal is to find supply that fits your market—not to push a predetermined product.' },
+            { title: 'Export Coordination', text: 'We assist with the commercial, documentation, and logistics coordination needed to move California almonds to international destinations.' },
+            { title: 'Long-Term Supply Relationships', text: 'Our focus extends beyond individual transactions. We aim to build dependable sourcing relationships with qualified buyers who require consistent access to California almond supply.' },
           ],
         },
         sortOrder: 8,
       },
       {
-        sectionKey: 'quote-cta',
-        heading: "Let's Grow Together",
-        subheading: 'Become a Prime Nuts Distribution Partner',
+        // Accordion FAQ — nội dung 5 lý do "Why Prime Nuts USA?".
+        sectionKey: 'faq',
+        heading: 'Why Prime Nuts USA?',
+        subheading: 'Why Choose Us',
+        metadata: {
+          headingAccent: 'Prime Nuts USA?',
+          items: [
+            { question: 'California-Based Sourcing', answer: 'Our location in California allows us to communicate efficiently with suppliers, processors, and logistics partners operating within the almond supply chain.' },
+            { question: 'Multiple Supply Options', answer: 'We are not limited to a single variety or supply source. This allows us to evaluate different options according to each buyer’s specifications, volume, destination, and commercial requirements.' },
+            { question: 'Buyer-Focused Procurement', answer: 'We begin with your requirements and source accordingly. Our goal is to find supply that fits your market—not to push a predetermined product.' },
+            { question: 'Export Coordination', answer: 'We assist with the commercial, documentation, and logistics coordination needed to move California almonds to international destinations.' },
+            { question: 'Long-Term Supply Relationships', answer: 'Our focus extends beyond individual transactions. We aim to build dependable sourcing relationships with qualified buyers who require consistent access to California almond supply.' },
+          ],
+        },
+        sortOrder: 8,
+      },
+      {
+        sectionKey: 'request-quote',
+        heading: 'Looking for California Almonds?',
+        subheading: 'Request a Quote',
         content:
-          '<p>Importers, distributors, wholesalers, food manufacturers &mdash; tell us what you need:</p>',
+          '<p>Send us your purchasing requirements, and our California sourcing team will review the available supply options.</p><p>Please include:</p>',
         metadata: {
           checklist: [
-            'Almond variety', 'Size & grade', 'Required volume', 'Packaging',
-            'Destination country & port', 'Preferred Incoterm',
+            'Product or variety', 'Grade', 'Size', 'Quantity', 'Packaging',
+            'Destination country', 'Destination port', 'Target shipment date',
+            'Incoterm preference', 'Special specifications, if applicable',
           ],
         },
         sortOrder: 9,
@@ -292,7 +362,7 @@ const PAGES: PageDefinition[] = [
     },
     sections: [
       {
-        sectionKey: 'contact-info',
+        sectionKey: 'contact-details',
         heading: 'Prime Nuts USA',
         subheading: 'Get in Touch',
         content:
@@ -306,7 +376,7 @@ const PAGES: PageDefinition[] = [
         sortOrder: 1,
       },
       {
-        sectionKey: 'quotation-checklist',
+        sectionKey: 'quote-checklist',
         heading: 'Tell Us What You Need',
         subheading: 'Faster Quotations',
         content:

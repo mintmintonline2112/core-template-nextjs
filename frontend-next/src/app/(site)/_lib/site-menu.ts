@@ -21,13 +21,13 @@ export const SITE_MENU_ITEMS: SiteMenuItem[] = [
     label: "Products",
     href: siteRoutes.products,
     children: [
-      { label: "Natural Almonds", href: siteRoutes.productsSection('natural') },
-      { label: "Processed Almonds", href: siteRoutes.productsSection('processed') },
-      { label: "Kernel Sizes", href: siteRoutes.productsSection('sizes') },
+      { label: "Natural Almonds", href: siteRoutes.productsSection('natural-almonds') },
+      { label: "Processed Almonds", href: siteRoutes.productsSection('processed-almonds') },
+      { label: "Kernel Sizes", href: siteRoutes.productsSection('kernel-sizes') },
     ],
   },
-  { key: "markets", label: "Markets", href: siteRoutes.homeSection('markets') },
-  { key: "sourcing", label: "Sourcing", href: siteRoutes.homeSection('sourcing') },
+  { key: "about-map", label: "About", href: siteRoutes.homeSection('about-map') },
+  { key: "how-it-works", label: "How It Works", href: siteRoutes.homeSection('how-it-works') },
   {
     key: "news",
     label: "News",

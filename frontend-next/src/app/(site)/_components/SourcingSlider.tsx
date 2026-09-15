@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Slider ảnh phần California Sourcing: autoplay, mũi tên, chấm, vuốt.
- * Nhận danh sách slide từ CMS (metadata.slides của section `sourcing`);
+ * Nhận danh sách slide từ CMS (metadata.slides của section `how-it-works`);
  * không truyền thì dùng bộ ảnh mặc định bên dưới.
  */
 

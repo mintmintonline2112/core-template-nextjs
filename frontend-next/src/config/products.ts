@@ -9,24 +9,20 @@
 
 /** Cỡ hạt tính theo số nhân trên mỗi ounce. */
 export const KERNEL_SIZES = [
-  "18/20",
   "20/22",
+  "22/24",
   "23/25",
   "25/27",
   "27/30",
   "30/32",
-  "32/34",
 ] as const;
 
-/** Giống hạt tự nhiên của California. */
+/** Giống hạt chào bán chính (form báo giá có thêm lựa chọn "Other / Custom"). */
 export const ALMOND_VARIETIES = [
   "Nonpareil",
   "Independence",
-  "Monterey",
-  "Carmel",
-  "Butte",
-  "Padre",
-  "California Varieties",
+  "Carmel-Type",
+  "California-Type",
 ] as const;
 
 /** Định dạng đã qua chế biến. */

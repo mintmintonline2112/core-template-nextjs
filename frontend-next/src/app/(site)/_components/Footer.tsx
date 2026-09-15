@@ -26,23 +26,23 @@ export function Footer({
         <div className="footer-brand">
           <Brand footer {...brand} />
           <p className="footer-tagline">
-            California Almonds. Global Markets. Reliable Supply.
+            California Almonds. Sourced with Confidence.
           </p>
         </div>
 
         <nav className="footer-col" aria-label="Explore">
           <h4>Explore</h4>
           <Link href={siteRoutes.products}>Our Products</Link>
-          <Link href={siteRoutes.homeSection('markets')}>Global Markets</Link>
-          <Link href={siteRoutes.homeSection('orders')}>Bulk &amp; Container Orders</Link>
-          <Link href={siteRoutes.homeSection('sourcing')}>California Sourcing</Link>
-          <Link href={siteRoutes.homeSection('logistics')}>Export &amp; Logistics</Link>
+          <Link href={siteRoutes.homeSection('about-map')}>About Prime Nuts USA</Link>
+          <Link href={siteRoutes.homeSection('product-specs')}>Product Specifications</Link>
+          <Link href={siteRoutes.homeSection('how-it-works')}>How It Works</Link>
+          <Link href={siteRoutes.homeSection('sourcing-services')}>Sourcing &amp; Procurement</Link>
         </nav>
 
         <nav className="footer-col" aria-label="Company">
           <h4>Company</h4>
-          <Link href={siteRoutes.homeSection('why')}>Why Prime Nuts USA</Link>
-          <Link href={siteRoutes.homeSection('serve')}>Who We Serve</Link>
+          <Link href={siteRoutes.homeSection('why-us')}>Why Prime Nuts USA</Link>
+          <Link href={siteRoutes.homeSection('buyers-marquee')}>International Buyers</Link>
           <Link href={siteRoutes.news}>News &amp; Insights</Link>
           <Link href={siteRoutes.contact}>Contact</Link>
         </nav>

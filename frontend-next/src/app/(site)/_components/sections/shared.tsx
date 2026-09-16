@@ -13,6 +13,18 @@ import type { PageSection } from "@/types/cms";
  * thiếu dữ liệu thì bỏ trống phần đó.
  *
  * `section` có thể thiếu (trang dựng tay) — mọi helper đều chịu null.
+ *
+ * ĐANG CHUYỂN SANG TAILWIND (site.css → utility class), từng component một —
+ * xem site.css đoạn đầu ("layer theme, base, utilities, legacy") và
+ * frontend-next/src/styles/tailwind.css. Hai điều cần nhớ khi chuyển:
+ * 1. `legacy` (site.css) LUÔN thắng `utilities` khi trùng thuộc tính — class
+ *    dùng chung (.container, .btn*, .icon-badge, .eyebrow, h1-h4…) chưa chuyển
+ *    thì GIỮ NGUYÊN tên class đó, không tự ý xoá/đổi.
+ * 2. Ghi đè một thuộc tính mà site.css có rule chọn theo TÊN THẺ (không phải
+ *    .class) — VD `h1,h2,h3,h4{margin,color,line-height,font-family,
+ *    font-weight}` — thì class Tailwind thường KHÔNG thắng (không có class hook
+ *    để tránh). Bắt buộc dùng hậu tố `!` (VD `mb-[0.5em]!`) để buộc thắng.
+ *    Không cần `!` cho font-size (site.css không set sẵn font-size cho thẻ heading).
  */
 export type SectionProps = { section?: PageSection | null; index?: number };
 

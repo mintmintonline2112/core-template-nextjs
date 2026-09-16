@@ -1,0 +1,71 @@
+/**
+ * Điểm vào Tailwind cho website public (site.css vẫn là nguồn CSS chính,
+ * import Tailwind chạy song song). CHỦ ĐÍCH KHÔNG nạp preflight.css (bộ reset
+ * mặc định của Tailwind) — site.css đã có reset riêng, nạp thêm sẽ đổi giao
+ * diện hiện có (margin/border mặc định của thẻ, list-style…).
+ *
+ * Thứ tự layer: `legacy` (site.css) nằm SAU `utilities` — nghĩa là CSS cũ
+ * luôn thắng nếu trùng tên với một utility Tailwind. Bắt buộc phải vậy vì
+ * site.css dùng class `.container` (max-width bố cục riêng) ở khắp nơi, và
+ * Tailwind cũng có sẵn utility tên `container` — nếu để `utilities` thắng thì
+ * layout toàn site vỡ ngay khi bật Tailwind. Khi chuyển một component sang
+ * Tailwind, xoá luôn khối CSS cũ của nó trong site.css — hết đối thủ thì
+ * class Tailwind trên component đó áp dụng bình thường, thứ tự layer không
+ * còn ảnh hưởng tới component đã chuyển.
+ */
+@layer theme, base, utilities, legacy;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/**
+ * Ánh xạ design token sẵn có (site.css :root) sang theme của Tailwind, dùng
+ * `inline` để Tailwind đọc thẳng var() gốc thay vì tạo bản sao — đổi giá trị
+ * trong site.css là mọi utility bên dưới đổi theo, không cần sửa 2 nơi.
+ */
+@theme inline {
+  /* Navy thương hiệu */
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+  --color-navy-600: var(--navy-600);
+  --color-navy-100: var(--navy-100);
+  --color-navy-50: var(--navy-50);
+
+  /* Nền kem / trung tính ấm */
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  /* Vàng đồng (hạnh nhân) */
+  --color-gold-500: var(--gold-500);
+  --color-gold-400: var(--gold-400);
+  --color-gold-300: var(--gold-300);
+  --color-gold-100: var(--gold-100);
+
+  /* Chữ */
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-light: var(--light);
+  --color-light-soft: var(--light-soft);
+
+  /* Font — dùng font-main / font-display (không đổi tên default font-sans) */
+  --font-main: var(--font-main);
+  --font-display: var(--font-display);
+
+  /* Bo góc mặc định của site (rounded / rounded-lg vẫn dùng thang Tailwind riêng) */
+  --radius: var(--radius);
+  --radius-lg: var(--radius-lg);
+
+  /* Đổ bóng riêng của site — không đụng thang shadow-sm/md/lg/xl mặc định */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+
+  /* Easing chuyển động chung của site */
+  --ease-brand: var(--ease);
+}
+
+@import "./site.css" layer(legacy);

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { env } from "@/lib/env";
-import "@/styles/site.css";
+import "@/styles/tailwind.css";
 
 /**
  * Chỉ giữ phần dùng chung cho CẢ site lẫn admin. Title/description/OG của site

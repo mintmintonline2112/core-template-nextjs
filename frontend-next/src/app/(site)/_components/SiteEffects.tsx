@@ -18,8 +18,12 @@ export function SiteEffects() {
   useEffect(() => {
     document.documentElement.classList.add("js");
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const finePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
     const cleanups: Array<() => void> = [];
 
     /* ---------- Stagger delays ---------- */
@@ -27,21 +31,34 @@ export function SiteEffects() {
       .querySelectorAll(".market-grid, .why-grid, .news-grid, .hero-copy")
       .forEach((group) => {
         group.querySelectorAll(":scope > .reveal").forEach((el, i) => {
-          (el as HTMLElement).style.setProperty("--reveal-delay", `${i * 90}ms`);
+          (el as HTMLElement).style.setProperty(
+            "--reveal-delay",
+            `${i * 90}ms`,
+          );
         });
       });
     document
-      .querySelectorAll(".doc-grid.reveal, .chain.reveal, .config-list.reveal, .photo-strip.reveal, .ps-steps.reveal")
+      .querySelectorAll(
+        ".doc-grid.reveal, .chain.reveal, .config-list.reveal, .photo-strip.reveal, .ps-steps.reveal",
+      )
       .forEach((group) => {
         Array.from(group.children).forEach((el, i) => {
-          (el as HTMLElement).style.setProperty("--reveal-delay", `${i * 70}ms`);
+          (el as HTMLElement).style.setProperty(
+            "--reveal-delay",
+            `${i * 70}ms`,
+          );
         });
       });
     document
-      .querySelectorAll(".reveal .size-grid, .reveal .country-list, .reveal .quote-checklist")
+      .querySelectorAll(
+        ".reveal .size-grid, .reveal .country-list, .reveal .quote-checklist",
+      )
       .forEach((group) => {
         Array.from(group.children).forEach((el, i) => {
-          (el as HTMLElement).style.setProperty("--reveal-delay", `${i * 45}ms`);
+          (el as HTMLElement).style.setProperty(
+            "--reveal-delay",
+            `${i * 45}ms`,
+          );
         });
       });
 
@@ -56,7 +73,8 @@ export function SiteEffects() {
         if (start === null) start = now;
         const progress = Math.min((now - start) / 1400, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        if (host.firstChild) host.firstChild.nodeValue = String(Math.round(eased * target));
+        if (host.firstChild)
+          host.firstChild.nodeValue = String(Math.round(eased * target));
         if (progress < 1) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
@@ -110,7 +128,9 @@ export function SiteEffects() {
       document.documentElement.classList.add("gsap");
 
       // Tiêu đề lớn: mỗi từ trồi lên từ mặt nạ riêng.
-      const headline = document.querySelector<HTMLElement>(".hero h1, .page-hero h1");
+      const headline = document.querySelector<HTMLElement>(
+        ".hero h1, .page-hero h1",
+      );
       if (headline && !headline.dataset.split) {
         headline.dataset.split = "true";
         headline.classList.remove("reveal");
@@ -157,7 +177,9 @@ export function SiteEffects() {
           ".photo-frame img, .hero-photo img, .news-featured-photo img",
         )
         .forEach((img) => {
-          const frame = img.closest(".photo-frame, .hero-photo, .news-featured-photo");
+          const frame = img.closest(
+            ".photo-frame, .hero-photo, .news-featured-photo",
+          );
           gsap.fromTo(
             img,
             { yPercent: -11, scale: 1.24 },
@@ -177,24 +199,37 @@ export function SiteEffects() {
 
       // Nút nam châm cho CTA chính.
       if (finePointer) {
-        document.querySelectorAll<HTMLElement>(".btn-gold, .nav-cta").forEach((btn) => {
-          const xTo = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3.out" });
-          const yTo = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3.out" });
-          const onMove = (e: MouseEvent) => {
-            const r = btn.getBoundingClientRect();
-            xTo((e.clientX - r.left - r.width / 2) * 0.28);
-            yTo((e.clientY - r.top - r.height / 2) * 0.4);
-          };
-          const onLeave = () => {
-            gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
-          };
-          btn.addEventListener("mousemove", onMove);
-          btn.addEventListener("mouseleave", onLeave);
-          cleanups.push(() => {
-            btn.removeEventListener("mousemove", onMove);
-            btn.removeEventListener("mouseleave", onLeave);
+        document
+          .querySelectorAll<HTMLElement>(".btn-gold, .nav-cta")
+          .forEach((btn) => {
+            const xTo = gsap.quickTo(btn, "x", {
+              duration: 0.4,
+              ease: "power3.out",
+            });
+            const yTo = gsap.quickTo(btn, "y", {
+              duration: 0.4,
+              ease: "power3.out",
+            });
+            const onMove = (e: MouseEvent) => {
+              const r = btn.getBoundingClientRect();
+              xTo((e.clientX - r.left - r.width / 2) * 0.28);
+              yTo((e.clientY - r.top - r.height / 2) * 0.4);
+            };
+            const onLeave = () => {
+              gsap.to(btn, {
+                x: 0,
+                y: 0,
+                duration: 0.7,
+                ease: "elastic.out(1, 0.45)",
+              });
+            };
+            btn.addEventListener("mousemove", onMove);
+            btn.addEventListener("mouseleave", onLeave);
+            cleanups.push(() => {
+              btn.removeEventListener("mousemove", onMove);
+              btn.removeEventListener("mouseleave", onLeave);
+            });
           });
-        });
       }
 
       cleanups.push(() => {
@@ -204,7 +239,11 @@ export function SiteEffects() {
 
     /* ---------- Parallax khung hero ---------- */
     const heroFrame = document.querySelector<HTMLElement>(".hero-frame");
-    if (heroFrame && !reduced && window.matchMedia("(min-width: 900px)").matches) {
+    if (
+      heroFrame &&
+      !reduced &&
+      window.matchMedia("(min-width: 900px)").matches
+    ) {
       let pending = false;
       const onScroll = () => {
         if (pending) return;
@@ -220,9 +259,14 @@ export function SiteEffects() {
     }
 
     /* ---------- Thẻ nghiêng 3D ---------- */
+    // `.tilt-card`: hook riêng cho component đã chuyển sang Tailwind (không còn
+    // class kiểu dáng cũ như `.why-card` để bám vào) — gắn thêm class này (không
+    // kèm style) là card đó có hiệu ứng nghiêng theo chuột.
     if (!reduced && finePointer) {
       document
-        .querySelectorAll<HTMLElement>(".why-card, .market-card, .news-card")
+        .querySelectorAll<HTMLElement>(
+          ".why-card, .market-card, .news-card, .tilt-card",
+        )
         .forEach((card) => {
           const onMove = (e: MouseEvent) => {
             const r = card.getBoundingClientRect();
@@ -247,5 +291,7 @@ export function SiteEffects() {
     };
   }, [pathname]);
 
-  return <div ref={progressRef} className="scroll-progress" aria-hidden="true" />;
+  return (
+    <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
+  );
 }

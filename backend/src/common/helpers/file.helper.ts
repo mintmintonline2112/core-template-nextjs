@@ -53,3 +53,46 @@ export function uniqueUploadName(
   while (exists(candidate)) candidate = `${base}-${n++}${ext}`;
   return candidate;
 }
+
+/** Đuôi file ảnh hợp lệ, suy ra từ nội dung thật của file. */
+export type ImageKind = '.jpg' | '.png' | '.webp' | '.gif';
+
+export const MIME_BY_IMAGE_KIND: Record<ImageKind, string> = {
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+};
+
+/**
+ * Nhận dạng ảnh bằng "magic bytes" thay vì tin `file.mimetype` — header đó do
+ * trình duyệt gửi lên nên giả mạo được. Trả null nếu không phải ảnh hỗ trợ.
+ *
+ * Thiếu bước này thì file .svg hoặc .html khai man `image/png` vẫn được lưu
+ * nguyên vẹn vào /uploads (bộ nén bỏ qua đuôi lạ) rồi mở thẳng trên domain API
+ * — tức là XSS lưu trữ.
+ */
+export function detectImageKind(buffer: Buffer): ImageKind | null {
+  if (!buffer || buffer.length < 12) return null;
+
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return '.jpg';
+
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  const pngMagic = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (buffer.subarray(0, 8).equals(pngMagic)) return '.png';
+
+  // WEBP: "RIFF" .... "WEBP"
+  if (
+    buffer.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    buffer.subarray(8, 12).toString('ascii') === 'WEBP'
+  ) {
+    return '.webp';
+  }
+
+  // GIF: "GIF87a" | "GIF89a"
+  const gif = buffer.subarray(0, 6).toString('ascii');
+  if (gif === 'GIF87a' || gif === 'GIF89a') return '.gif';
+
+  return null;
+}

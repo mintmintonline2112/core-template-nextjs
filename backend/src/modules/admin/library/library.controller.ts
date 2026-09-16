@@ -30,6 +30,12 @@ import { LibraryService } from './library.service';
 const VIDEO_DIR = resolve(process.cwd(), 'uploads', 'videos');
 const VIDEO_MAX_MB = 200;
 const VIDEO_MIMES = new Set(['video/mp4', 'video/webm', 'video/quicktime']);
+/** Đuôi file ép theo mimetype đã lọc, không lấy theo tên người dùng đặt. */
+const VIDEO_EXT: Record<string, string> = {
+  'video/mp4': '.mp4',
+  'video/webm': '.webm',
+  'video/quicktime': '.mov',
+};
 
 /** Video ghi thẳng ra đĩa (không qua RAM như ảnh) — file tới 200MB. */
 const videoStorage = diskStorage({
@@ -38,9 +44,11 @@ const videoStorage = diskStorage({
     cb(null, VIDEO_DIR);
   },
   filename: (_req, file, cb) => {
+    const ext = VIDEO_EXT[file.mimetype] ?? '.mp4';
+    const safeName = file.originalname.replace(/\.[^.]+$/, '') + ext;
     cb(
       null,
-      uniqueUploadName(file.originalname, (candidate) =>
+      uniqueUploadName(safeName, (candidate) =>
         existsSync(resolve(VIDEO_DIR, candidate)),
       ),
     );

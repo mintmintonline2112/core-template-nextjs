@@ -61,7 +61,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     ) {
       message = (exceptionResponse as any).message || message;
       error = (exceptionResponse as any).error || null;
-    } else if (exception?.message) {
+    } else if (exception?.message && process.env.NODE_ENV !== 'production') {
+      // Lỗi ngoài HttpException (vd. lỗi TypeORM) mang theo tên bảng, tên cột,
+      // đường dẫn file... Chỉ hiện khi chạy dev; production trả câu chung chung,
+      // chi tiết đã nằm trong log phía dưới.
       message = exception.message;
     }
 

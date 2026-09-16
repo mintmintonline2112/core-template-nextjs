@@ -9,9 +9,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
 import { existsSync } from 'fs';
 import { readdir, stat, unlink, writeFile, mkdir } from 'fs/promises';
-import { extname, join, relative, resolve } from 'path';
+import { extname, join, relative, resolve, sep } from 'path';
 import sharp from 'sharp';
-import { uniqueUploadName } from 'src/common/helpers/file.helper';
+import {
+  detectImageKind,
+  MIME_BY_IMAGE_KIND,
+  uniqueUploadName,
+} from 'src/common/helpers/file.helper';
 import {
   MAX_UPLOAD_BYTES,
   MAX_UPLOAD_MB,
@@ -246,11 +250,12 @@ export class LibraryService implements OnModuleInit {
         `File size exceeds the ${MAX_UPLOAD_MB}MB limit`,
       );
     }
-    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowed.includes(file.mimetype)) {
-      throw new BadRequestException(
-        'Only jpg, png, webp, gif images are allowed',
-      );
+    // Nhận dạng theo nội dung thật, không tin mimetype client khai: file .svg
+    // hay .html khai man image/png từng được lưu nguyên vào /uploads và mở
+    // thẳng trên domain API (XSS lưu trữ).
+    const kind = detectImageKind(file.buffer);
+    if (!kind) {
+      throw new BadRequestException('Chỉ chấp nhận ảnh jpg, png, webp hoặc gif');
     }
 
     const safeFolder =
@@ -262,17 +267,19 @@ export class LibraryService implements OnModuleInit {
     await mkdir(targetDir, { recursive: true });
 
     // Nén ảnh về ~≤1MB; bỏ qua nếu admin đã tự chọn mức nén trên trình duyệt.
+    // Đuôi luôn theo loại ảnh đã nhận dạng, không theo tên người dùng đặt.
+    const safeName = file.originalname.replace(/\.[^.]+$/, '') + kind;
+
     const optimized = opts.skipOptimize
       ? {
           buffer: file.buffer,
-          ext: extname(file.originalname).toLowerCase() || '.jpg',
-          mime: file.mimetype,
+          ext: kind,
+          mime: MIME_BY_IMAGE_KIND[kind],
           changed: false,
         }
-      : await optimizeImage(file.buffer, file.originalname, file.mimetype);
+      : await optimizeImage(file.buffer, safeName, MIME_BY_IMAGE_KIND[kind]);
 
-    const baseName =
-      file.originalname.replace(/\.[^.]+$/, '') + optimized.ext;
+    const baseName = safeName.replace(/\.[^.]+$/, '') + optimized.ext;
     const name = uniqueUploadName(baseName, (candidate) =>
       existsSync(join(targetDir, candidate)),
     );
@@ -517,7 +524,12 @@ export class LibraryService implements OnModuleInit {
     if (!filePath) throw new BadRequestException('Image path is required');
     const relativePath = this.normalizePath(filePath).replace(/^uploads\//, '');
     const absolutePath = resolve(this.uploadsRoot, relativePath);
-    if (!absolutePath.startsWith(this.uploadsRoot)) {
+    // So sánh kèm dấu phân cách: nếu chỉ startsWith thì thư mục anh em
+    // (vd. /app/uploads-backup) cũng lọt qua.
+    if (
+      absolutePath !== this.uploadsRoot &&
+      !absolutePath.startsWith(this.uploadsRoot + sep)
+    ) {
       throw new BadRequestException('Invalid image path');
     }
     return absolutePath;

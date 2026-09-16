@@ -5,8 +5,12 @@ import {
 } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { mkdirSync, existsSync, unlinkSync } from 'fs';
-import { extname, join } from 'path';
-import { uniqueUploadName } from 'src/common/helpers/file.helper';
+import { join, resolve, sep } from 'path';
+import {
+  detectImageKind,
+  MIME_BY_IMAGE_KIND,
+  uniqueUploadName,
+} from 'src/common/helpers/file.helper';
 import {
   MAX_UPLOAD_BYTES,
   MAX_UPLOAD_MB,
@@ -21,7 +25,7 @@ export class FileSizeLimitException extends BadRequestException {
 
 export class FileTypeException extends BadRequestException {
   constructor() {
-    super('Only jpg, png, webp images are allowed');
+    super('Chỉ chấp nhận ảnh jpg, png, webp hoặc gif');
   }
 }
 
@@ -51,7 +55,9 @@ export class UploadImageService {
       throw new FileSizeLimitException();
     }
 
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype)) {
+    // Kiểm nội dung thật của file, không tin mimetype do client khai.
+    const kind = detectImageKind(file.buffer);
+    if (!kind) {
       throw new FileTypeException();
     }
 
@@ -63,14 +69,17 @@ export class UploadImageService {
 
     // Nén ảnh về ~≤1MB rồi mới lưu (đuôi có thể đổi .png → .jpg)
     // (bỏ qua nếu admin đã chọn mức nén trên trình duyệt — skipOptimize)
+    // Đuôi luôn lấy theo loại ảnh đã nhận dạng, không lấy theo tên người dùng đặt.
+    const safeName = file.originalname.replace(/\.[^.]+$/, '') + kind;
+
     const optimized = opts.skipOptimize
       ? {
           buffer: file.buffer,
-          ext: extname(file.originalname).toLowerCase() || '.jpg',
-          mime: file.mimetype,
+          ext: kind,
+          mime: MIME_BY_IMAGE_KIND[kind],
           changed: false,
         }
-      : await optimizeImage(file.buffer, file.originalname, file.mimetype);
+      : await optimizeImage(file.buffer, safeName, MIME_BY_IMAGE_KIND[kind]);
     // Giữ tên gốc (slug hóa) thay vì timestamp; trùng thì thêm -2, -3...
     const baseName = file.originalname.replace(/\.[^.]+$/, '') + optimized.ext;
     const uniqueFileName = uniqueUploadName(baseName, (candidate) =>
@@ -105,7 +114,14 @@ export class UploadImageService {
 
       if (!cleanPath.startsWith(this.ROOT_PATH)) return;
 
-      const absolutePath = join(process.cwd(), cleanPath);
+      // So khớp sau khi resolve: chuỗi "uploads/../../ngoai-vung" vẫn bắt đầu
+      // bằng "uploads" nhưng trỏ ra ngoài thư mục upload.
+      const uploadRoot = resolve(process.cwd(), this.ROOT_PATH);
+      const absolutePath = resolve(process.cwd(), cleanPath);
+
+      if (absolutePath !== uploadRoot && !absolutePath.startsWith(uploadRoot + sep)) {
+        return;
+      }
 
       if (existsSync(absolutePath)) {
         unlinkSync(absolutePath);

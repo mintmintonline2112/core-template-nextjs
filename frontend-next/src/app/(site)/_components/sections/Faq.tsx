@@ -41,12 +41,12 @@ function AccentHeading({ text, accent }: { text: string; accent?: string }) {
   const at = accent ? text.lastIndexOf(accent) : -1;
   if (!accent || at < 0)
     return (
-      <h2 className="mb-[0.5em]! text-[clamp(2.1rem,3.8vw,3rem)] text-ink!">
+      <h2 className="mb-[0.5em] text-[clamp(2.1rem,3.8vw,3rem)] text-ink">
         {text}
       </h2>
     );
   return (
-    <h2 className="mb-[0.5em]! text-[clamp(2.1rem,3.8vw,3rem)] text-ink!">
+    <h2 className="mb-[0.5em] text-[clamp(2.1rem,3.8vw,3rem)] text-ink">
       {text.slice(0, at)}
       <span className="text-gold-500">{accent}</span>
       {text.slice(at + accent.length)}
@@ -60,7 +60,7 @@ function AccentHeading({ text, accent }: { text: string; accent?: string }) {
  */
 const Answer = ({ text, className }: { text: string; className: string }) =>
   text ? (
-    <div className={cn(className, "[&_p]:mb-[0.7em]! [&_p:last-child]:mb-0!")}>
+    <div className={cn(className, "[&_p]:mb-[0.7em] [&_p:last-child]:mb-0")}>
       {paragraphs(text).map((paragraph, index) => (
         <p key={index}>{paragraph}</p>
       ))}
@@ -104,18 +104,18 @@ export function Faq({ section }: SectionProps) {
             )}
           >
             {section?.subheading ? (
-              <p className="m-0! font-display text-[0.76rem] font-semibold tracking-[0.24em] text-gold-500 uppercase">
+              <p className="m-0 font-display text-[0.76rem] font-semibold tracking-[0.24em] text-gold-500 uppercase">
                 {section.subheading}
               </p>
             ) : null}
             {section?.heading ? (
-              <h2 className="mt-[0.7rem]! mb-0! text-[clamp(2rem,3.3vw,2.85rem)] leading-[1.14]! text-navy-900!">
+              <h2 className="mt-[0.7rem] mb-0 text-[clamp(2rem,3.3vw,2.85rem)] leading-[1.14] text-navy-900">
                 {section.heading}
               </h2>
             ) : null}
             <RichIntro
               html={section?.content}
-              className="mt-[1.1rem] max-w-[54ch] leading-[1.72] text-ink-soft [&_p]:mb-[0.65em]! [&_p:last-child]:mb-0!"
+              className="mt-[1.1rem] max-w-[54ch] leading-[1.72] text-ink-soft [&_p]:mb-[0.65em] [&_p:last-child]:mb-0"
             />
 
             {list.length > 0 ? (
@@ -142,7 +142,7 @@ export function Faq({ section }: SectionProps) {
             ) : null}
 
             {note ? (
-              <p className="mt-auto! border-t border-line pt-[1.1rem] text-[0.82rem] leading-[1.6] text-ink-faint max-[900px]:mt-[1.75rem]!">
+              <p className="mt-auto border-t border-line pt-[1.1rem] text-[0.82rem] leading-[1.6] text-ink-faint max-[900px]:mt-[1.75rem]">
                 {note}
               </p>
             ) : null}
@@ -171,7 +171,7 @@ export function Faq({ section }: SectionProps) {
         {section?.heading || section?.subheading || section?.content ? (
           <div className="reveal mx-auto mb-[clamp(2.5rem,5vw,3.5rem)] max-w-[52rem] text-center">
             {section?.subheading ? (
-              <p className="mb-[0.7rem]! text-[0.9rem] font-semibold tracking-[0.18em] text-gold-500 uppercase">
+              <p className="mb-[0.7rem] text-[0.9rem] font-semibold tracking-[0.18em] text-gold-500 uppercase">
                 {section.subheading}
               </p>
             ) : null}
@@ -183,7 +183,7 @@ export function Faq({ section }: SectionProps) {
             ) : null}
             <RichIntro
               html={section?.content}
-              className="mx-auto max-w-[46rem] text-ink-soft [&_p]:mb-[0.6em]! [&_p:last-child]:mb-0!"
+              className="mx-auto max-w-[46rem] text-ink-soft [&_p]:mb-[0.6em] [&_p:last-child]:mb-0"
             />
           </div>
         ) : null}
@@ -196,7 +196,7 @@ export function Faq({ section }: SectionProps) {
                 key={column.title ?? columnIndex}
               >
                 {column.title ? (
-                  <h3 className="mb-[1.1rem]! text-2xl text-ink!">
+                  <h3 className="mb-[1.1rem] text-2xl text-ink">
                     {column.title}
                   </h3>
                 ) : null}

@@ -8,7 +8,7 @@ const EDGE_FADE =
 function MarqueeLine({ items }: { items: string[] }) {
   return (
     <p
-      className="m-0! flex items-baseline gap-[1.4rem] text-[clamp(1.35rem,2.6vw,1.9rem)] font-medium whitespace-nowrap text-navy-700 italic"
+      className="m-0 flex items-baseline gap-[1.4rem] text-[clamp(1.35rem,2.6vw,1.9rem)] font-medium whitespace-nowrap text-navy-700 italic"
       aria-hidden="true"
     >
       {items.map((item) => (
@@ -95,7 +95,7 @@ export function Marquee({ section }: SectionProps) {
         ) : null}
         {section?.content?.trim() ? (
           <p
-            className="mx-auto! my-0! max-w-[36rem] text-[1.05rem] text-ink-faint"
+            className="mx-auto my-0 max-w-[36rem] text-[1.05rem] text-ink-faint"
             dangerouslySetInnerHTML={{ __html: inlineHtml(section.content) }}
           />
         ) : null}

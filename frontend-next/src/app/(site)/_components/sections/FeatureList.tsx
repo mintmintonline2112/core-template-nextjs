@@ -47,7 +47,7 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
       <div className="reveal mt-[2.6rem] flex flex-wrap items-center justify-between gap-6 rounded-lg border border-navy-100 bg-navy-50 px-8 py-[1.6rem] max-[640px]:flex-col max-[640px]:items-start">
         {note ? (
           <p
-            className="m-0! max-w-[34rem] text-[1.05rem] text-ink-soft"
+            className="m-0 max-w-[34rem] text-[1.05rem] text-ink-soft"
             dangerouslySetInnerHTML={{ __html: inlineHtml(note) }}
           />
         ) : null}
@@ -120,7 +120,7 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
             {String(offset + i + 1).padStart(2, "0")}
           </span>
           <div>
-            <h4 className="m-0! text-[1.05rem]">{row.label}</h4>
+            <h4 className="m-0 text-[1.05rem]">{row.label}</h4>
             {row.note ? (
               <span className={`block ${NOTE} mt-[0.15rem] text-[0.88rem]`}>
                 {row.note}

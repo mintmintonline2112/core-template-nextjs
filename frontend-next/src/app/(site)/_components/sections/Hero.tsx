@@ -175,7 +175,7 @@ export function Hero({ section }: SectionProps) {
             <p className="eyebrow eyebrow-gold reveal">{section.subheading}</p>
           ) : null}
           {section?.heading ? (
-            <h1 className="reveal mb-[0.5em]! text-[clamp(2.5rem,5.4vw,3.9rem)] font-semibold! text-light!">
+            <h1 className="reveal mb-[0.5em] text-[clamp(2.5rem,5.4vw,3.9rem)] font-semibold text-light">
               {section.heading}
             </h1>
           ) : null}

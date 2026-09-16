@@ -50,7 +50,7 @@ export function SizeRuler({ sizes, note }: { sizes: string[]; note?: string }) {
         ))}
       </ol>
       {note ? (
-        <p className="mt-[1.1rem]! mb-0! text-center font-display text-[0.98rem] text-gold-300 italic">
+        <p className="mt-[1.1rem] mb-0 text-center font-display text-[0.98rem] text-gold-300 italic">
           {note}
         </p>
       ) : null}

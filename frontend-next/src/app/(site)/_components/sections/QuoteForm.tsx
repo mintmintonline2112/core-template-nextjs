@@ -45,7 +45,7 @@ export function QuoteForm({ section }: SectionProps) {
           ) : null}
           <RichIntro
             html={section?.content}
-            className="max-w-176 text-[1.16rem] text-light-soft [&_p]:mb-[1em]! [&_p:last-child]:mb-0!"
+            className="max-w-176 text-[1.16rem] text-light-soft [&_p]:mb-[1em] [&_p:last-child]:mb-0"
           />
           {checklist.length > 0 ? (
             <ul className="quote-checklist my-[1.8rem]! grid grid-cols-2 gap-x-[1.4rem] gap-y-[0.65rem]">

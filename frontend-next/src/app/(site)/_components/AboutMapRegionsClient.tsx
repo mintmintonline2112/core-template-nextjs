@@ -70,7 +70,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
               </button>
               {isActive && region.countries.length > 0 ? (
                 <ul
-                  className="flex animate-[amr-in_350ms_var(--ease)_both] flex-wrap gap-[0.4rem] px-[0.95rem]! pt-[0.9rem]! pb-[1.1rem]! motion-reduce:animate-none"
+                  className="flex animate-[amr-in_350ms_var(--ease)_both] flex-wrap gap-[0.4rem] px-[0.95rem] pt-[0.9rem] pb-[1.1rem] motion-reduce:animate-none"
                   id={panelId}
                 >
                   {region.countries.map((country) => (
@@ -90,7 +90,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
 
       <div className="max-[900px]:order-[-1]">
         <WorldMapPanel active={active} className="mb-[0.8rem]" />
-        <p className="m-0! text-right text-[0.95rem] text-ink-faint italic max-[900px]:text-left">
+        <p className="m-0 text-right text-[0.95rem] text-ink-faint italic max-[900px]:text-left">
           Additional destinations on request.
         </p>
       </div>

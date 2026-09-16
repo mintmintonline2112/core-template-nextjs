@@ -116,11 +116,11 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
                         {iconFor(row.icon, i)}
                       </IconBadge>
                       <div>
-                        <h4 className="m-0! text-[1.08rem]">
+                        <h4 className="m-0 text-[1.08rem]">
                           {row.title ?? row.label}
                         </h4>
                         {row.text ? (
-                          <p className="mt-[0.15rem]! mb-0! text-[0.95rem] text-ink-soft">
+                          <p className="mt-[0.15rem] mb-0 text-[0.95rem] text-ink-soft">
                             {row.text}
                           </p>
                         ) : null}
@@ -148,11 +148,11 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
             >
               <IconBadge>{iconFor(row.icon, i)}</IconBadge>
               <div>
-                <h4 className="mb-[0.15rem]! text-[1.22rem]">
+                <h4 className="mb-[0.15rem] text-[1.22rem]">
                   {row.title ?? row.label}
                 </h4>
                 {row.text ? (
-                  <p className="m-0! text-[0.98rem] text-ink-soft">
+                  <p className="m-0 text-[0.98rem] text-ink-soft">
                     {row.text}
                   </p>
                 ) : null}

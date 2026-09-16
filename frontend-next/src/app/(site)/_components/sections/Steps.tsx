@@ -94,7 +94,7 @@ export function Steps({ section }: SectionProps) {
           <Head section={section} />
           {steps.length > 0 ? (
             <ol
-              className="ps-steps reveal mt-[clamp(0.5rem,2vw,1.5rem)]! grid grid-cols-[repeat(var(--ps-count,5),minmax(0,1fr))] gap-x-[var(--ps-gap)] gap-y-[2.8rem] [--ps-gap:clamp(1rem,2.4vw,2rem)] [--ps-size:132px] max-[1080px]:grid-cols-3 max-[1080px]:[--ps-size:116px] max-[640px]:grid-cols-1 max-[640px]:gap-[2.4rem]"
+              className="ps-steps reveal mt-[clamp(0.5rem,2vw,1.5rem)] grid grid-cols-[repeat(var(--ps-count,5),minmax(0,1fr))] gap-x-[var(--ps-gap)] gap-y-[2.8rem] [--ps-gap:clamp(1rem,2.4vw,2rem)] [--ps-size:132px] max-[1080px]:grid-cols-3 max-[1080px]:[--ps-size:116px] max-[640px]:grid-cols-1 max-[640px]:gap-[2.4rem]"
               style={
                 { ["--ps-count" as string]: steps.length } as CSSProperties
               }
@@ -146,11 +146,11 @@ export function Steps({ section }: SectionProps) {
                       />
                     </svg>
                   ) : null}
-                  <h3 className="mb-[0.55rem]! text-[1.22rem] text-ink!">
+                  <h3 className="mb-[0.55rem] text-[1.22rem] text-ink">
                     {step.title}
                   </h3>
                   {step.text ? (
-                    <p className="mx-auto! my-0! max-w-[16rem] text-[0.98rem] leading-[1.6] text-ink-soft">
+                    <p className="mx-auto my-0 max-w-[16rem] text-[0.98rem] leading-[1.6] text-ink-soft">
                       {step.text}
                     </p>
                   ) : null}

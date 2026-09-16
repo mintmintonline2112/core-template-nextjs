@@ -9,6 +9,7 @@
     "build": "next build",
     "lint": "eslint src next.config.ts --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --noEmit",
+    "lint:layers": "node scripts/lint-layers.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

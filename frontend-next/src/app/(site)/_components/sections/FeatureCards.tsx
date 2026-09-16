@@ -43,11 +43,11 @@ export function FeatureCards({ section }: SectionProps) {
                 <IconBadge className="mb-[1.3rem] inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-[rgba(245,241,227,.30)] bg-[rgba(245,241,227,.10)] text-light group-hover:scale-110 group-hover:rotate-[-5deg] [&>svg]:h-6 [&>svg]:w-6">
                   {iconFor(card.icon, index)}
                 </IconBadge>
-                <h3 className="mb-[0.4rem]! text-[1.4rem] text-light!">
+                <h3 className="mb-[0.4rem] text-[1.4rem] text-light">
                   {card.title}
                 </h3>
                 {card.text ? (
-                  <p className="m-0! text-[1.02rem] text-[rgba(245,241,227,.88)]">
+                  <p className="m-0 text-[1.02rem] text-[rgba(245,241,227,.88)]">
                     {card.text}
                   </p>
                 ) : null}

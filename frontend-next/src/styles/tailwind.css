@@ -1,23 +1,32 @@
 /**
- * Điểm vào Tailwind cho website public. site.css vẫn được import song song vì
- * còn giữ phần HẠ TẦNG dùng chung (reset, .container, .section*, .btn*,
- * .eyebrow, .icon-badge, .photo-frame, hệ hiệu ứng cuộn .reveal, header/footer,
- * trang tin, form, hero-slider) — toàn bộ component section đã chuyển sang
- * Tailwind. CHỦ ĐÍCH KHÔNG nạp preflight.css (bộ reset mặc định của Tailwind):
- * site.css đã có reset riêng, nạp thêm sẽ đổi giao diện hiện có (margin/border
- * mặc định của thẻ, list-style…).
+ * Điểm vào Tailwind cho website public. CSS cũ chia làm HAI file, nằm hai bên
+ * `utilities` — đây là điểm quan trọng nhất của kiến trúc này:
  *
- * Thứ tự layer: `legacy` (site.css) nằm SAU `utilities` — nghĩa là CSS cũ
- * luôn thắng nếu trùng tên với một utility Tailwind. Bắt buộc phải vậy vì
- * site.css dùng class `.container` (max-width bố cục riêng) ở khắp nơi, và
- * Tailwind cũng có sẵn utility tên `container` — nếu để `utilities` thắng thì
- * layout toàn site vỡ ngay. Khi chuyển tiếp một mảng hạ tầng sang Tailwind,
- * xoá luôn khối CSS cũ của nó trong site.css — hết đối thủ thì class Tailwind
- * áp dụng bình thường, thứ tự layer không còn ảnh hưởng tới phần đã chuyển.
+ *   base.css  → @layer base    (TRƯỚC utilities)  design token + reset theo TÊN THẺ
+ *   site.css  → @layer legacy  (SAU utilities)    CSS component theo .class
+ *
+ * Vì sao tách: rule theo tên thẻ (h1-h4, p, ul/ol, a, button, img/svg) mà nằm
+ * sau utilities thì nó nuốt mọi class Tailwind đặt lên đúng mấy thẻ đó —
+ * `<p className="m-0">` không có tác dụng, build vẫn xanh, cực khó thấy. Đẩy
+ * chúng vào `base` là trả lại lẽ thường: utility thắng reset.
+ *
+ * Vì sao phần .class VẪN phải nằm sau utilities: site.css dùng class
+ * `.container` (max-width bố cục riêng) ở khắp nơi, trùng tên với utility
+ * `container` có sẵn của Tailwind — để `utilities` thắng thì layout toàn site
+ * vỡ ngay. Nên `.section*`, `.btn*`, `.eyebrow`, `.icon-badge`, `.photo-frame`,
+ * `.reveal`, header/footer, trang tin, form, hero-slider… vẫn thắng utility
+ * trùng thuộc tính; chuyển mảng nào sang Tailwind thì XOÁ khối CSS cũ của mảng
+ * đó đi, hết đối thủ là xong.
+ *
+ * CHỦ ĐÍCH KHÔNG nạp preflight.css (reset mặc định của Tailwind) — base.css đã
+ * là reset riêng của site, nạp thêm sẽ đổi giao diện hiện có. Đổi lại phải tự
+ * lo vài thứ preflight hay làm hộ: `button` không được reset nền/viền/padding,
+ * `img`/`video` không có `height:auto`, `h5`/`h6` không reset cỡ chữ.
  */
 @layer theme, base, utilities, legacy;
 
 @import "tailwindcss/theme.css" layer(theme);
+@import "./base.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
 /**
@@ -77,9 +86,9 @@
      nên `pt-md` và `pt-4` ra đúng một kết quả — dùng lẫn lộn cũng không lệch.
      Thang số mặc định vẫn nguyên vẹn, token này chỉ THÊM chứ không thay thế.
 
-     Lưu ý: trên <ul>/<ol>/<p>/<a>/<h1-h4> vẫn phải gắn hậu tố `!` (VD `pt-xl!`)
-     vì site.css nhắm mấy thẻ đó theo TÊN THẺ ở layer legacy, mà legacy đứng sau
-     utilities nên thắng bất kể specificity — xem comment đầu sections/shared.tsx. */
+     Dùng thẳng `pt-xl`, KHÔNG cần hậu tố `!`: reset theo tên thẻ nằm ở base.css
+     (@layer base, trước utilities). Chỉ khi đè lên một rule theo .class còn ở
+     site.css mới cần `!` — xem comment đầu sections/shared.tsx. */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;

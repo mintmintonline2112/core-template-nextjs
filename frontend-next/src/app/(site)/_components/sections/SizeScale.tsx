@@ -11,16 +11,12 @@ import {
 
 const LAYOUTS = ["section", "band"] as const;
 
-/**
- * Tiêu đề nhỏ kiểu panel: gạch vàng ngắn + chữ in hoa giãn ký tự. Các thuộc
- * tính có `!` là chỗ đè lên rule theo tên thẻ `h1,h2,h3,h4` của site.css
- * (font-weight/letter-spacing/color/margin) — không có `!` thì layer legacy thắng.
- */
+/** Tiêu đề nhỏ kiểu panel: gạch vàng ngắn + chữ in hoa giãn ký tự. */
 function PanelTitle({ text, center }: { text: string; center?: boolean }) {
   return (
     <h3
       className={cn(
-        "mb-[1.8rem]! flex items-center gap-4 text-[1.05rem] font-semibold! tracking-[0.26em]! text-navy-700! uppercase",
+        "mb-[1.8rem] flex items-center gap-4 text-[1.05rem] font-semibold tracking-[0.26em] text-navy-700 uppercase",
         center && "justify-center",
       )}
     >
@@ -33,7 +29,7 @@ function PanelTitle({ text, center }: { text: string; center?: boolean }) {
 /** Chú thích dưới thước — giữ margin-bottom 1em mặc định của thẻ <p>. */
 function Footnote({ text }: { text: string }) {
   return (
-    <p className="mt-[1.5rem]! text-[0.98rem] text-ink-faint italic">{text}</p>
+    <p className="mt-[1.5rem] text-[0.98rem] text-ink-faint italic">{text}</p>
   );
 }
 

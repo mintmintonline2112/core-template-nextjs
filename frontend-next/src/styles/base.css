@@ -1,0 +1,134 @@
+/* ============================================================
+   PRIME NUTS USA — NỀN TẢNG (design token + reset theo tên thẻ)
+   ============================================================
+   Tách khỏi site.css để nạp vào @layer base — tức là TRƯỚC utilities.
+   Nhờ vậy class Tailwind thắng mấy rule chọn theo TÊN THẺ ở đây
+   (h1-h4, p, ul/ol, a, button, img/svg) theo đúng lẽ thường, không phải
+   đeo hậu tố `!` nữa.
+
+   ĐỪNG đưa rule theo .class vào file này. Class dùng chung (.container,
+   .section*, .btn*, .eyebrow, .icon-badge, .photo-frame, .reveal…) vẫn ở
+   site.css / @layer legacy, nằm SAU utilities — cố ý, vì .container trùng
+   tên với utility `container` của Tailwind.
+
+   Thứ tự layer khai ở tailwind.css: theme, base, utilities, legacy.
+   ============================================================ */
+
+:root {
+  /* Brand navy */
+  --navy-900: #0F1729;
+  --navy-800: #141F38;
+  --navy-700: #1A2744;            /* primary brand color */
+  --navy-600: #25375E;
+  --navy-100: #DDE3EE;
+  --navy-50:  #EEF1F7;
+
+  /* Warm neutrals */
+  --cream:     #FAF8F3;
+  --cream-2:   #F3EFE6;
+  --paper:     #FFFFFF;
+  --line:      #E3DDD0;
+  --line-soft: #ECE7DC;
+
+  /* Almond gold */
+  --gold-500:  #9A7326;
+  --gold-400:  #C9A25E;
+  --gold-300:  #D9B45F;
+  --gold-100:  #F3E8CD;
+
+  /* Text */
+  --ink:       #1A2236;
+  --ink-soft:  #4A5468;
+  --ink-faint: #6B7385;
+  --light:     #F5F1E3;
+  --light-soft:#C3CADB;
+
+  /* Type — chỉnh font toàn site tại đây:
+     --font-main    = chữ thân bài (mặc định Roboto)
+     --font-display = tiêu đề h1/h2/h3 + số liệu nổi bật (mặc định Montserrat)
+     Lưu ý: đổi sang font Google khác thì thêm font đó vào link fonts
+     trong src/app/layout.tsx nữa nhé. */
+  --font-main: "Roboto", "Segoe UI", Arial, sans-serif;
+  --font-display: "Montserrat", "Segoe UI", Arial, sans-serif;
+
+  /* Rhythm */
+  --radius: 6px;
+  --radius-lg: 12px;
+  --container: 1160px;
+  --section-pad: clamp(4.5rem, 9vw, 7.5rem);
+  --shadow-soft: 0 1px 2px rgba(15, 23, 41, 0.05), 0 12px 32px -16px rgba(15, 23, 41, 0.18);
+  --shadow-lift: 0 2px 4px rgba(15, 23, 41, 0.06), 0 20px 44px -20px rgba(15, 23, 41, 0.28);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ============ RESET & BASE ============ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 92px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background-color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+[hidden] { display: none !important; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-main);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 0.6em;
+  color: inherit;
+  text-wrap: balance;
+}
+
+/* Tiêu đề dùng --font-display (admin tự override bằng Barlow riêng) */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 em, h2 em, h3 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold-400);
+}
+
+p { margin: 0 0 1em; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+a {
+  color: var(--navy-700);
+  text-decoration: none;
+  transition: color 180ms var(--ease);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--navy-700);
+  color: var(--cream);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

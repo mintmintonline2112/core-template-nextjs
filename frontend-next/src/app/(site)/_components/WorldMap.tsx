@@ -190,7 +190,7 @@ export function WorldMap({ regions }: { regions?: MapRegion[] }) {
           </button>
         ))}
       </div>
-      <p className="mx-auto! my-0! max-w-[46rem] text-center text-[0.98rem] text-ink-faint italic">
+      <p className="mx-auto my-0 max-w-[46rem] text-center text-[0.98rem] text-ink-faint italic">
         Hover a region — its markets light up. Additional destinations on
         request.
       </p>

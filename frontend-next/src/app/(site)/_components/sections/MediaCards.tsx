@@ -50,8 +50,9 @@ const CARD_ZOOM =
  *   bắt chúng để rải `--reveal-delay`, cho hiệu ứng hiện dần so le từng thẻ.
  * - `tilt-card`: SiteEffects.tsx nghiêng thẻ theo chuột (thay cho `why-card` cũ).
  * - `icon-badge`, `photo-frame`, `section-*`, `container`, `reveal`: hạ tầng
- *   dùng chung, chưa chuyển. `.icon-badge` đặt sẵn cỡ/màu nên chỗ nào đổi phải
- *   dùng hậu tố `!` (layer legacy thắng utilities).
+ *   dùng chung, chưa chuyển. Riêng `.icon-badge` đặt sẵn cỡ/nền/màu và vẫn nằm
+ *   ở layer legacy (sau utilities), nên hai chỗ đổi cỡ/màu huy hiệu bên dưới
+ *   phải dùng hậu tố `!` — đó là 2 trong 3 chỗ còn `!` của cả repo.
  */
 export function MediaCards({ section, index = 0 }: SectionProps) {
   const id = anchorId(section, "media-cards");
@@ -82,7 +83,7 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
                 <IconBadge className="icon-badge mb-[1.3rem] group-hover:scale-110 group-hover:rotate-[-5deg]">
                   {ALMOND_ICON}
                 </IconBadge>
-                <h3 className="mb-[0.4rem]! text-[1.4rem]">{card.title}</h3>
+                <h3 className="mb-[0.4rem] text-[1.4rem]">{card.title}</h3>
               </article>
             ))}
           </div>
@@ -96,7 +97,7 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
       <div className="container">
         <Head section={section} />
         {cards.length > 0 ? (
-          <ul className="reveal mt-[clamp(2.5rem,5vw,3.5rem)]! grid grid-cols-4 gap-[clamp(1.5rem,3vw,2.5rem)] text-center max-[900px]:grid-cols-2 max-[900px]:gap-y-10">
+          <ul className="reveal mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-4 gap-[clamp(1.5rem,3vw,2.5rem)] text-center max-[900px]:grid-cols-2 max-[900px]:gap-y-10">
             {cards.map((card, i) => (
               <li className="group" key={`${card.title}-${i}`}>
                 <div className="relative mx-auto aspect-square w-[clamp(150px,15vw,210px)]">
@@ -116,11 +117,11 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
                     />
                   ) : null}
                 </div>
-                <h4 className="mt-[1.2rem]! mb-[0.4rem]! text-[1.24rem]">
+                <h4 className="mt-[1.2rem] mb-[0.4rem] text-[1.24rem]">
                   {card.title}
                 </h4>
                 {card.text ? (
-                  <p className="m-0! text-[0.98rem] text-ink-soft">
+                  <p className="m-0 text-[0.98rem] text-ink-soft">
                     {card.text}
                   </p>
                 ) : null}
@@ -145,7 +146,7 @@ const PHOTO_CARD_SCRIM =
 
 /** Đoạn mô tả trong thẻ — dùng cho cả bản ngắn và các đoạn của bản đầy đủ. */
 const CARD_TEXT =
-  "mt-[0.75rem]! max-w-[44ch] text-[1.02rem] leading-[1.6] text-[rgba(255,255,255,0.9)]";
+  "mt-[0.75rem] max-w-[44ch] text-[1.02rem] leading-[1.6] text-[rgba(255,255,255,0.9)]";
 
 /**
  * Thẻ lớn + công tắc "Short version".
@@ -225,7 +226,7 @@ function ToggleCards({
                       </span>
                     </div>
 
-                    <h3 className="mt-[1.1rem]! mb-0! font-display text-[clamp(1.7rem,2.8vw,2.35rem)] leading-[1.12]! text-white!">
+                    <h3 className="mt-[1.1rem] mb-0 font-display text-[clamp(1.7rem,2.8vw,2.35rem)] leading-[1.12] text-white">
                       {card.title}
                     </h3>
 
@@ -233,7 +234,7 @@ function ToggleCards({
                       <p
                         className={cn(
                           CARD_TEXT,
-                          "mb-[1.5rem]! group-has-[input:not(:checked)]:hidden",
+                          "mb-[1.5rem] group-has-[input:not(:checked)]:hidden",
                         )}
                       >
                         {card.short}
@@ -248,13 +249,13 @@ function ToggleCards({
                       )}
                     >
                       {paragraphs(detail).map((paragraph, p) => (
-                        <p key={p} className={cn(CARD_TEXT, "mb-0!")}>
+                        <p key={p} className={cn(CARD_TEXT, "mb-0")}>
                           {paragraph}
                         </p>
                       ))}
                       {sizes.length > 0 ? (
                         <ul
-                          className="mt-[1.1rem]! flex flex-wrap gap-[0.45rem]"
+                          className="mt-[1.1rem] flex flex-wrap gap-[0.45rem]"
                           aria-label="Available sizes"
                         >
                           {sizes.map((size) => (
@@ -270,10 +271,9 @@ function ToggleCards({
                     </div>
 
                     {ctaLabel ? (
-                      // Nút kính mờ ở đáy thẻ; `!` vì site.css đặt màu + transition
-                      // cho thẻ <a> theo tên thẻ, utilities không thắng được.
+                      // Nút kính mờ ở đáy thẻ
                       <a
-                        className="mt-auto inline-flex items-center gap-[0.6rem] self-start rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] px-[1.2rem] py-3 text-[0.98rem] font-semibold text-white! backdrop-blur-[8px] transition-[background-color,color,border-color]! duration-[220ms] ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900!"
+                        className="mt-auto inline-flex items-center gap-[0.6rem] self-start rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] px-[1.2rem] py-3 text-[0.98rem] font-semibold text-white backdrop-blur-[8px] transition-[background-color,color,border-color] duration-[220ms] ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900"
                         href={ctaHref || "#request-quote"}
                       >
                         <span
@@ -355,14 +355,14 @@ function PhotoCards({
                 ) : null}
                 <div className="flex flex-col justify-center px-[1.6rem] py-[1.7rem]">
                   <div className="mb-[1.15rem] flex items-center gap-[0.8rem] text-[0.7rem] font-bold tracking-[0.13em] text-ink-faint uppercase">
-                    <IconBadge className="icon-badge m-0! h-[42px]! w-[42px]! flex-none">
+                    <IconBadge className="icon-badge h-[42px]! w-[42px]! flex-none">
                       {ALMOND_ICON}
                     </IconBadge>
                     <span>{`${itemLabel} ${pad(i)}`}</span>
                   </div>
-                  <h3 className="mb-[0.55rem]! text-[1.45rem]">{card.title}</h3>
+                  <h3 className="mb-[0.55rem] text-[1.45rem]">{card.title}</h3>
                   {card.text ? (
-                    <p className="m-0! text-ink-soft">{card.text}</p>
+                    <p className="m-0 text-ink-soft">{card.text}</p>
                   ) : null}
                 </div>
               </article>
@@ -417,14 +417,14 @@ function BadgeCards({
                   </span>
                 </div>
                 <div className="relative min-h-[190px] border-t-[3px] border-gold-400 px-[1.6rem] pt-[1.55rem] pb-[1.7rem]">
-                  <IconBadge className="icon-badge absolute -top-[1.8rem] right-[1.3rem] m-0! border-cream! bg-navy-700! text-cream! shadow-[0_8px_18px_-10px_rgba(15,23,41,0.72)]">
+                  <IconBadge className="icon-badge absolute -top-[1.8rem] right-[1.3rem] border-cream! bg-navy-700! text-cream! shadow-[0_8px_18px_-10px_rgba(15,23,41,0.72)]">
                     {iconFor(card.icon, i)}
                   </IconBadge>
-                  <h3 className="mb-[0.55rem]! max-w-[calc(100%-3.2rem)] text-[1.4rem]">
+                  <h3 className="mb-[0.55rem] max-w-[calc(100%-3.2rem)] text-[1.4rem]">
                     {card.title}
                   </h3>
                   {card.text ? (
-                    <p className="m-0! text-ink-soft">{card.text}</p>
+                    <p className="m-0 text-ink-soft">{card.text}</p>
                   ) : null}
                 </div>
               </article>
@@ -462,7 +462,7 @@ function BadgeCards({
         {note ? (
           <div className="reveal mt-[clamp(2.5rem,5vw,4rem)] rounded-lg border border-l-2 border-navy-100 border-l-gold-400 bg-navy-50 px-8 py-[1.6rem] text-[1.08rem] text-ink-soft">
             <p
-              className="m-0! max-w-none [&_strong]:text-navy-700"
+              className="m-0 max-w-none [&_strong]:text-navy-700"
               dangerouslySetInnerHTML={{ __html: sanitizeRichText(note) }}
             />
           </div>

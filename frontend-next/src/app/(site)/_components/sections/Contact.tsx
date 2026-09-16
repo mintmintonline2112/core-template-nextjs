@@ -65,7 +65,7 @@ export async function Contact({ section, index = 0 }: SectionProps) {
   ].filter((row) => row.body);
 
   const list = (
-    <ul className="mb-[1.8rem]! flex flex-col gap-[0.9rem]">
+    <ul className="mb-[1.8rem] flex flex-col gap-[0.9rem]">
       {rows.map((row) => (
         <li
           className="group flex items-start gap-[1.1rem] rounded-lg border border-line bg-paper px-[1.4rem] py-[1.2rem] shadow-soft"
@@ -75,8 +75,8 @@ export async function Contact({ section, index = 0 }: SectionProps) {
             {row.icon}
           </IconBadge>
           <div>
-            <h4 className="m-0! mb-[0.15rem]! text-[1.15rem]">{row.label}</h4>
-            <p className="m-0! text-base text-ink-soft [&_a]:border-b [&_a]:border-gold-400 [&_a:hover]:text-gold-500!">
+            <h4 className="m-0 mb-[0.15rem] text-[1.15rem]">{row.label}</h4>
+            <p className="m-0 text-base text-ink-soft [&_a]:border-b [&_a]:border-gold-400 [&_a:hover]:text-gold-500">
               {row.body}
             </p>
           </div>
@@ -129,7 +129,7 @@ export async function Contact({ section, index = 0 }: SectionProps) {
           {note}
 
           {image ? (
-            <figure className="photo-frame reveal mt-8 aspect-16/10">
+            <figure className="photo-frame reveal mt-8! aspect-16/10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={resolveImage(image)}

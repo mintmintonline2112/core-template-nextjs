@@ -20,20 +20,24 @@ import type { PageSection } from "@/types/cms";
  * là HẠ TẦNG DÙNG CHUNG chưa chuyển: `.container`, `.section*`, `.btn*`,
  * `.eyebrow`, `.icon-badge`, `.photo-frame`, `.reveal` + hệ hiệu ứng cuộn,
  * `.post-content`, header/footer, trang tin, form, hero-slider.
- * Xem site.css đoạn đầu ("layer theme, base, utilities, legacy") và
- * frontend-next/src/styles/tailwind.css. Ba điều cần nhớ khi chuyển tiếp:
- * 1. `legacy` (site.css) LUÔN thắng `utilities` khi trùng thuộc tính — class
- *    hạ tầng kể trên chưa chuyển thì GIỮ NGUYÊN tên class, không tự ý xoá/đổi.
- * 2. Ghi đè một thuộc tính mà site.css có rule chọn theo TÊN THẺ (không phải
- *    .class) — VD `h1,h2,h3,h4{margin,color,line-height,font-family,
- *    font-weight}`, `p{margin}`, `a{color,transition}` — thì class Tailwind
- *    KHÔNG thắng (không có class hook để tránh). Bắt buộc dùng hậu tố `!`
- *    (VD `mb-[0.5em]!`) để buộc thắng. Không cần `!` cho font-size (site.css
- *    không set sẵn font-size cho thẻ heading).
+ * CSS cũ nằm hai bên `utilities` — xem comment đầu styles/tailwind.css:
+ *   base.css  (@layer base,   TRƯỚC utilities) — token + reset theo TÊN THẺ
+ *   site.css  (@layer legacy, SAU utilities)   — CSS component theo .class
+ * Ba điều cần nhớ khi chuyển tiếp:
+ * 1. Reset theo tên thẻ (h1-h4, p, ul/ol, a, button, img/svg) nằm ở `base` nên
+ *    class Tailwind THẮNG bình thường — viết `mb-2`, `m-0`, `pt-xl` như mọi dự
+ *    án Tailwind khác, KHÔNG cần hậu tố `!`.
+ * 2. Nhưng rule theo .class trong site.css thì vẫn thắng utilities. Đè lên một
+ *    thuộc tính mà class hạ tầng kể trên có set (VD đổi cỡ `.icon-badge`, đổi
+ *    margin `.quote-checklist`) thì mới cần `!`. Cả repo hiện chỉ còn 3 chỗ như
+ *    vậy — thấy `!` ở đâu thì phải có lý do class cụ thể, không rắc đại.
  * 3. Vài tên class cũ được GIỮ LẠI dù không còn style: chúng là móc cho
  *    SiteEffects.tsx (`.reveal`, `.doc-grid`, `.config-list`, `.photo-strip`,
  *    `.ps-steps`, `.why-grid`, `.hero-copy`, `.tilt-card`) hoặc cho rule dùng
  *    chung còn lại trong site.css. Mỗi chỗ đều ghi rõ lý do ở đầu component.
+ *
+ * `npm run lint:layers` dò giúp cả hai chiều: chỗ thiếu `!` mà cần, và chỗ đeo
+ * `!` thừa.
  */
 export type SectionProps = { section?: PageSection | null; index?: number };
 

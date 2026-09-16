@@ -4,24 +4,28 @@ import { createCrudService } from '@/app/admin/_lib/crud-service';
 export const PAGE_SECTION_QUERY_KEY = ['admin', 'page-sections'] as const;
 export const SECTION_DEFINITION_QUERY_KEY = ['admin', 'section-definitions'] as const;
 
+/** Phần chung của mọi field spec. */
+type SpecBase = {
+  key: string;
+  label: string;
+  hint?: string;
+  /** Chỉ hiện khi metadata.layout thuộc danh sách này. */
+  layouts?: string[];
+};
+
 /** Spec một field metadata — khớp SectionFieldSpec phía backend. */
-export type SectionFieldSpec =
-  | { key: string; label: string; type: 'stringList'; hint?: string }
-  | {
-      key: string;
-      label: string;
-      type: 'itemList';
-      hint?: string;
-      itemFields: Array<{ name: string; label: string; kind: 'text' | 'textarea' | 'image' }>;
-    }
-  | {
-      key: string;
-      label: string;
-      type: 'textMap';
-      hint?: string;
-      fields: Array<{ name: string; label: string }>;
-    }
-  | { key: string; label: string; type: 'json'; hint?: string };
+export type SectionFieldSpec = SpecBase &
+  (
+    | { type: 'stringList' }
+    | {
+        type: 'itemList';
+        itemFields: Array<{ name: string; label: string; kind: 'text' | 'textarea' | 'image' }>;
+      }
+    | { type: 'textMap'; fields: Array<{ name: string; label: string }> }
+    | { type: 'image' }
+    | { type: 'json' }
+    | { type: 'select'; options: Array<{ value: string; label: string; hint?: string }> }
+  );
 
 export interface SectionDefinition {
   id: number;

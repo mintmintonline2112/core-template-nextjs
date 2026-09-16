@@ -9,6 +9,8 @@ export interface PageSectionSummary {
   heading: string | null;
   isActive: boolean;
   sortOrder: number;
+  /** metadata._component = component thật (key instance có thể khác, VD hero-slider-2). */
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface SitePage {

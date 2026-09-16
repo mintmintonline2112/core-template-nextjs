@@ -2833,3 +2833,249 @@ body .swal2-html-container {
 .me-json-error { border-color: var(--admin-danger) !important; }
 .me-error { color: var(--admin-danger); }
 .me-advanced { margin-top: 4px; }
+
+/* ============================================================
+   PAGE SECTION — thẻ chọn component (component-picker.tsx)
+   và bảng section kéo thả trong form Page (page-sections-panel.tsx)
+   ============================================================ */
+
+.cp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+
+.cp-card:hover {
+  border-color: rgba(26, 39, 68, 0.45);
+  box-shadow: 0 10px 22px -16px rgba(15, 23, 41, 0.55);
+  transform: translateY(-2px);
+}
+
+.cp-card.is-active {
+  border-color: var(--admin-brass);
+  box-shadow: 0 0 0 2px rgba(26, 39, 68, 0.18);
+}
+
+.cp-sketch {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 4px;
+  border: 1px solid var(--admin-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.cp-name { font-size: 13px; font-weight: 600; color: var(--admin-text); }
+
+.cp-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  color: var(--admin-muted);
+}
+
+/* ---------- Bảng section trong form Page ---------- */
+
+.ps-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ps-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ps-rows.is-busy { opacity: 0.6; pointer-events: none; }
+
+.ps-row {
+  display: grid;
+  grid-template-columns: 22px 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--admin-line);
+  border-left: 3px solid var(--admin-brass);
+  border-radius: 10px;
+  cursor: grab;
+  transition: box-shadow 0.18s, border-color 0.18s, opacity 0.18s;
+}
+
+.ps-row:hover { box-shadow: 0 8px 20px -16px rgba(15, 23, 41, 0.6); }
+.ps-row.is-dragging { opacity: 0.45; cursor: grabbing; }
+.ps-row.is-off { border-left-color: var(--admin-line); background: #fbfaf7; }
+.ps-row.is-off .ps-heading { color: var(--admin-muted); }
+
+.ps-handle { display: grid; place-items: center; color: var(--admin-muted); }
+.ps-handle svg { width: 18px; height: 18px; }
+
+.ps-order {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--admin-brass);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ps-row.is-off .ps-order { background: var(--admin-muted); }
+
+.ps-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+.ps-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-text);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ps-heading:hover { text-decoration: underline; }
+
+.ps-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--admin-muted); }
+.ps-component { color: var(--admin-muted); }
+
+.ps-actions { display: flex; align-items: center; gap: 6px; }
+
+.ps-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--admin-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--admin-text);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.ps-icon-btn svg { width: 16px; height: 16px; }
+.ps-icon-btn:hover { background: var(--admin-brass); border-color: var(--admin-brass); color: #fff; }
+.ps-icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.ps-icon-btn.is-danger:hover { background: var(--admin-danger); border-color: var(--admin-danger); }
+
+.ps-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--admin-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.ps-switch-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ps-switch.is-on {
+  border-color: rgba(63, 125, 78, 0.45);
+  background: rgba(63, 125, 78, 0.12);
+  color: #2f6b3e;
+}
+
+.ps-switch:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 900px) {
+  .ps-row { grid-template-columns: 22px 28px minmax(0, 1fr); row-gap: 8px; }
+  .ps-actions { grid-column: 1 / -1; justify-content: flex-end; }
+}
+
+/* Component picker khi sửa section: chỉ hiện thẻ đang dùng, không đổi được */
+.cp-grid.is-locked { grid-template-columns: minmax(0, 240px); }
+.cp-grid.is-locked .cp-card { cursor: default; }
+.cp-grid.is-locked .cp-card:hover { transform: none; box-shadow: 0 0 0 2px rgba(26, 39, 68, 0.18); }
+
+/* Component picker chia nhóm (trang tự tạo liệt kê toàn bộ component) */
+.cp-groups { display: grid; gap: 22px; margin-top: 10px; }
+.cp-group .cp-grid { margin-top: 8px; }
+
+.cp-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--admin-text);
+  border-bottom: 1px solid var(--admin-line);
+}
+
+.cp-group-title span {
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--admin-muted);
+  background: var(--admin-line);
+  border-radius: 999px;
+}
+
+/* Metadata editor: dãy nút chọn một giá trị (bố cục) */
+.me-segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--admin-line);
+  border-radius: 10px;
+}
+
+.me-segment {
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--admin-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.me-segment:hover { color: var(--admin-text); }
+
+.me-segment.is-active {
+  color: #fff;
+  background: var(--admin-brass);
+}

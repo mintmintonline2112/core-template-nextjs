@@ -21,6 +21,29 @@ import {
 } from '@/app/admin/(protected)/page-sections/_lib/page-section.service';
 import { adminRoutes } from '@/config/routes';
 
+/** Nhãn tiếng Việt cho các mảng trong metadata (đếm để tóm tắt nội dung). */
+const META_LABELS: Record<string, string> = {
+  items: 'mục',
+  stats: 'số liệu',
+  slides: 'slide',
+  sizes: 'cỡ hạt',
+  chips: 'chip',
+  photos: 'ảnh',
+  regions: 'khu vực',
+};
+
+/** "3 slide · 5 bước · có ảnh" — nhìn là biết khối đã có dữ liệu hay còn trống. */
+function summarize(row: PageSection): string {
+  const meta = (row.metadata ?? {}) as Record<string, unknown>;
+  const parts: string[] = [];
+  for (const [key, value] of Object.entries(meta)) {
+    if (key === '_component' || !Array.isArray(value) || value.length === 0) continue;
+    parts.push(`${value.length} ${META_LABELS[key] ?? key}`);
+  }
+  if (row.mediaPath) parts.push('có ảnh');
+  return parts.join(' · ');
+}
+
 export function PageSectionList() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -83,6 +106,20 @@ export function PageSectionList() {
         type: 'text',
         align: 'left',
         link: (row) => adminRoutes.pageSections.edit(row.id),
+      },
+      {
+        key: 'dataSummary',
+        label: 'Dữ liệu',
+        type: 'custom',
+        align: 'left',
+        render: (row) => {
+          const summary = summarize(row);
+          return summary ? (
+            <span style={{ color: 'var(--admin-text)' }}>{summary}</span>
+          ) : (
+            <em style={{ color: 'var(--admin-muted)' }}>chưa có</em>
+          );
+        },
       },
       {
         key: 'isActive',

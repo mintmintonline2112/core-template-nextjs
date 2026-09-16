@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { GenericForm } from '@/app/admin/_components/generic-form/generic-form';
@@ -25,6 +24,7 @@ import {
   zhTranslationsPayload,
 } from '@/app/admin/_lib/translation-fields';
 import { pageService, PAGE_QUERY_KEY } from '@/app/admin/(protected)/pages/_lib/page.service';
+import { PageSectionsPanel } from '@/app/admin/(protected)/pages/_components/page-sections-panel';
 import { adminRoutes } from '@/config/routes';
 
 interface FormValues extends SeoFormValues {
@@ -156,53 +156,7 @@ export function PageForm({ id }: { id?: number }) {
         onCancel={() => router.push(adminRoutes.pages.list)}
       />
 
-      {isEdit && (
-        <div className="gf-card" style={{ marginTop: 24 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
-              <label className="gf-label" style={{ margin: 0 }}>Section thuộc trang này ({sections.length})</label>
-              <Link
-                href={`${adminRoutes.pageSections.create}?pageId=${id}`}
-                className="adm-btn adm-btn--primary adm-btn--sm"
-              >
-                + Thêm section cho trang này
-              </Link>
-            </div>
-            <table className="dt-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Section key</th>
-                  <th>Heading</th>
-                  <th className="is-center">Trạng thái</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sections.map((s) => (
-                  <tr key={s.id}>
-                    <td>{s.sortOrder}</td>
-                    <td><span className="dt-badge">{s.sectionKey}</span></td>
-                    <td>
-                      <Link href={adminRoutes.pageSections.edit(s.id)} className="dt-link">
-                        {s.heading ?? s.sectionKey}
-                      </Link>
-                    </td>
-                    <td className="is-center">
-                      <span className={`dt-status ${s.isActive ? 'is-success' : 'is-muted'}`}>
-                        {s.isActive ? 'Hiển thị' : 'Ẩn'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <p className="gf-hint">
-              Nội dung từng section chỉnh tại mục{' '}
-              <Link href={adminRoutes.pageSections.list} className="dt-link">Section trang</Link>.
-            </p>
-          </div>
-        </div>
-      )}
+      {isEdit && id != null && <PageSectionsPanel pageId={id} sections={sections} />}
     </>
   );
 }

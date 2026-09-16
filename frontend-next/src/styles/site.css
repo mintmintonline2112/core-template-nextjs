@@ -293,17 +293,110 @@ body { counter-reset: sect; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 247, 238, 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 250ms var(--ease), box-shadow 250ms var(--ease);
+  transition: box-shadow 250ms var(--ease);
 }
 
 .site-header.scrolled {
-  border-bottom-color: var(--line);
-  box-shadow: 0 6px 24px -18px rgba(15, 23, 41, 0.35);
+  box-shadow: 0 8px 28px -20px rgba(15, 23, 41, 0.45);
 }
+
+/* --- Utility bar: hotline + email + mạng xã hội (thu lại khi cuộn) --- */
+
+.site-topbar {
+  background: var(--navy-700);
+  color: var(--light-soft);
+  font-size: 0.86rem;
+  max-height: 48px;
+  overflow: hidden;
+  transition: max-height 320ms var(--ease), opacity 240ms var(--ease);
+}
+
+.site-header.scrolled .site-topbar { max-height: 0; opacity: 0; }
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 48px;
+}
+
+.topbar-contact {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+.topbar-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--light-soft);
+  white-space: nowrap;
+  transition: color 200ms var(--ease);
+}
+
+.topbar-contact a:hover { color: var(--gold-300); }
+
+.topbar-contact svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--gold-300);
+}
+
+.topbar-key {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 227, 0.55);
+}
+
+.topbar-hotline strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--light);
+  transition: color 200ms var(--ease);
+}
+
+.topbar-hotline:hover strong { color: var(--gold-300); }
+
+.topbar-social { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+.topbar-social a {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--light-soft);
+  border: 1px solid rgba(245, 241, 227, 0.2);
+  transition: color 200ms var(--ease), background-color 200ms var(--ease),
+              border-color 200ms var(--ease);
+}
+
+.topbar-social a:hover {
+  color: var(--navy-900);
+  background: var(--gold-300);
+  border-color: var(--gold-300);
+}
+
+.topbar-social svg { width: 15px; height: 15px; }
+
+/* --- Thanh chính --- */
+
+.header-bar {
+  background: rgba(250, 247, 238, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line-soft);
+  transition: border-color 250ms var(--ease);
+}
+
+.site-header.scrolled .header-bar { border-bottom-color: var(--line); }
 
 .header-inner {
   display: flex;
@@ -350,15 +443,19 @@ body { counter-reset: sect; }
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 1.45rem;
 }
 
 .site-nav a:not(.btn) {
-  font-size: 1.02rem;
-  font-weight: 500;
-  color: var(--ink);
-  padding-block: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-block: 0.45rem;
   position: relative;
+  transition: color 200ms var(--ease);
 }
 
 .site-nav a:not(.btn)::after {
@@ -366,7 +463,7 @@ body { counter-reset: sect; }
   position: absolute;
   left: 0; right: 100%;
   bottom: 0;
-  height: 1.5px;
+  height: 2px;
   background: var(--gold-500);
   transition: right 220ms var(--ease);
 }
@@ -381,7 +478,15 @@ body { counter-reset: sect; }
   right: 0;
 }
 
-.nav-cta { margin-left: 0.4rem; }
+.nav-cta {
+  margin-left: 0.7rem;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+}
+
+/* Hotline + social nhắc lại trong menu mobile (ẩn ở desktop) */
+.nav-foot { display: none; }
 
 /* Mobile toggle */
 .nav-toggle {
@@ -1949,10 +2054,54 @@ html.gsap :is(.btn-gold, .btn-primary) {
   .site-nav a:not(.btn)::after { content: none; }
 
   .nav-cta { margin: 1rem 0 0; justify-content: center; }
+
+  .nav-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .nav-foot-call {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy-700);
+  }
+
+  .nav-foot-social { display: inline-flex; align-items: center; gap: 0.45rem; }
+
+  .nav-foot-social a {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: var(--navy-700);
+    border: 1px solid var(--line);
+  }
+
+  .nav-foot-social a:hover { color: var(--navy-900); background: var(--gold-300); border-color: var(--gold-300); }
+  .nav-foot-social svg { width: 16px; height: 16px; }
+
+  /* Utility bar hẹp: bỏ email, chỉ giữ hotline + social */
+  .topbar-mail { display: none; }
+  .site-topbar { font-size: 0.82rem; }
+  .topbar-hotline strong { font-size: 0.94rem; }
 }
 
 @media (max-width: 640px) {
   body { font-size: 1.06rem; }
+
+  /* Utility bar chỉ còn số hotline + icon social cỡ nhỏ */
+  .topbar-key { display: none; }
+  .topbar-inner { gap: 0.75rem; }
+  .topbar-social a { width: 26px; height: 26px; }
+  .topbar-social svg { width: 13px; height: 13px; }
 
   .container { width: min(var(--container), 100% - 2.2rem); }
 

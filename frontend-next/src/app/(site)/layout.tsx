@@ -69,17 +69,19 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     ? { ...brand, logoUrl: logo(settings.footerLogoUrl), logoHeight: settings.footerLogoHeight ?? null }
     : brand;
 
+  const contact = resolveContact(settings);
+
   return (
     <>
       {fontStack ? (
         <style>{`:root { --font-main: ${fontStack}; }`}</style>
       ) : null}
       <SiteEffects />
-      <Header menu={menu} brand={brand} />
+      <Header menu={menu} brand={brand} contact={contact} social={settings.socialLinks} />
       <main id="main">{children}</main>
       <Footer
         brand={footerBrand}
-        contact={resolveContact(settings)}
+        contact={contact}
         footerText={settings.footerText ?? null}
       />
     </>

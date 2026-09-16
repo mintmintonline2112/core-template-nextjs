@@ -69,11 +69,20 @@
   /* Easing chuyển động chung của site */
   --ease-brand: var(--ease);
 
-  /* Khoảng cách đặt tên — mở khoá `pt-xl` / `mb-xl` / `gap-xl`… Thang SỐ mặc
-     định (pt-8 = 2rem) vẫn dùng bình thường, token này chỉ thêm tên `xl` chứ
-     không thay thế. Lưu ý: trên <ul>/<ol>/<p>/<a>/<h1-h4> vẫn phải gắn hậu tố
-     `!` (VD `pt-xl!`) vì site.css nhắm mấy thẻ đó theo TÊN THẺ ở layer legacy
-     — xem comment đầu sections/shared.tsx. */
+  /* Khoảng cách đặt tên — mở khoá `pt-md`, `mb-xl`, `gap-lg`, `px-sm`… cho mọi
+     utility ăn thang spacing. Bốn mốc này CHỈ là tên gọi khác của thang số có
+     sẵn, không phải giá trị mới:
+         sm = 0.5rem  (= 2)      lg = 1.5rem  (= 6)
+         md = 1rem    (= 4)      xl = 2rem    (= 8)
+     nên `pt-md` và `pt-4` ra đúng một kết quả — dùng lẫn lộn cũng không lệch.
+     Thang số mặc định vẫn nguyên vẹn, token này chỉ THÊM chứ không thay thế.
+
+     Lưu ý: trên <ul>/<ol>/<p>/<a>/<h1-h4> vẫn phải gắn hậu tố `!` (VD `pt-xl!`)
+     vì site.css nhắm mấy thẻ đó theo TÊN THẺ ở layer legacy, mà legacy đứng sau
+     utilities nên thắng bất kể specificity — xem comment đầu sections/shared.tsx. */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
 }
 

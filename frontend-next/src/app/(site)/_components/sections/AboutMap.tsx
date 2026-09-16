@@ -1,31 +1,57 @@
+import { AboutMapRegionsClient, type RegionEntry } from "@/app/(site)/_components/AboutMapRegionsClient";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
-import { RichIntro, metaOf, type StandardSectionProps } from "./section-content";
+import { DEFAULT_MAP_REGIONS, countriesInRegion } from "@/config/markets";
+import { Head, anchorId, layoutOf, metaOf, type SectionProps } from "./shared";
 
-const DEFAULT_INTRO =
-  "<p>Prime Nuts USA is a California-based sourcing and trading company focused on connecting qualified international buyers with the California almond supply chain.</p>" +
-  "<p>We simplify procurement by providing buyers with a local sourcing partner who understands supplier communication, product specifications, commercial requirements, logistics, and international trade.</p>" +
-  "<p>Our team works with established industry participants to identify almond supply according to each customer&rsquo;s required variety, grade, size, packaging, volume, destination, and shipment schedule.</p>" +
-  "<p>Our business is built on straightforward communication, responsible sourcing, and long-term commercial relationships.</p>";
+const LAYOUTS = ["pins", "regions"] as const;
+
+type CmsRegion = { key?: string; name?: string; countries?: string[] };
 
 /**
- * SECTION `about-map` — trang Home.
- * Giới thiệu công ty + bản đồ thế giới tương tác (6 nút khu vực).
- * CMS: heading, subheading, content, metadata.regions [{key,name,countries[]}].
+ * SECTION `about-map` — giới thiệu + bản đồ thế giới.
+ * layout `pins`: bản đồ ghim thị trường với 6 nút khu vực dưới bản đồ.
+ * layout `regions`: danh sách khu vực bên trái (bấm để xem các nước), bản đồ
+ *   bên phải sáng đúng khu vực đang chọn.
+ * CMS: heading, subheading, content, metadata.regions [{key,name,countries[]}]
+ * (key thuộc us/na/ap/sa/me/eu; trống thì dùng 6 khu vực của bản đồ).
  */
-export function AboutMap({ section }: StandardSectionProps) {
-  const regions = metaOf<Array<{ key?: string; name?: string }>>(section, "regions")
-    ?.filter((region) => region.key && region.name)
-    .map((region) => ({ key: region.key!, label: region.name! }));
+export function AboutMap({ section }: SectionProps) {
+  const layout = layoutOf(section, LAYOUTS, "pins");
+  const cmsRegions = metaOf<CmsRegion[]>(section, "regions")?.filter((region) => region.key && region.name);
 
-  return (
-    <section className="section" id={section?.sectionKey ?? "about-map"}>
-      <div className="container">
-        <div className="section-head reveal">
-          <p className="eyebrow">{section?.subheading ?? "About Prime Nuts USA"}</p>
-          <h2>{section?.heading ?? "Connecting California Supply with Global Demand"}</h2>
-          <RichIntro html={section?.content ?? DEFAULT_INTRO} />
+  if (layout === "regions") {
+    const regions: RegionEntry[] =
+      cmsRegions && cmsRegions.length > 0
+        ? cmsRegions.map((region) => ({
+            key: region.key!,
+            label: region.name!,
+            countries:
+              region.countries && region.countries.length > 0
+                ? region.countries.filter(Boolean)
+                : countriesInRegion(region.key!),
+          }))
+        : DEFAULT_MAP_REGIONS.map((region) => ({
+            key: region.key,
+            label: region.label,
+            countries: countriesInRegion(region.key),
+          }));
+
+    return (
+      <section className="section about-map-regions" id={anchorId(section, "about-map")}>
+        <div className="container">
+          <Head section={section} />
+          <AboutMapRegionsClient regions={regions} />
         </div>
-        <WorldMap regions={regions} />
+      </section>
+    );
+  }
+
+  const pins = cmsRegions?.map((region) => ({ key: region.key!, label: region.name! }));
+  return (
+    <section className="section" id={anchorId(section, "about-map")}>
+      <div className="container">
+        <Head section={section} />
+        <WorldMap regions={pins && pins.length > 0 ? pins : undefined} />
       </div>
     </section>
   );

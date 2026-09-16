@@ -1,6 +1,6 @@
 /**
  * Thị trường xuất khẩu trên bản đồ thế giới — dùng chung cho WorldMap (about-map)
- * và danh sách khu vực (about-map-regions). Tọa độ theo kinh/vĩ độ thật.
+ * và danh sách khu vực (about-map bố cục regions). Tọa độ theo kinh/vĩ độ thật.
  */
 
 export type MarketPoint = { r: string; n: string; lat: number; lon: number };

@@ -1,22 +1,15 @@
-import { RichIntro, metaOf, type StandardSectionProps } from "./section-content";
+import { RichIntro, anchorId, items, layoutOf, paragraphs, resolveImage, str, type SectionProps } from "./shared";
+
+const LAYOUTS = ["columns", "split"] as const;
 
 type FaqItem = { question: string; answer: string; group?: string };
 type FaqColumn = { title?: string; items: FaqItem[] };
 
-// Nội dung mặc định — 5 lý do "Why Prime Nuts USA?" (câu hỏi = tiêu đề, trả lời = mô tả).
-const DEFAULT_ITEMS: FaqItem[] = [
-  { question: "California-Based Sourcing", answer: "Our location in California allows us to communicate efficiently with suppliers, processors, and logistics partners operating within the almond supply chain." },
-  { question: "Multiple Supply Options", answer: "We are not limited to a single variety or supply source. This allows us to evaluate different options according to each buyer’s specifications, volume, destination, and commercial requirements." },
-  { question: "Buyer-Focused Procurement", answer: "We begin with your requirements and source accordingly. Our goal is to find supply that fits your market—not to push a predetermined product." },
-  { question: "Export Coordination", answer: "We assist with the commercial, documentation, and logistics coordination needed to move California almonds to international destinations." },
-  { question: "Long-Term Supply Relationships", answer: "Our focus extends beyond individual transactions. We aim to build dependable sourcing relationships with qualified buyers who require consistent access to California almond supply." },
-];
-
 /** Có tên nhóm → mỗi nhóm một cột có tiêu đề; không có → chia đều 2 cột. */
-function toColumns(items: FaqItem[]): FaqColumn[] {
-  if (items.some((item) => item.group)) {
+function toColumns(list: FaqItem[]): FaqColumn[] {
+  if (list.some((item) => item.group)) {
     const columns: FaqColumn[] = [];
-    for (const item of items) {
+    for (const item of list) {
       const title = item.group ?? "";
       let column = columns.find((entry) => (entry.title ?? "") === title);
       if (!column) {
@@ -27,8 +20,8 @@ function toColumns(items: FaqItem[]): FaqColumn[] {
     }
     return columns;
   }
-  const half = Math.ceil(items.length / 2);
-  return [{ items: items.slice(0, half) }, { items: items.slice(half) }].filter((column) => column.items.length > 0);
+  const half = Math.ceil(list.length / 2);
+  return [{ items: list.slice(0, half) }, { items: list.slice(half) }].filter((column) => column.items.length > 0);
 }
 
 /** Tiêu đề có một phần tô màu (phần đó phải nằm trong tiêu đề). */
@@ -44,63 +37,105 @@ function AccentHeading({ text, accent }: { text: string; accent?: string }) {
   );
 }
 
+const Answer = ({ text, className }: { text: string; className: string }) =>
+  text ? (
+    <div className={className}>
+      {paragraphs(text).map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
+      ))}
+    </div>
+  ) : null;
+
 /**
- * SECTION `faq` — accordion 2 cột: mỗi câu là một thẻ trắng viền trái có dấu +,
- * bấm để mở câu trả lời (thẻ <details> gốc — không cần JavaScript).
- * CMS: subheading (dòng nhỏ), heading, content (đoạn dẫn), metadata.headingAccent
- * (phần tiêu đề tô màu), metadata.items [{question, answer, group}].
+ * SECTION `faq` — accordion câu hỏi (thẻ <details> gốc, không cần JavaScript).
+ * layout `columns`: thẻ trắng viền trái có dấu +, tự chia 2 cột hoặc theo nhóm.
+ * layout `split`:   chữ + accordion 1 cột bên trái (dấu + bên phải), ảnh lớn bo
+ *                   góc bên phải, dòng ghi chú cuối cột.
+ * CMS: subheading, heading, content, metadata.items [{question,answer,group}],
+ * headingAccent (columns), image / imageAlt / imageSide ('left') / note (split).
  */
-export function Faq({ section }: StandardSectionProps) {
-  const cmsItems = metaOf<Array<{ question?: string; answer?: string; group?: string }>>(section, "items")
-    ?.filter((item) => item.question?.trim())
-    .map((item) => ({
-      question: item.question!.trim(),
-      answer: item.answer?.trim() ?? "",
-      group: item.group?.trim() || undefined,
-    }));
-  const items = cmsItems && cmsItems.length > 0 ? cmsItems : DEFAULT_ITEMS;
-  const columns = toColumns(items);
+export function Faq({ section }: SectionProps) {
+  const id = anchorId(section, "faq");
+  const list: FaqItem[] = items(section, "items")
+    .filter((item) => item.question)
+    .map((item) => ({ question: item.question, answer: item.answer ?? "", group: item.group }));
 
-  return (
-    <section className="section section-tint faq" id={section?.sectionKey ?? "faq"}>
-      <div className="container">
-        <div className="faq-head reveal">
-          <p className="faq-eyebrow">{section?.subheading ?? "Why Choose Us"}</p>
-          <AccentHeading
-            text={section?.heading ?? "Why Prime Nuts USA?"}
-            accent={metaOf<string>(section, "headingAccent") ?? "Prime Nuts USA?"}
-          />
-          <RichIntro html={section?.content} className="faq-intro" />
-        </div>
+  if (layoutOf(section, LAYOUTS, "columns") === "split") {
+    const image = str(section, "image");
+    const flipped = str(section, "imageSide")?.toLowerCase() === "left";
+    const note = str(section, "note");
+    return (
+      <section className={`section faq-split${flipped ? " is-flipped" : ""}`} id={id}>
+        <div className="container fs-inner">
+          <div className="fs-text reveal">
+            {section?.subheading ? <p className="fs-eyebrow">{section.subheading}</p> : null}
+            {section?.heading ? <h2 className="fs-heading">{section.heading}</h2> : null}
+            <RichIntro html={section?.content} className="fs-intro" />
 
-        <div className="faq-columns">
-          {columns.map((column, columnIndex) => (
-            <div className="faq-column reveal" key={column.title ?? columnIndex}>
-              {column.title ? <h3 className="faq-group-title">{column.title}</h3> : null}
-              <div className="faq-list">
-                {column.items.map((item) => (
-                  <details className="faq-item" key={item.question}>
-                    <summary className="faq-question">
-                      <span className="faq-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                          <path d="M12 5v14M5 12h14" />
-                        </svg>
-                      </span>
+            {list.length > 0 ? (
+              <div className="fs-list">
+                {list.map((item) => (
+                  <details className="fs-item" key={item.question}>
+                    <summary className="fs-question">
                       <span>{item.question}</span>
+                      <span className="fs-plus" aria-hidden="true" />
                     </summary>
-                    {item.answer ? (
-                      <div className="faq-answer">
-                        {item.answer.split(/\n{2,}/).map((paragraph, index) => (
-                          <p key={index}>{paragraph}</p>
-                        ))}
-                      </div>
-                    ) : null}
+                    <Answer text={item.answer} className="fs-answer" />
                   </details>
                 ))}
               </div>
-            </div>
-          ))}
+            ) : null}
+
+            {note ? <p className="fs-note">{note}</p> : null}
+          </div>
+
+          {image ? (
+            <figure className="fs-figure reveal">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={resolveImage(image)} alt={str(section, "imageAlt") ?? section?.heading ?? ""} loading="lazy" />
+            </figure>
+          ) : null}
         </div>
+      </section>
+    );
+  }
+
+  const columns = toColumns(list);
+  return (
+    <section className="section section-tint faq" id={id}>
+      <div className="container">
+        {section?.heading || section?.subheading || section?.content ? (
+          <div className="faq-head reveal">
+            {section?.subheading ? <p className="faq-eyebrow">{section.subheading}</p> : null}
+            {section?.heading ? <AccentHeading text={section.heading} accent={str(section, "headingAccent")} /> : null}
+            <RichIntro html={section?.content} className="faq-intro" />
+          </div>
+        ) : null}
+
+        {columns.length > 0 ? (
+          <div className="faq-columns">
+            {columns.map((column, columnIndex) => (
+              <div className="faq-column reveal" key={column.title ?? columnIndex}>
+                {column.title ? <h3 className="faq-group-title">{column.title}</h3> : null}
+                <div className="faq-list">
+                  {column.items.map((item) => (
+                    <details className="faq-item" key={item.question}>
+                      <summary className="faq-question">
+                        <span className="faq-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        </span>
+                        <span>{item.question}</span>
+                      </summary>
+                      <Answer text={item.answer} className="faq-answer" />
+                    </details>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

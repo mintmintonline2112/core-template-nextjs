@@ -3,10 +3,9 @@ import type { CSSProperties } from "react";
 /**
  * Thước đo cỡ hạt: panel xanh đậm, mỗi cỡ là một hạt hạnh nhân vàng nhỏ dần
  * theo đúng nghĩa (18/20 = hạt to nhất → 32/34 = nhỏ nhất), số đặt trên vạch
- * chia như thước đo nông sản. Dùng chung cho trang chủ, /products và section
- * kernel-sizes tạo từ CMS.
+ * chia như thước đo nông sản. Widget của section `size-scale` (SizeScale.tsx).
  */
-export function SizeScale({ sizes, note }: { sizes: string[]; note?: string }) {
+export function SizeRuler({ sizes, note }: { sizes: string[]; note?: string }) {
   const max = Math.max(sizes.length - 1, 1);
   return (
     <div className="size-scale">
@@ -25,7 +24,7 @@ export function SizeScale({ sizes, note }: { sizes: string[]; note?: string }) {
           </li>
         ))}
       </ol>
-      <p className="size-scale-note">{note ?? "Custom sizes & grades on request"}</p>
+      {note ? <p className="size-scale-note">{note}</p> : null}
     </div>
   );
 }

@@ -1,110 +1,121 @@
 import type { ComponentType } from "react";
 import type { SectionProps } from "./shared";
 
-// Section của trang chuẩn — mỗi khối trên trang một tên.
 import { AboutMap } from "./AboutMap";
-import { AboutMapRegions } from "./AboutMapRegions";
-import { AlmondVarieties } from "./AlmondVarieties";
-import { BuyersMarquee } from "./BuyersMarquee";
-import { ContactDetails } from "./ContactDetails";
-import { Faq } from "./Faq";
-import { HeroSlider } from "./HeroSlider";
-import { HowItWorks } from "./HowItWorks";
-import { KernelSizes } from "./KernelSizes";
-import { NaturalAlmonds } from "./NaturalAlmonds";
-import { ProcessedAlmonds } from "./ProcessedAlmonds";
-import { ProductSpecs } from "./ProductSpecs";
-import { QuoteChecklist } from "./QuoteChecklist";
-import { RequestQuote } from "./RequestQuote";
-import { SourcingServices } from "./SourcingServices";
-import { WhyUs } from "./WhyUs";
-import { WorkingProcess } from "./WorkingProcess";
-
-// Thư viện component chung — giữ để tái sử dụng trên trang tự tạo.
 import { Checklist } from "./Checklist";
-import { ContactInfo } from "./ContactInfo";
-import { DocGrid } from "./DocGrid";
-import { HeroStats } from "./HeroStats";
+import { Contact } from "./Contact";
+import { Faq } from "./Faq";
+import { FeatureCards } from "./FeatureCards";
+import { FeatureList } from "./FeatureList";
+import { Hero } from "./Hero";
 import { IconCardList } from "./IconCardList";
-import { MarketsMap } from "./MarketsMap";
 import { Marquee } from "./Marquee";
-import { NameCards } from "./NameCards";
-import { ProductsOverview } from "./ProductsOverview";
-import { QuoteCta } from "./QuoteCta";
-import { SizeGrid } from "./SizeGrid";
-import { SliderChain } from "./SliderChain";
+import { MediaCards } from "./MediaCards";
+import { PhotoStrip } from "./PhotoStrip";
+import { QuoteForm } from "./QuoteForm";
+import { SizeScale } from "./SizeScale";
 import { Stats } from "./Stats";
-import { WhyCards } from "./WhyCards";
+import { Steps } from "./Steps";
 
 /**
- * REGISTRY component.
+ * REGISTRY component — mỗi component là MỘT BỐ CỤC, đặt tên theo hình dạng.
  *
- * QUY TẮC TÊN: key (kebab-case) = tên file component (PascalCase) = sectionKey
- * trong CMS = key trong bảng section_definitions = id neo trên trang.
- * VD `product-specs` ↔ ProductSpecs.tsx ↔ /#product-specs.
- * Phần tương tác ("use client") nằm ở _components/ với hậu tố Client khi cần tách.
+ * key (kebab-case) = tên file (PascalCase) = `metadata._component` của section
+ * = key trong bảng section_definitions. Biến thể hiển thị là `metadata.layout`.
+ * Section key của từng section là id neo trên trang (VD /#about-map), có thể
+ * khác tên component (dùng một component nhiều lần trên một trang).
  *
- * Thêm component mới = 1 file trong thư mục này + 1 dòng ở đây
- * + 1 entry trong backend/src/database/seeding/seeds/section-definition.seed.ts.
+ * Thêm component = 1 file ở đây + 1 dòng dưới + 1 entry trong
+ * backend/src/database/seeding/seeds/section-definition.seed.ts
+ * (+ hình minh hoạ trong admin component-picker.tsx).
  */
 export const SECTION_COMPONENTS: Record<string, ComponentType<SectionProps>> = {
-  // ── Home ──
-  "hero-slider": HeroSlider,
-  "about-map": AboutMap,
-  "about-map-regions": AboutMapRegions, // phiên bản khác của about-map
-  "almond-varieties": AlmondVarieties,
-  "product-specs": ProductSpecs,
-  "how-it-works": HowItWorks,
-  "working-process": WorkingProcess,
-  "sourcing-services": SourcingServices,
-  "buyers-marquee": BuyersMarquee,
-  "why-us": WhyUs,
-  faq: Faq,
-  "request-quote": RequestQuote,
-  // ── Products ──
-  "natural-almonds": NaturalAlmonds,
-  "processed-almonds": ProcessedAlmonds,
-  "kernel-sizes": KernelSizes,
-  // ── Contact ──
-  "contact-details": ContactDetails,
-  "quote-checklist": QuoteChecklist,
-
-  // ── Thư viện component chung ──
-  "hero-stats": HeroStats, // hero tĩnh cũ của trang chủ — cất lại để dùng khi cần
+  hero: Hero,
   stats: Stats,
-  "markets-map": MarketsMap,
-  "products-overview": ProductsOverview,
+  "about-map": AboutMap,
+  "media-cards": MediaCards,
+  "size-scale": SizeScale,
+  "photo-strip": PhotoStrip,
   "icon-card-list": IconCardList,
-  "slider-chain": SliderChain,
-  "doc-grid": DocGrid,
+  steps: Steps,
+  "feature-list": FeatureList,
   marquee: Marquee,
-  "why-cards": WhyCards,
-  "quote-cta": QuoteCta,
-  "name-cards": NameCards,
-  "size-grid": SizeGrid,
+  "feature-cards": FeatureCards,
+  faq: Faq,
+  "quote-form": QuoteForm,
   checklist: Checklist,
-  "contact-info": ContactInfo,
+  contact: Contact,
 };
+
+/**
+ * Tên component CŨ (trước khi gộp theo bố cục) → component + layout hiện tại.
+ * Lưới an toàn cho dữ liệu chưa chạy migration; migration
+ * `layout_components` ghi thẳng `_component` + `layout` mới vào từng section.
+ */
+export type LegacyEntry = {
+  component: string;
+  layout?: string;
+  /** Key metadata cũ → key mới (chỉ áp dụng khi key mới còn thiếu). */
+  keys?: Record<string, string>;
+};
+
+const LIST = (from: string): Record<string, string> => ({ [from]: "items" });
+
+export const LEGACY_COMPONENTS: Record<string, LegacyEntry> = {
+  "hero-slider": { component: "hero", layout: "slider" },
+  "hero-stats": { component: "hero", layout: "static" },
+  "markets-map": { component: "about-map", layout: "pins" },
+  "about-map-regions": { component: "about-map", layout: "regions" },
+  "almond-varieties": { component: "media-cards", layout: "circles", keys: LIST("varieties") },
+  "variety-circles": { component: "media-cards", layout: "circles", keys: LIST("varieties") },
+  "almond-variety-cards": { component: "media-cards", layout: "toggle", keys: LIST("cards") },
+  "products-overview": { component: "media-cards", layout: "names", keys: LIST("varieties") },
+  "name-cards": { component: "media-cards", layout: "names", keys: { varieties: "items", formats: "items" } },
+  "natural-almonds": { component: "media-cards", layout: "photo", keys: LIST("varieties") },
+  "processed-almonds": { component: "media-cards", layout: "badge", keys: LIST("formats") },
+  "kernel-sizes": { component: "size-scale", layout: "section", keys: LIST("sizes") },
+  "size-grid": { component: "size-scale", layout: "section", keys: LIST("sizes") },
+  "sizes-band": { component: "size-scale", layout: "band", keys: LIST("sizes") },
+  "photo-strip": { component: "photo-strip", keys: LIST("photos") },
+  "product-specs": { component: "icon-card-list", layout: "split", keys: LIST("configurations") },
+  "how-it-works": { component: "steps", layout: "slider", keys: LIST("chain") },
+  "slider-chain": { component: "steps", layout: "slider", keys: LIST("chain") },
+  "working-process": { component: "steps", layout: "circles", keys: LIST("steps") },
+  "sourcing-services": { component: "feature-list", layout: "split", keys: { documents: "items", incoterms: "chips" } },
+  "doc-grid": { component: "feature-list", layout: "grid", keys: { documents: "items", incoterms: "chips" } },
+  "buyers-marquee": { component: "marquee", keys: LIST("audiences") },
+  "why-us": { component: "feature-cards", keys: LIST("reasons") },
+  "why-cards": { component: "feature-cards", keys: LIST("reasons") },
+  "faq-split": { component: "faq", layout: "split" },
+  "request-quote": { component: "quote-form", keys: LIST("checklist") },
+  "quote-cta": { component: "quote-form", keys: LIST("checklist") },
+  "quote-checklist": { component: "checklist", keys: LIST("checklist") },
+  "contact-details": { component: "contact", layout: "form" },
+  "contact-info": { component: "contact", layout: "list" },
+};
+
+/** Tên component (mới hoặc cũ) → component + layout / key gợi ý; không khớp → null. */
+export function resolveComponent(key: string): LegacyEntry | null {
+  if (SECTION_COMPONENTS[key]) return { component: key };
+  return LEGACY_COMPONENTS[key] ?? null;
+}
 
 export {
   AboutMap,
-  AboutMapRegions,
-  AlmondVarieties,
-  BuyersMarquee,
-  ContactDetails,
+  Checklist,
+  Contact,
   Faq,
-  HeroSlider,
-  HeroStats,
-  HowItWorks,
-  KernelSizes,
-  NaturalAlmonds,
-  ProcessedAlmonds,
-  ProductSpecs,
-  QuoteChecklist,
-  RequestQuote,
-  SourcingServices,
-  WhyUs,
-  WorkingProcess,
+  FeatureCards,
+  FeatureList,
+  Hero,
+  IconCardList,
+  Marquee,
+  MediaCards,
+  PhotoStrip,
+  QuoteForm,
+  SizeScale,
+  Stats,
+  Steps,
 };
 export { GenericBlock } from "./GenericBlock";
 export type { SectionProps } from "./shared";

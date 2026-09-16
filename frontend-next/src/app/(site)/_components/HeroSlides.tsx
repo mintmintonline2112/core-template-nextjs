@@ -11,7 +11,7 @@ export type HeroSlide = {
 };
 
 /**
- * Phần tương tác của section hero-slider (dùng trong sections/HeroSlider.tsx):
+ * Phần tương tác của section `hero` bố cục slider (dùng trong sections/Hero.tsx):
  * ảnh nền chuyển mờ dần, tiêu đề + mô tả bên trái đổi theo slide, dãy số slide
  * bên phải (bấm để chuyển; vạch vàng chạy theo thời gian tự chuyển).
  * Tự chạy mỗi `interval` ms; dừng khi rê chuột / focus bên trong / tab bị ẩn;

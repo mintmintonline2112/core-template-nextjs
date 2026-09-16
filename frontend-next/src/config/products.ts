@@ -1,10 +1,7 @@
 /**
- * Danh mục sản phẩm dùng chung — nguồn DUY NHẤT cho trang chủ, trang Sản phẩm
- * và các ô chọn trong form báo giá. Trước đây mỗi nơi khai báo một bản nên đã
- * lệch nhau (form có "Independence" còn trang chủ thì không).
- *
- * Đây chỉ là giá trị MẶC ĐỊNH: admin nhập `varieties` / `sizes` trong
- * page-section thì dữ liệu CMS được ưu tiên.
+ * Danh mục sản phẩm cho các ô chọn trong FORM BÁO GIÁ (forms.tsx).
+ * Nội dung hiển thị trên trang (giống, cỡ hạt…) nằm trong CMS / seed
+ * (backend page.seed.ts), không đọc từ đây.
  */
 
 /** Cỡ hạt tính theo số nhân trên mỗi ounce. */

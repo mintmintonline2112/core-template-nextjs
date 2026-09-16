@@ -1,13 +1,14 @@
 import { mediaUrl } from "@/app/(site)/_lib/cms";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
-import { Shell, type SectionProps } from "./shared";
+import { Shell, anchorId, type SectionProps } from "./shared";
 
-/** Khối generic: eyebrow + heading + nội dung rich-text + ảnh minh họa. */
-export function GenericBlock({ section, index }: SectionProps) {
+/** Khối generic (không dùng component): eyebrow + heading + nội dung rich-text + ảnh minh họa. */
+export function GenericBlock({ section, index = 0 }: SectionProps) {
+  if (!section) return null;
   const image = mediaUrl(section.mediaPath);
   return (
-    <Shell tint={index % 2 === 1} id={section.sectionKey}>
-      {(section.subheading || section.heading) ? (
+    <Shell tint={index % 2 === 1} id={anchorId(section, "generic")}>
+      {section.subheading || section.heading ? (
         <div className="section-head reveal">
           {section.subheading ? <p className="eyebrow">{section.subheading}</p> : null}
           {section.heading ? <h2>{section.heading}</h2> : null}
@@ -20,10 +21,7 @@ export function GenericBlock({ section, index }: SectionProps) {
         </figure>
       ) : null}
       {section.content ? (
-        <div
-          className="post-content reveal"
-          dangerouslySetInnerHTML={{ __html: sanitizeRichText(section.content) }}
-        />
+        <div className="post-content reveal" dangerouslySetInnerHTML={{ __html: sanitizeRichText(section.content) }} />
       ) : null}
     </Shell>
   );

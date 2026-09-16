@@ -6,7 +6,7 @@ import { WorldMapPanel } from "./WorldMap";
 export type RegionEntry = { key: string; label: string; countries: string[] };
 
 /**
- * Phần tương tác của section about-map-regions (dùng trong sections/AboutMapRegions.tsx):
+ * Phần tương tác của section `about-map` bố cục regions (dùng trong sections/AboutMap.tsx):
  * danh sách khu vực bên trái — bấm một khu vực để mở danh sách nước — và bản đồ
  * bên phải sáng đúng khu vực đang chọn (ghim + đường hàng hải).
  */

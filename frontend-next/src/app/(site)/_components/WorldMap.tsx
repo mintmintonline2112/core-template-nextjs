@@ -31,7 +31,7 @@ function arcPath(region: string): string {
 /**
  * Khung bản đồ: ảnh nền, đường hàng hải, ghim, chú thích.
  * `active` = key khu vực đang sáng (us/na/ap/sa/me/eu) hoặc null.
- * Dùng trong WorldMap (about-map) và AboutMapRegionsClient (about-map-regions).
+ * Dùng trong WorldMap (about-map bố cục pins) và AboutMapRegionsClient (bố cục regions).
  */
 export function WorldMapPanel({ active, id }: { active: string | null; id?: string }) {
   const pinClass = (region: string, origin = false) => {

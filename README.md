@@ -26,6 +26,25 @@ thêm ~10 MB. Xem `.gitignore` ở gốc.
    (đăng nhập seed: admin@gmail.com / admin#123)
 3. Bản demo tĩnh cũ: mở `frontend/index.html` trực tiếp trong trình duyệt
 
+## Nội dung & component (CMS)
+
+Website ghép từ các **section**; mỗi section dùng một **component** = một *bố cục*
+(đặt tên theo hình dạng: `hero`, `faq`, `media-cards`, `steps`…), biến thể hiển thị
+là `metadata.layout` (đổi layout, dữ liệu giữ nguyên). Section key là id neo trên
+trang (`/#about-map`), cố định sau khi tạo.
+
+- Registry component: `frontend-next/src/app/(site)/_components/sections/index.ts`
+  (15 component, helper chung ở `shared.tsx`; tên cũ vẫn nhận qua `LEGACY_COMPONENTS`).
+- Danh mục cho admin (ô nhập liệu, bố cục, kiểm tra dữ liệu):
+  `backend/src/database/seeding/seeds/section-definition.seed.ts`.
+- **Nội dung mặc định chỉ nằm ở** `backend/src/database/seeding/seeds/page.seed.ts`
+  (component không có chữ mặc định). Sửa seed xong chạy `cd backend && npm run content:export`
+  để sinh lại bản dự phòng `frontend-next/src/content/cms-fallback.json` (website dùng khi
+  API lỗi) — không sửa tay file JSON này.
+- Thêm bố cục mới = thêm case trong component + option `layout` trong seed + CSS.
+  Thêm component mới = 1 file + 1 dòng registry + 1 entry seed + hình minh hoạ trong
+  `admin/(protected)/page-sections/_components/component-picker.tsx`.
+
 ## Deploy (VPS — aaPanel)
 
 > VPS dùng chung với site **primenuts.vn** (pm2 `primenuts_api`:3010, `primenuts_web`:3001).

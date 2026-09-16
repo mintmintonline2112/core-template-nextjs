@@ -41,7 +41,7 @@ export function Footer({
 
         <nav className="footer-col" aria-label="Company">
           <h4>Company</h4>
-          <Link href={siteRoutes.homeSection('why-us')}>Why Prime Nuts USA</Link>
+          <Link href={siteRoutes.homeSection('faq')}>Why Prime Nuts USA</Link>
           <Link href={siteRoutes.homeSection('buyers-marquee')}>International Buyers</Link>
           <Link href={siteRoutes.news}>News &amp; Insights</Link>
           <Link href={siteRoutes.contact}>Contact</Link>

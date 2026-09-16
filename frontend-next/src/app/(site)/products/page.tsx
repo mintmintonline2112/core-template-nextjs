@@ -1,52 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSections } from "@/app/(site)/_components/SectionRenderer";
-import {
-  KernelSizes,
-  NaturalAlmonds,
-  ProcessedAlmonds,
-} from "@/app/(site)/_components/sections";
 import { getCmsPage } from "@/app/(site)/_lib/cms";
+import { fallbackPage } from "@/app/(site)/_lib/fallback";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { siteRoutes } from "@/config/routes";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getCmsPage("products");
+  const page = (await getCmsPage("products")) ?? fallbackPage("products");
   return buildPageMetadata({
-    title: page?.metaTitle ?? "Our Products",
-    description:
-      page?.metaDescription ??
-      "Natural and processed California almonds — Nonpareil, Independence, Monterey, Carmel, Butte, Padre kernels plus blanched, sliced, slivered, diced almonds and almond flour.",
+    title: page.metaTitle ?? page.title,
+    description: page.metaDescription ?? page.lead,
     path: siteRoutes.products,
-    image: page?.ogImagePath,
-    canonical: page?.canonicalUrl,
+    image: page.ogImagePath,
+    canonical: page.canonicalUrl,
   });
 }
-
-/** Bộ khối mặc định — chỉ dùng khi API lỗi hoặc CMS chưa có trang "products". */
-const DEFAULT_SECTIONS = [NaturalAlmonds, ProcessedAlmonds, KernelSizes];
 
 /**
  * Trang Products — banner + các section đang bật của trang "products" trong CMS
  * (theo thứ tự admin; xoá / tắt = ẩn) + dải CTA cuối trang.
+ * API lỗi → bản dự phòng sinh từ seed (src/content/cms-fallback.json).
  */
 export default async function ProductsPage() {
-  const page = await getCmsPage("products");
+  const page = (await getCmsPage("products")) ?? fallbackPage("products");
 
   return (
     <>
       <section className="page-hero">
         <div className="container page-hero-inner">
-          <p className="eyebrow eyebrow-gold reveal">{page?.eyebrow ?? "California Almonds"}</p>
-          <h1 className="reveal">{page?.title ?? "Our Products"}</h1>
-          <p className="lead reveal">
-            {page?.lead ??
-              "We source California almonds based on customer requirements, applications, and market demand — from natural kernels to processed formats for food manufacturing."}
-          </p>
+          {page.eyebrow ? <p className="eyebrow eyebrow-gold reveal">{page.eyebrow}</p> : null}
+          <h1 className="reveal">{page.title}</h1>
+          {page.lead ? <p className="lead reveal">{page.lead}</p> : null}
         </div>
       </section>
 
-      <PageSections page={page} defaults={DEFAULT_SECTIONS} />
+      <PageSections page={page} />
 
       <section className="cta-band">
         <div className="container reveal">

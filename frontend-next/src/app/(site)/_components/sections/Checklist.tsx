@@ -13,11 +13,12 @@ import {
  * báo giá), dưới là dòng ghi chú (có thể chứa link) + nút.
  * CMS: heading, subheading, content, metadata.items [], note, ctaLabel, ctaHref.
  *
- * Style bằng Tailwind, nhưng vẫn GIỮ class `doc-grid` trên <ul> (dù đã có class
- * Tailwind tương đương — giá trị copy y hệt CSS cũ nên không lệch): (1) bố cục
- * "Lưới tick" của FeatureList.tsx còn dùng CSS này, xoá khi component đó chuyển
- * xong; (2) SiteEffects.tsx bắt `.doc-grid.reveal` để so le hiệu ứng hiện dần
- * từng dòng — bỏ class là mất hiệu ứng so le dù layout không đổi.
+ * Style bằng Tailwind. Khối `.doc-grid` đã xoá khỏi site.css (FeatureList.tsx —
+ * component còn lại dùng nó — cũng đã chuyển), nhưng vẫn GIỮ TÊN class `doc-grid`
+ * trên <ul> làm móc cho hai thứ trong site.css: SiteEffects.tsx bắt
+ * `.doc-grid.reveal` để so le hiệu ứng hiện dần từng dòng, và khối
+ * prefers-reduced-motion tắt transition cho `.doc-grid li`. Bỏ class là mất
+ * hiệu ứng so le dù layout không đổi.
  */
 export function Checklist({ section }: SectionProps) {
   const list = strings(section, "items");
@@ -33,7 +34,7 @@ export function Checklist({ section }: SectionProps) {
         <Head section={section} />
 
         {list.length > 0 ? (
-          <ul className="doc-grid reveal grid grid-cols-4 gap-[0.9rem]">
+          <ul className="doc-grid reveal grid grid-cols-4 gap-[0.9rem] max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1">
             {list.map((item) => (
               <li
                 className="flex flex-wrap items-center gap-[0.8rem] rounded border border-line bg-paper px-[1.2rem] py-[1.05rem] text-[1.02rem] transition-[border-color,transform] duration-200 ease-brand hover:-translate-y-0.5 hover:border-gold-400"

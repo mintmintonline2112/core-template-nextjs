@@ -104,7 +104,7 @@ export function Faq({ section }: SectionProps) {
             )}
           >
             {section?.subheading ? (
-              <p className="m-0 font-display text-[0.76rem] font-semibold tracking-[0.24em] text-gold-500 uppercase">
+              <p className="m-0! font-display text-[0.76rem] font-semibold tracking-[0.24em] text-gold-500 uppercase">
                 {section.subheading}
               </p>
             ) : null}
@@ -142,7 +142,7 @@ export function Faq({ section }: SectionProps) {
             ) : null}
 
             {note ? (
-              <p className="mt-auto border-t border-line pt-[1.1rem] text-[0.82rem] leading-[1.6] text-ink-faint max-[900px]:mt-[1.75rem]">
+              <p className="mt-auto! border-t border-line pt-[1.1rem] text-[0.82rem] leading-[1.6] text-ink-faint max-[900px]:mt-[1.75rem]!">
                 {note}
               </p>
             ) : null}
@@ -171,7 +171,7 @@ export function Faq({ section }: SectionProps) {
         {section?.heading || section?.subheading || section?.content ? (
           <div className="reveal mx-auto mb-[clamp(2.5rem,5vw,3.5rem)] max-w-[52rem] text-center">
             {section?.subheading ? (
-              <p className="mb-[0.7rem] text-[0.9rem] font-semibold tracking-[0.18em] text-gold-500 uppercase">
+              <p className="mb-[0.7rem]! text-[0.9rem] font-semibold tracking-[0.18em] text-gold-500 uppercase">
                 {section.subheading}
               </p>
             ) : null}

@@ -76,7 +76,7 @@ export async function Contact({ section, index = 0 }: SectionProps) {
           </IconBadge>
           <div>
             <h4 className="m-0! mb-[0.15rem]! text-[1.15rem]">{row.label}</h4>
-            <p className="m-0 text-base text-ink-soft [&_a]:border-b [&_a]:border-gold-400 [&_a:hover]:text-gold-500!">
+            <p className="m-0! text-base text-ink-soft [&_a]:border-b [&_a]:border-gold-400 [&_a:hover]:text-gold-500!">
               {row.body}
             </p>
           </div>

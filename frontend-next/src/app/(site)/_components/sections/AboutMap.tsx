@@ -1,4 +1,7 @@
-import { AboutMapRegionsClient, type RegionEntry } from "@/app/(site)/_components/AboutMapRegionsClient";
+import {
+  AboutMapRegionsClient,
+  type RegionEntry,
+} from "@/app/(site)/_components/AboutMapRegionsClient";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { DEFAULT_MAP_REGIONS, countriesInRegion } from "@/config/markets";
 import { Head, anchorId, layoutOf, metaOf, type SectionProps } from "./shared";
@@ -14,10 +17,17 @@ type CmsRegion = { key?: string; name?: string; countries?: string[] };
  *   bên phải sáng đúng khu vực đang chọn.
  * CMS: heading, subheading, content, metadata.regions [{key,name,countries[]}]
  * (key thuộc us/na/ap/sa/me/eu; trống thì dùng 6 khu vực của bản đồ).
+ *
+ * Section này không có CSS riêng — toàn bộ hình thức nằm ở hai widget
+ * WorldMap.tsx và AboutMapRegionsClient.tsx, cả hai đã chuyển sang Tailwind
+ * (khối `.world-*`, `.map-pin*`, `.amr-*` đã xoá khỏi site.css). Class
+ * `about-map-regions` cũ vốn không có rule nào nên bỏ luôn.
  */
 export function AboutMap({ section }: SectionProps) {
   const layout = layoutOf(section, LAYOUTS, "pins");
-  const cmsRegions = metaOf<CmsRegion[]>(section, "regions")?.filter((region) => region.key && region.name);
+  const cmsRegions = metaOf<CmsRegion[]>(section, "regions")?.filter(
+    (region) => region.key && region.name,
+  );
 
   if (layout === "regions") {
     const regions: RegionEntry[] =
@@ -37,7 +47,7 @@ export function AboutMap({ section }: SectionProps) {
           }));
 
     return (
-      <section className="section about-map-regions" id={anchorId(section, "about-map")}>
+      <section className="section" id={anchorId(section, "about-map")}>
         <div className="container">
           <Head section={section} />
           <AboutMapRegionsClient regions={regions} />
@@ -46,7 +56,10 @@ export function AboutMap({ section }: SectionProps) {
     );
   }
 
-  const pins = cmsRegions?.map((region) => ({ key: region.key!, label: region.name! }));
+  const pins = cmsRegions?.map((region) => ({
+    key: region.key!,
+    label: region.name!,
+  }));
   return (
     <section className="section" id={anchorId(section, "about-map")}>
       <div className="container">

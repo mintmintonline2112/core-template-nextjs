@@ -1,17 +1,19 @@
 /**
- * Điểm vào Tailwind cho website public (site.css vẫn là nguồn CSS chính,
- * import Tailwind chạy song song). CHỦ ĐÍCH KHÔNG nạp preflight.css (bộ reset
- * mặc định của Tailwind) — site.css đã có reset riêng, nạp thêm sẽ đổi giao
- * diện hiện có (margin/border mặc định của thẻ, list-style…).
+ * Điểm vào Tailwind cho website public. site.css vẫn được import song song vì
+ * còn giữ phần HẠ TẦNG dùng chung (reset, .container, .section*, .btn*,
+ * .eyebrow, .icon-badge, .photo-frame, hệ hiệu ứng cuộn .reveal, header/footer,
+ * trang tin, form, hero-slider) — toàn bộ component section đã chuyển sang
+ * Tailwind. CHỦ ĐÍCH KHÔNG nạp preflight.css (bộ reset mặc định của Tailwind):
+ * site.css đã có reset riêng, nạp thêm sẽ đổi giao diện hiện có (margin/border
+ * mặc định của thẻ, list-style…).
  *
  * Thứ tự layer: `legacy` (site.css) nằm SAU `utilities` — nghĩa là CSS cũ
  * luôn thắng nếu trùng tên với một utility Tailwind. Bắt buộc phải vậy vì
  * site.css dùng class `.container` (max-width bố cục riêng) ở khắp nơi, và
  * Tailwind cũng có sẵn utility tên `container` — nếu để `utilities` thắng thì
- * layout toàn site vỡ ngay khi bật Tailwind. Khi chuyển một component sang
- * Tailwind, xoá luôn khối CSS cũ của nó trong site.css — hết đối thủ thì
- * class Tailwind trên component đó áp dụng bình thường, thứ tự layer không
- * còn ảnh hưởng tới component đã chuyển.
+ * layout toàn site vỡ ngay. Khi chuyển tiếp một mảng hạ tầng sang Tailwind,
+ * xoá luôn khối CSS cũ của nó trong site.css — hết đối thủ thì class Tailwind
+ * áp dụng bình thường, thứ tự layer không còn ảnh hưởng tới phần đã chuyển.
  */
 @layer theme, base, utilities, legacy;
 
@@ -66,6 +68,13 @@
 
   /* Easing chuyển động chung của site */
   --ease-brand: var(--ease);
+
+  /* Khoảng cách đặt tên — mở khoá `pt-xl` / `mb-xl` / `gap-xl`… Thang SỐ mặc
+     định (pt-8 = 2rem) vẫn dùng bình thường, token này chỉ thêm tên `xl` chứ
+     không thay thế. Lưu ý: trên <ul>/<ol>/<p>/<a>/<h1-h4> vẫn phải gắn hậu tố
+     `!` (VD `pt-xl!`) vì site.css nhắm mấy thẻ đó theo TÊN THẺ ở layer legacy
+     — xem comment đầu sections/shared.tsx. */
+  --spacing-xl: 2rem;
 }
 
 @import "./site.css" layer(legacy);

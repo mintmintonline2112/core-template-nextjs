@@ -17,13 +17,13 @@ import {
  * CMS: subheading, heading, content, metadata.items [{image,caption}], note,
  * ctaLabel, ctaHref.
  *
- * Style bằng Tailwind, nhưng vẫn GIỮ class `photo-strip`/`photo-strip-2` (dù
- * đã có class Tailwind tương đương) vì hai lý do: (1) bố cục `badge`/`photo`
- * của MediaCards.tsx còn dùng — xoá CSS khi component đó chuyển xong; (2)
- * SiteEffects.tsx bắt `.photo-strip.reveal` để so le hiệu ứng hiện dần từng
- * ảnh — bỏ class là mất hiệu ứng so le đó dù layout không đổi. Giá trị CSS
- * cũ của `.photo-strip *` đã copy y hệt sang Tailwind nên giữ cả hai không
- * gây lệch giao diện. `.photo-frame` (khung ảnh viền vàng khi hover) là hạ
+ * Style bằng Tailwind. Khối `.photo-strip*` đã xoá khỏi site.css (MediaCards.tsx
+ * — component còn lại dùng nó — cũng đã chuyển), nhưng vẫn GIỮ TÊN class
+ * `photo-strip` trên lưới: SiteEffects.tsx bắt `.photo-strip.reveal` để so le
+ * hiệu ứng hiện dần từng ảnh, bỏ class là mất hiệu ứng đó dù layout không đổi.
+ * Chữ chú thích ảnh giờ phải tự khai `font-display` — trước đây nó ăn ké rule
+ * dùng chung `.photo-strip figcaption, .hero-frame-caption, .section-note` trong
+ * site.css. `.photo-frame` (khung ảnh viền vàng khi hover) là hạ
  * tầng dùng chung, giữ nguyên className, chỉ thêm tỷ lệ khung riêng.
  */
 export function PhotoStrip({ section }: SectionProps) {
@@ -43,7 +43,7 @@ export function PhotoStrip({ section }: SectionProps) {
           <div
             className={cn(
               "photo-strip reveal mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-3 gap-[1.4rem]",
-              photos.length === 2 && "photo-strip-2 grid-cols-2",
+              photos.length === 2 && "grid-cols-2",
             )}
           >
             {photos.map((photo, index) => (
@@ -57,7 +57,7 @@ export function PhotoStrip({ section }: SectionProps) {
                   />
                 </div>
                 {photo.caption ? (
-                  <figcaption className="mt-[0.7rem] text-center text-[0.95rem] text-ink-faint italic">
+                  <figcaption className="mt-[0.7rem] text-center font-display text-[0.95rem] text-ink-faint italic">
                     {photo.caption}
                   </figcaption>
                 ) : null}

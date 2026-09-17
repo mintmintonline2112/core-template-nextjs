@@ -73,6 +73,9 @@ export function metadataProblems(
         break;
       case 'image':
         if (typeof value !== 'string') problems.push(`${at(spec.label)} phải là đường dẫn ảnh`);
+        if (spec.positionKey && !isStringOrEmpty(metadata[spec.positionKey])) {
+          problems.push(`${at(spec.label)} · vị trí ảnh phải là chữ (VD 50% 62%)`);
+        }
         break;
       case 'select':
         if (typeof value !== 'string' || !spec.options.some((o) => o.value === value)) {

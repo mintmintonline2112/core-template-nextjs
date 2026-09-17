@@ -30,7 +30,11 @@ export type SectionFieldSpec = SpecBase &
         type: 'textMap';
         fields: Array<{ name: string; label: string }>;
       }
-    | { type: 'image' }
+    | {
+        type: 'image';
+        /** Key metadata lưu vị trí ảnh (CSS object-position, VD "50% 62%") — admin hiện công cụ chọn điểm lấy nét. */
+        positionKey?: string;
+      }
     | { type: 'json' }
     | {
         /** Chọn một giá trị (VD layout) — hiện dạng nút bấm. */

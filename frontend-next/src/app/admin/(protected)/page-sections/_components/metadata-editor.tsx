@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, ImageIcon, Plus, Trash2 } from 'lucide-react';
 import { LibraryPicker } from '@/app/admin/_components/library-picker/library-picker';
+import { FocalPointPicker } from '@/app/admin/(protected)/page-sections/_components/focal-point-picker';
 import type { SectionDefinition, SectionFieldSpec } from '@/app/admin/(protected)/page-sections/_lib/page-section.service';
 
 /**
@@ -231,17 +232,24 @@ function ItemListEditor({
   );
 }
 
-/** Một ô ảnh đơn của khối (VD ảnh lớn cột phải của FAQ) — gõ URL hoặc chọn Thư viện. */
+/**
+ * Một ô ảnh đơn của khối (VD ảnh lớn cột phải của FAQ) — gõ URL hoặc chọn Thư viện.
+ * Spec có `positionKey` thì hiện thêm công cụ chọn điểm lấy nét (lưu vào key đó).
+ */
 function ImageFieldEditor({
   spec,
   value,
   onChange,
   onPickImage,
+  position,
+  onPositionChange,
 }: {
   spec: Extract<SectionFieldSpec, { type: 'image' }>;
   value: unknown;
   onChange: (next: string | undefined) => void;
   onPickImage: (apply: (url: string) => void) => void;
+  position: unknown;
+  onPositionChange: (next: string | undefined) => void;
 }) {
   const url = typeof value === 'string' ? value : '';
 
@@ -264,6 +272,13 @@ function ImageFieldEditor({
         ) : null}
       </div>
       {spec.hint ? <p className="gf-hint">{spec.hint}</p> : null}
+      {spec.positionKey && url ? (
+        <FocalPointPicker
+          url={url}
+          value={typeof position === 'string' ? position : undefined}
+          onChange={onPositionChange}
+        />
+      ) : null}
     </div>
   );
 }
@@ -429,6 +444,10 @@ export function MetadataEditor({
               value={value[spec.key]}
               onChange={(next) => setKey(spec.key, next)}
               onPickImage={(apply) => setPicker({ apply })}
+              position={spec.positionKey ? value[spec.positionKey] : undefined}
+              onPositionChange={(next) => {
+                if (spec.positionKey) setKey(spec.positionKey, next);
+              }}
             />
           );
         }

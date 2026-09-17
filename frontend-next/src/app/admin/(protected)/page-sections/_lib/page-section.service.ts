@@ -22,7 +22,8 @@ export type SectionFieldSpec = SpecBase &
         itemFields: Array<{ name: string; label: string; kind: 'text' | 'textarea' | 'image' }>;
       }
     | { type: 'textMap'; fields: Array<{ name: string; label: string }> }
-    | { type: 'image' }
+    /** positionKey: key metadata lưu vị trí ảnh (object-position) — hiện công cụ chọn điểm lấy nét. */
+    | { type: 'image'; positionKey?: string }
     | { type: 'json' }
     | { type: 'select'; options: Array<{ value: string; label: string; hint?: string }> }
   );

@@ -11,10 +11,13 @@ import { Hero } from "./Hero";
 import { IconCardList } from "./IconCardList";
 import { Marquee } from "./Marquee";
 import { MediaCards } from "./MediaCards";
+import { MediaTabs } from "./MediaTabs";
+import { NumberedList } from "./NumberedList";
 import { PhotoSlider } from "./PhotoSlider";
 import { PhotoStrip } from "./PhotoStrip";
 import { QuoteForm } from "./QuoteForm";
 import { SizeScale } from "./SizeScale";
+import { SpecSheet } from "./SpecSheet";
 import { Stats } from "./Stats";
 import { Steps } from "./Steps";
 
@@ -35,10 +38,12 @@ export const SECTION_COMPONENTS: Record<string, ComponentType<SectionProps>> = {
   stats: Stats,
   "about-map": AboutMap,
   "media-cards": MediaCards,
+  "media-tabs": MediaTabs,
   "size-scale": SizeScale,
   "photo-strip": PhotoStrip,
   "photo-slider": PhotoSlider,
   "icon-card-list": IconCardList,
+  "spec-sheet": SpecSheet,
   steps: Steps,
   "feature-list": FeatureList,
   marquee: Marquee,
@@ -46,6 +51,7 @@ export const SECTION_COMPONENTS: Record<string, ComponentType<SectionProps>> = {
   faq: Faq,
   "quote-form": QuoteForm,
   checklist: Checklist,
+  "numbered-list": NumberedList,
   contact: Contact,
 };
 
@@ -113,10 +119,13 @@ export {
   IconCardList,
   Marquee,
   MediaCards,
+  MediaTabs,
+  NumberedList,
   PhotoSlider,
   PhotoStrip,
   QuoteForm,
   SizeScale,
+  SpecSheet,
   Stats,
   Steps,
 };

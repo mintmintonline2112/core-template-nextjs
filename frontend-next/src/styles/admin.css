@@ -3079,3 +3079,65 @@ body .swal2-html-container {
   color: #fff;
   background: var(--admin-brass);
 }
+
+/* ---------- Chọn điểm lấy nét của ảnh (focal-point-picker.tsx) ---------- */
+.me-focal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--admin-line);
+  border-radius: 10px;
+  background: var(--admin-surface-solid);
+}
+.me-focal-main { flex: 1 1 320px; min-width: 0; }
+.me-focal-main .gf-hint { margin: 8px 0 0; }
+.me-focal-stage {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  background: #e9e4d8;
+}
+/* Khung ôm sát ảnh (inline-block) để toạ độ bấm khớp ảnh; ảnh dọc không cao quá 360px. */
+.me-focal-stage img { display: block; width: auto; max-width: min(100%, 460px); height: auto; max-height: 360px; pointer-events: none; }
+.me-focal-dot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: rgba(201, 162, 94, 0.9);
+  box-shadow: 0 0 0 1px rgba(15, 23, 41, 0.45), 0 4px 12px rgba(15, 23, 41, 0.35);
+  cursor: grab;
+}
+.me-focal-dot:focus-visible { outline: 2px solid var(--admin-brass); outline-offset: 3px; }
+.me-focal-reset {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--admin-brass);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.me-focal-previews { display: flex; align-items: flex-end; gap: 12px; }
+.me-focal-previews figure { margin: 0; }
+.me-focal-previews figcaption { margin-top: 6px; font-size: 11.5px; color: var(--admin-muted); text-align: center; }
+.me-focal-frame {
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(26, 34, 54, 0.15);
+  background: #e9e4d8;
+}
+.me-focal-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Kích thước khung xem trước truyền qua prop `previews` (inline style). */

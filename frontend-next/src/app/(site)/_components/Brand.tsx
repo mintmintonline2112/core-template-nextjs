@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteRoutes } from "@/config/routes";
+import { cn } from "@/utils/cn";
 
 export type BrandProps = {
   footer?: boolean;
@@ -12,7 +13,11 @@ export type BrandProps = {
 /** Logo SVG mặc định của theme (dùng khi admin chưa upload logo). */
 export function BrandMark({ footer = false }: { footer?: boolean }) {
   return (
-    <svg className="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+    <svg
+      className="h-[42px] w-[42px] shrink-0"
+      viewBox="0 0 40 40"
+      aria-hidden="true"
+    >
       <circle
         cx="20"
         cy="20"
@@ -37,18 +42,23 @@ export function BrandMark({ footer = false }: { footer?: boolean }) {
 }
 
 /** Logo + wordmark dùng chung cho header và footer. */
-export function Brand({ footer = false, logoUrl, logoHeight, brandName }: BrandProps) {
+export function Brand({
+  footer = false,
+  logoUrl,
+  logoHeight,
+  brandName,
+}: BrandProps) {
   const name = brandName?.trim() || "Prime Nuts USA";
   return (
     <Link
       href={siteRoutes.home}
-      className={footer ? "brand brand-footer" : "brand"}
+      className="inline-flex items-center gap-3 text-navy-700"
       aria-label={`${name} — home`}
     >
       {logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          className="brand-logo"
+          className="block h-[42px] w-auto max-w-[260px] object-contain"
           src={logoUrl}
           alt={name}
           style={logoHeight ? { height: logoHeight } : undefined}
@@ -56,11 +66,28 @@ export function Brand({ footer = false, logoUrl, logoHeight, brandName }: BrandP
       ) : (
         <>
           <BrandMark footer={footer} />
-          <span className="brand-text">
-            <span className="brand-name">
-              {brandName?.trim() ? name : (<>Prime Nuts <em>USA</em></>)}
+          <span className="flex flex-col leading-tight">
+            <span
+              className={cn(
+                "text-xl font-bold tracking-xs",
+                footer ? "text-light" : "text-navy-700",
+              )}
+            >
+              {brandName?.trim() ? (
+                name
+              ) : (
+                <>
+                  Prime Nuts{" "}
+                  <em className="font-medium text-gold-500 italic">USA</em>
+                </>
+              )}
             </span>
-            <span className="brand-tag">
+            <span
+              className={cn(
+                "mt-1 text-2xs tracking-xl uppercase",
+                footer ? "text-light-soft" : "text-ink-faint",
+              )}
+            >
               {footer ? "California, USA" : "California Almonds"}
             </span>
           </span>

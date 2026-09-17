@@ -1,3 +1,4 @@
+import { Eyebrow } from "@/app/(site)/_components/ui";
 import { cn } from "@/utils/cn";
 import { anchorId, inlineHtml, strings, type SectionProps } from "./shared";
 
@@ -8,7 +9,7 @@ const EDGE_FADE =
 function MarqueeLine({ items }: { items: string[] }) {
   return (
     <p
-      className="m-0 flex items-baseline gap-[1.4rem] text-[clamp(1.35rem,2.6vw,1.9rem)] font-medium whitespace-nowrap text-navy-700 italic"
+      className="m-0 flex items-baseline gap-6 text-h4 font-medium whitespace-nowrap text-navy-700 italic"
       aria-hidden="true"
     >
       {items.map((item) => (
@@ -37,14 +38,14 @@ function MarqueeRow({
   return (
     <div
       className={cn(
-        "group mx-auto mt-[0.6rem] mb-[1.4rem] overflow-hidden",
+        "group mx-auto mt-2 mb-6 overflow-hidden",
         EDGE_FADE,
-        tight && "mt-[0.2rem]",
+        tight && "mt-1",
       )}
     >
       <div
         className={cn(
-          "flex w-max gap-[1.4rem] group-hover:[animation-play-state:paused]",
+          "flex w-max gap-6 group-hover:[animation-play-state:paused]",
           direction === "right"
             ? "animate-[marquee-right_32s_linear_infinite]"
             : "animate-[marquee-left_26s_linear_infinite]",
@@ -63,15 +64,6 @@ function MarqueeRow({
  * 2 dòng chạy ngược chiều (trên → phải, dưới → trái); dưới cùng là câu ghi chú
  * (content). Không có mục nào thì không render.
  * CMS: heading, content, metadata.items [].
- *
- * Đã chuyển sang Tailwind — khối `.serve-*` (trừ 2 dòng nói dưới đây) đã xoá
- * khỏi site.css. Ba thứ CÒN ở site.css và vì sao:
- * - `@keyframes marquee-left/right`: Tailwind chỉ gọi tên animation, keyframes
- *   vẫn phải khai ở CSS (dùng chung một chỗ, không nhân bản).
- * - `.serve-band`: GIỮ tên class dù không còn style riêng — site.css ẩn eyebrow
- *   ở mọi khối khác, chỉ chừa `.serve-band .eyebrow` (ở đây eyebrow chính là
- *   tiêu đề dải) và cho nó `display:inline-block` + gạch vàng căn giữa.
- * - `.eyebrow`, `.container`, `.sr-only`, `.reveal`: hạ tầng dùng chung, chưa chuyển.
  */
 export function Marquee({ section }: SectionProps) {
   const list = strings(section, "items");
@@ -83,11 +75,11 @@ export function Marquee({ section }: SectionProps) {
 
   return (
     <section
-      className="serve-band border-y border-line-soft bg-paper py-[clamp(3.5rem,7vw,5.5rem)] text-center"
+      className="border-y border-line-soft bg-paper py-[clamp(3.5rem,7vw,5.5rem)] text-center"
       id={anchorId(section, "marquee")}
     >
-      <div className="reveal container">
-        {section?.heading ? <p className="eyebrow">{section.heading}</p> : null}
+      <div className="reveal site-container">
+        {section?.heading ? <Eyebrow center>{section.heading}</Eyebrow> : null}
         <p className="sr-only">{list.join(", ")}</p>
         <MarqueeRow items={rowA} direction="right" />
         {rowB.length > 0 ? (
@@ -95,7 +87,7 @@ export function Marquee({ section }: SectionProps) {
         ) : null}
         {section?.content?.trim() ? (
           <p
-            className="mx-auto my-0 max-w-[36rem] text-[1.05rem] text-ink-faint"
+            className="mx-auto my-0 max-w-[36rem] text-base text-ink-faint"
             dangerouslySetInnerHTML={{ __html: inlineHtml(section.content) }}
           />
         ) : null}

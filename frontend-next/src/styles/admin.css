@@ -4,7 +4,7 @@
 .admin-root,
 .admin-login-page,
 .admin-auth-loading {
-  /* Palette đồng bộ với :root của site (styles/site.css) — brand Prime Nuts */
+  /* Palette đồng bộ với :root của site (styles/base.css) — brand Prime Nuts */
   --admin-bg: #f3efe6;                     /* --cream-2 */
   --admin-surface: rgba(255, 255, 255, 0.78);
   --admin-surface-solid: #faf8f3;          /* --cream */

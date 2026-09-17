@@ -1,6 +1,12 @@
 import type { CSSProperties, ReactNode } from "react";
+import {
+  SECTION,
+  SECTION_DARK,
+  SECTION_NOTE,
+} from "@/app/(site)/_components/ui";
 import { SourcingBlock } from "@/app/(site)/_components/SourcingBlock";
 import { type SourcingSlide } from "@/app/(site)/_components/SourcingSlider";
+import { cn } from "@/utils/cn";
 import {
   Cta,
   Head,
@@ -70,13 +76,7 @@ const MAP_BACKDROP =
  * CMS: heading, subheading, content, metadata.items [{title,text}],
  * slides [{image,caption,alt}] (slider), ctaLabel/ctaHref (slider).
  *
- * Bố cục `circles` đã chuyển sang Tailwind — `.working-process`, `.ps-step`,
- * `.ps-circle`, `.ps-ring`, `.ps-num`, `.ps-link` đã xoá khỏi site.css. Ba thứ
- * còn lại ở site.css: `@keyframes ps-dash` (Tailwind chỉ gọi tên animation),
- * hai rule `html.js .ps-steps.reveal > *` (hiện dần so le — SiteEffects.tsx bắt
- * `.ps-steps.reveal` để rải `--reveal-delay`, nên GIỮ class `ps-steps`), và
- * `--ps-count` vẫn truyền bằng inline style vì số bước do CMS quyết định.
- * Bố cục `slider` (SourcingBlock + `.btn*` + `.section-note*`) chưa chuyển.
+ * `--ps-count` truyền bằng inline style vì số bước do CMS quyết định.
  */
 export function Steps({ section }: SectionProps) {
   const id = anchorId(section, "steps");
@@ -87,14 +87,19 @@ export function Steps({ section }: SectionProps) {
   if (layoutOf(section, LAYOUTS, "slider") === "circles") {
     return (
       <section
-        className={`section relative overflow-hidden border-y border-line-soft bg-cream-2 ${MAP_BACKDROP}`}
+        className={cn(
+          SECTION,
+          "relative overflow-hidden border-y border-line-soft bg-cream-2",
+          MAP_BACKDROP,
+        )}
         id={id}
       >
-        <div className="relative container">
+        <div className="relative site-container">
           <Head section={section} />
           {steps.length > 0 ? (
             <ol
-              className="ps-steps reveal mt-[clamp(0.5rem,2vw,1.5rem)] grid grid-cols-[repeat(var(--ps-count,5),minmax(0,1fr))] gap-x-[var(--ps-gap)] gap-y-[2.8rem] [--ps-gap:clamp(1rem,2.4vw,2rem)] [--ps-size:132px] max-[1080px]:grid-cols-3 max-[1080px]:[--ps-size:116px] max-[640px]:grid-cols-1 max-[640px]:gap-[2.4rem]"
+              data-stagger="70"
+              className="reveal reveal-group mt-[clamp(0.5rem,2vw,1.5rem)] grid grid-cols-[repeat(var(--ps-count,5),minmax(0,1fr))] gap-x-[var(--ps-gap)] gap-y-11 [--ps-gap:clamp(1rem,2.4vw,2rem)] [--ps-size:132px] max-[1080px]:grid-cols-3 max-[1080px]:[--ps-size:116px] max-[640px]:grid-cols-1 max-[640px]:gap-10"
               style={
                 { ["--ps-count" as string]: steps.length } as CSSProperties
               }
@@ -104,7 +109,7 @@ export function Steps({ section }: SectionProps) {
                   className="group relative text-center"
                   key={`${step.title}-${index}`}
                 >
-                  <div className="relative z-1 mx-auto mb-[1.6rem] h-[var(--ps-size)] w-[var(--ps-size)] rounded-full bg-paper shadow-[0_18px_40px_-22px_rgba(15,23,41,0.35)]">
+                  <div className="relative z-1 mx-auto mb-6 h-[var(--ps-size)] w-[var(--ps-size)] rounded-full bg-paper shadow-float">
                     <span
                       className="absolute inset-[11px] grid place-items-center rounded-full border border-dashed border-navy-600 text-navy-700 transition-[background-color,color,border-color] duration-300 ease-brand group-hover:border-gold-400 group-hover:bg-navy-700 group-hover:text-gold-300"
                       aria-hidden="true"
@@ -122,7 +127,7 @@ export function Steps({ section }: SectionProps) {
                       </svg>
                     </span>
                     <span
-                      className="absolute top-[2px] -right-[4px] grid h-10 w-10 place-items-center rounded-full border-[3px] border-cream-2 bg-navy-700 font-display text-[0.85rem] font-bold text-gold-300"
+                      className="absolute top-[2px] -right-[4px] grid h-10 w-10 place-items-center rounded-full border-[3px] border-cream-2 bg-navy-700 font-display text-sm font-bold text-gold-300"
                       aria-hidden="true"
                     >
                       {String(index + 1).padStart(2, "0")}
@@ -146,11 +151,9 @@ export function Steps({ section }: SectionProps) {
                       />
                     </svg>
                   ) : null}
-                  <h3 className="mb-[0.55rem] text-[1.22rem] text-ink">
-                    {step.title}
-                  </h3>
+                  <h3 className="mb-2 text-xl text-ink">{step.title}</h3>
                   {step.text ? (
-                    <p className="mx-auto my-0 max-w-[16rem] text-[0.98rem] leading-[1.6] text-ink-soft">
+                    <p className="mx-auto my-0 max-w-[16rem] text-base leading-relaxed text-ink-soft">
                       {step.text}
                     </p>
                   ) : null}
@@ -176,14 +179,14 @@ export function Steps({ section }: SectionProps) {
   const ctaLabel = str(section, "ctaLabel");
 
   return (
-    <section className="section section-dark" id={id}>
-      <div className="container">
+    <section className={cn(SECTION, SECTION_DARK)} id={id}>
+      <div className="site-container">
         <Head section={section} light />
         {steps.length > 0 || slides ? (
           <SourcingBlock slides={slides} chain={steps} />
         ) : null}
         {ctaLabel ? (
-          <p className="section-note section-note-light reveal">
+          <p className={cn(SECTION_NOTE, "reveal text-light-soft")}>
             <Cta
               label={ctaLabel}
               href={str(section, "ctaHref")}

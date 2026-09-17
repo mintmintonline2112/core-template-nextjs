@@ -1,0 +1,128 @@
+/* ============================================================
+   COMPONENT CLASS — @layer components (TRƯỚC utilities)
+   ============================================================
+   Chỉ dành cho thứ BẮT BUỘC phải là class thật: HTML do admin soạn trong
+   CMS không mang được class Tailwind (bộ soạn thảo chèn `<a class="btn">`,
+   nội dung bài viết là HTML thô). Giao diện còn lại viết bằng class Tailwind
+   trong JSX.
+
+   Nằm trước utilities → class Tailwind đè được bình thường:
+   `<a className="btn btn-gold ml-3 font-display">` không cần hậu tố `!`.
+   ============================================================ */
+
+/* ---------- Nút ---------- */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: --spacing(4) --spacing(8);
+  font-family: var(--font-main);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-md);
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 200ms var(--ease), color 200ms var(--ease),
+              border-color 200ms var(--ease), transform 200ms var(--ease),
+              box-shadow 200ms var(--ease);
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--navy-700);
+  color: var(--cream);
+}
+.btn-primary:hover {
+  background: var(--navy-800);
+  color: var(--cream);
+}
+
+.btn-gold {
+  background: var(--gold-400);
+  border-color: var(--gold-400);
+  color: var(--navy-900);
+  box-shadow: 0 10px 24px -12px --alpha(var(--color-gold-500) / 55%);
+}
+.btn-gold:hover {
+  background: var(--gold-300);
+  border-color: var(--gold-300);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -12px --alpha(var(--color-gold-500) / 60%);
+}
+
+/* Vệt sáng lướt qua nút vàng khi rê chuột */
+.btn-gold::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 45%;
+  background: linear-gradient(105deg, transparent, --alpha(var(--color-white) / 45%), transparent);
+  transform: skewX(-20deg);
+  transition: left 650ms var(--ease);
+  pointer-events: none;
+}
+.btn-gold:hover::after { left: 115%; }
+
+.btn-ghost {
+  background: transparent;
+  border-color: --alpha(var(--color-light) / 45%);
+  color: var(--light);
+}
+.btn-ghost:hover {
+  border-color: var(--gold-300);
+  color: var(--gold-300);
+}
+
+.btn-ghost-dark {
+  background: transparent;
+  border-color: var(--navy-700);
+  color: var(--navy-700);
+}
+.btn-ghost-dark:hover {
+  background: var(--navy-700);
+  color: var(--cream);
+}
+
+.btn-sm { padding: --spacing(2) --spacing(5); font-size: var(--text-base); }
+.btn-block { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn-gold::after { display: none; }
+}
+
+/* ---------- Nội dung rich-text từ CMS (bài viết, khối generic) ---------- */
+
+.post-content {
+  font-size: var(--text-lg);
+  line-height: var(--leading-loose);
+  color: var(--ink);
+}
+
+.post-content h2,
+.post-content h3 { margin-top: 1.6em; }
+.post-content p { margin-bottom: 1.1em; }
+.post-content img { border-radius: var(--radius-lg); margin: --spacing(6) auto; }
+.post-content a { border-bottom: 1px solid var(--gold-400); }
+.post-content a:hover { color: var(--gold-500); }
+.post-content ul,
+.post-content ol { padding-left: --spacing(6); margin-bottom: 1.1em; }
+.post-content ul { list-style: disc; }
+.post-content ol { list-style: decimal; }
+.post-content blockquote {
+  margin: --spacing(6) 0;
+  padding: --spacing(3) --spacing(6);
+  border-left: 2px solid var(--gold-400);
+  background: var(--navy-50);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+}

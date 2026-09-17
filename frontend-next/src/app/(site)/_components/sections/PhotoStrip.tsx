@@ -1,3 +1,10 @@
+import {
+  PHOTO_FRAME,
+  SECTION,
+  SECTION_FLOW,
+  SECTION_NOTE,
+  SECTION_TINT,
+} from "@/app/(site)/_components/ui";
 import { cn } from "@/utils/cn";
 import {
   Cta,
@@ -16,15 +23,6 @@ import {
  * ghép liền dưới khối khác — section-flow).
  * CMS: subheading, heading, content, metadata.items [{image,caption}], note,
  * ctaLabel, ctaHref.
- *
- * Style bằng Tailwind. Khối `.photo-strip*` đã xoá khỏi site.css (MediaCards.tsx
- * — component còn lại dùng nó — cũng đã chuyển), nhưng vẫn GIỮ TÊN class
- * `photo-strip` trên lưới: SiteEffects.tsx bắt `.photo-strip.reveal` để so le
- * hiệu ứng hiện dần từng ảnh, bỏ class là mất hiệu ứng đó dù layout không đổi.
- * Chữ chú thích ảnh giờ phải tự khai `font-display` — trước đây nó ăn ké rule
- * dùng chung `.photo-strip figcaption, .hero-frame-caption, .section-note` trong
- * site.css. `.photo-frame` (khung ảnh viền vàng khi hover) là hạ
- * tầng dùng chung, giữ nguyên className, chỉ thêm tỷ lệ khung riêng.
  */
 export function PhotoStrip({ section }: SectionProps) {
   const photos = items(section, "items").filter((photo) => photo.image);
@@ -33,22 +31,23 @@ export function PhotoStrip({ section }: SectionProps) {
 
   return (
     <section
-      className="section section-tint section-flow"
+      className={cn(SECTION, SECTION_TINT, SECTION_FLOW)}
       id={anchorId(section, "photo-strip")}
     >
-      <div className="container">
+      <div className="site-container">
         <Head section={section} />
 
         {photos.length > 0 ? (
           <div
+            data-stagger="70"
             className={cn(
-              "photo-strip reveal mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-3 gap-[1.4rem]",
+              "reveal reveal-group mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-3 gap-6",
               photos.length === 2 && "grid-cols-2",
             )}
           >
             {photos.map((photo, index) => (
               <figure className="m-0" key={`${photo.image}-${index}`}>
-                <div className="photo-frame aspect-4/3">
+                <div className={cn(PHOTO_FRAME, "aspect-4/3")}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={resolveImage(photo.image)}
@@ -57,7 +56,7 @@ export function PhotoStrip({ section }: SectionProps) {
                   />
                 </div>
                 {photo.caption ? (
-                  <figcaption className="mt-[0.7rem] text-center font-display text-[0.95rem] text-ink-faint italic">
+                  <figcaption className="mt-3 text-center font-display text-base text-ink-faint italic">
                     {photo.caption}
                   </figcaption>
                 ) : null}
@@ -67,7 +66,7 @@ export function PhotoStrip({ section }: SectionProps) {
         ) : null}
 
         {note || ctaLabel ? (
-          <p className="section-note reveal">
+          <p className={cn(SECTION_NOTE, "reveal")}>
             {note ? (
               <span dangerouslySetInnerHTML={{ __html: inlineHtml(note) }} />
             ) : null}

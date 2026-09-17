@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, type ReactNode } from 'react';
-import { cn } from '@/utils/cn';
-import './ui.css';
+import { useEffect, useRef, type ReactNode } from "react";
+import { cn } from "@/utils/cn";
 
 /*
  * Client Component DUY NHẤT trong bộ ui mẫu: cần useEffect + DOM API của <dialog>.
@@ -28,7 +27,15 @@ export interface ModalProps {
   children?: ReactNode;
 }
 
-export function Modal({ open, onClose, title, footer, width, className, children }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  footer,
+  width,
+  className,
+  children,
+}: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   // Đồng bộ prop `open` với trạng thái thật của <dialog> (showModal/close).
@@ -50,30 +57,46 @@ export function Modal({ open, onClose, title, footer, width, className, children
     const onClick = (event: MouseEvent) => {
       if (event.target === dialog) onClose();
     };
-    dialog.addEventListener('cancel', onCancel);
-    dialog.addEventListener('click', onClick);
+    dialog.addEventListener("cancel", onCancel);
+    dialog.addEventListener("click", onClick);
     return () => {
-      dialog.removeEventListener('cancel', onCancel);
-      dialog.removeEventListener('click', onClick);
+      dialog.removeEventListener("cancel", onCancel);
+      dialog.removeEventListener("click", onClick);
     };
   }, [onClose]);
 
   return (
     <dialog
       ref={ref}
-      className={cn('ui-modal', className)}
-      style={width ? ({ '--ui-modal-width': width } as React.CSSProperties) : undefined}
+      className={cn(
+        "w-[min(92vw,var(--ui-modal-width,32rem))] rounded-2xl border-none bg-paper p-0 text-ink shadow-float backdrop:bg-navy-900/45",
+        className,
+      )}
+      style={
+        width
+          ? ({ "--ui-modal-width": width } as React.CSSProperties)
+          : undefined
+      }
     >
       {title ? (
-        <div className="ui-modal__header">
-          <h2 className="ui-modal__title">{title}</h2>
-          <button type="button" className="ui-modal__close" aria-label="Đóng" onClick={onClose}>
+        <div className="flex items-center justify-between border-b border-b-line-soft px-5 py-4">
+          <h2 className="m-0 text-lg font-bold">{title}</h2>
+          <button
+            type="button"
+            className="cursor-pointer border-none bg-transparent text-2xl leading-none text-ink-faint"
+            aria-label="Đóng"
+            onClick={onClose}
+          >
             ×
           </button>
         </div>
       ) : null}
-      <div className="ui-modal__body">{children}</div>
-      {footer ? <div className="ui-modal__footer">{footer}</div> : null}
+      <div className="p-5">{children}</div>
+      {footer ? (
+        <div className="flex justify-end gap-2 border-t border-t-line-soft px-5 py-4">
+          {footer}
+        </div>
+      ) : null}
     </dialog>
   );
 }

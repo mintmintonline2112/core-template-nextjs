@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { cn } from "@/utils/cn";
+import { Eyebrow, HERO_TEXT } from "./ui";
 
 export type HeroSlide = {
   src: string;
@@ -51,7 +53,10 @@ export function HeroSlides({
     };
   }, []);
 
-  const go = useCallback((index: number) => setCurrent(((index % count) + count) % count), [count]);
+  const go = useCallback(
+    (index: number) => setCurrent(((index % count) + count) % count),
+    [count],
+  );
 
   const paused = hovered || tabHidden || reducedMotion;
 
@@ -69,60 +74,114 @@ export function HeroSlides({
 
   return (
     <section
-      className={`hero-slider${paused ? " is-paused" : ""}`}
+      className="relative isolate flex min-h-[clamp(580px,88vh,840px)] items-center overflow-hidden bg-navy-900 text-light before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(90deg,rgba(15,23,41,0.95)_0%,rgba(15,23,41,0.86)_34%,rgba(15,23,41,0.45)_64%,rgba(15,23,41,0.2)_100%),linear-gradient(0deg,rgba(15,23,41,0.55)_0%,rgba(15,23,41,0)_30%)] before:content-[''] max-[900px]:min-h-0 max-[900px]:before:bg-[linear-gradient(180deg,rgba(15,23,41,0.6)_0%,rgba(15,23,41,0.92)_55%)]"
       id={id}
       aria-roledescription="carousel"
       aria-label="Prime Nuts USA highlights"
-      style={{ ["--hs-interval" as string]: `${interval}ms` } as React.CSSProperties}
+      style={
+        { ["--hs-interval" as string]: `${interval}ms` } as React.CSSProperties
+      }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocusCapture={() => setHovered(true)}
       onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHovered(false);
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setHovered(false);
       }}
     >
-      <div className="hs-media" aria-hidden="true">
+      <div className="absolute inset-0 -z-2" aria-hidden="true">
         {slides.map((item, index) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={`${item.src}-${index}`}
             src={item.src}
             alt=""
-            className={index === current ? "is-active" : undefined}
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover [transition:opacity_1200ms_var(--ease),transform_7000ms_linear] motion-reduce:[transform:none] motion-reduce:transition-none",
+              index === current
+                ? "[transform:scale(1)] opacity-100"
+                : "[transform:scale(1.08)] opacity-0",
+            )}
             loading={index === 0 ? "eager" : "lazy"}
           />
         ))}
       </div>
 
-      <div className="container hs-inner">
-        <div className="hs-copy">
-          {eyebrow ? <p className="eyebrow eyebrow-gold">{eyebrow}</p> : null}
-          <div className="hs-slide" key={current} aria-live={paused ? "polite" : "off"}>
-            <h1>{slide.title}</h1>
+      <div className="site-container grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[clamp(2rem,6vw,5rem)] py-[clamp(5rem,10vw,7.5rem)] max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-8">
+        <div className="max-w-[41rem]">
+          {eyebrow ? (
+            <Eyebrow gold heading>
+              {eyebrow}
+            </Eyebrow>
+          ) : null}
+          <div
+            className="animate-[hs-in_800ms_var(--ease)_both] motion-reduce:animate-none"
+            key={current}
+            aria-live={paused ? "polite" : "off"}
+          >
+            <h1 className="mb-[0.5em] text-display font-semibold text-light">
+              {slide.title}
+            </h1>
             {slide.html ? (
-              <div className="hero-cms" dangerouslySetInnerHTML={{ __html: slide.html }} />
+              <div
+                className={cn(HERO_TEXT, "max-w-[37rem]")}
+                dangerouslySetInnerHTML={{ __html: slide.html }}
+              />
             ) : null}
           </div>
           {children}
         </div>
 
         {count > 1 ? (
-          <div className="hs-nav" role="group" aria-label="Choose slide">
+          <div
+            className="flex flex-col items-end gap-1 max-[900px]:mt-7 max-[900px]:flex-row max-[900px]:items-center max-[900px]:justify-center max-[900px]:gap-5"
+            role="group"
+            aria-label="Choose slide"
+          >
             {slides.map((item, index) => (
               <button
                 key={`${item.src}-${index}`}
                 type="button"
-                className={`hs-num${index === current ? " is-active" : ""}`}
+                className={cn(
+                  "flex min-h-11 cursor-pointer items-center gap-4 border-0 bg-transparent px-0 py-1 font-display text-base font-semibold tracking-sm transition-[color] duration-250 ease-brand",
+                  // Số đang xem giữ màu vàng cả khi rê chuột.
+                  index === current
+                    ? "text-gold-300"
+                    : "text-light-soft hover:text-light",
+                )}
                 aria-label={`Slide ${index + 1} of ${count}: ${item.title}`}
                 aria-current={index === current ? "true" : undefined}
                 onClick={() => go(index)}
               >
-                <span className="hs-num-line" key={index === current ? progressKey : "idle"} aria-hidden="true" />
-                <span className="hs-num-label">{String(index + 1).padStart(2, "0")}</span>
+                {/* Vạch vàng (::after) chạy hết vạch trong đúng `interval` — dừng thì đứng yên, mờ đi. */}
+                <span
+                  className={cn(
+                    "relative h-[2px] w-[34px] overflow-hidden bg-light/25 transition-[width] duration-350 ease-brand max-[900px]:w-[20px]",
+                    index === current &&
+                      "w-[76px] after:absolute after:inset-0 after:origin-left after:animate-[hs-progress_var(--hs-interval,6500ms)_linear_forwards] after:bg-gold-400 after:content-[''] max-[900px]:w-[44px]",
+                    index === current &&
+                      paused &&
+                      "after:[transform:scaleX(1)] after:animate-none after:opacity-55",
+                  )}
+                  key={index === current ? progressKey : "idle"}
+                  aria-hidden="true"
+                />
+                <span
+                  className={cn(
+                    "transition-[font-size] duration-300 ease-brand",
+                    index === current && "text-3xl max-[900px]:text-xl",
+                  )}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
               </button>
             ))}
-            <p className="hs-count" aria-hidden="true">
-              {String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+            <p
+              className="mt-4 mb-0 text-xs tracking-2xl text-light-soft max-[900px]:hidden"
+              aria-hidden="true"
+            >
+              {String(current + 1).padStart(2, "0")} /{" "}
+              {String(count).padStart(2, "0")}
             </p>
           </div>
         ) : null}

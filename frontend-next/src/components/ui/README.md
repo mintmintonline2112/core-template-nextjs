@@ -7,7 +7,7 @@ không import service, không phụ thuộc CMS. Vì vậy dùng được ở c�
 | Component | Loại | Khi nào dùng |
 |---|---|---|
 | `Button` | Server | Nút hoặc link dạng nút. Có `href` → render `<Link>`. Variant: primary, gold, outline, ghost, danger. |
-| `Badge` | Server | Nhãn trạng thái nhỏ (Draft, Published, Mới…). |
+| `Badge` | Server | Nhãn trạng thái nhỏ (Draft, Published, Mới…). Tone: navy (mặc định), gold, neutral, danger. |
 | `Card` + `CardHeader/Body/Footer` | Server | Khung nội dung có viền, dùng cho dashboard, block CMS. |
 | `Spinner` | Server | Vòng xoay loading, kế thừa màu chữ hiện tại. |
 | `Modal` | **Client** | Hộp thoại dựa trên `<dialog>`; cần hook nên có `'use client'`. |
@@ -61,10 +61,13 @@ export function DeleteButton({ onConfirm }: { onConfirm: () => void }) {
    hook, event listener hay browser API (như `Modal`). `Button` nhận `onClick`
    nhưng không cần `'use client'`: handler chỉ chạy khi Button nằm trong một
    Client Component, còn trong Server Component thì dùng `href` / `type="submit"`.
-2. **Style đặt trong `ui.css`, prefix `ui-`**, màu lấy từ biến brand của
-   `styles/site.css` và có fallback để chạy trong admin.
+2. **Style viết bằng class Tailwind ngay trong component** (không có file CSS
+   riêng). Biến thể (variant/size/tone) là một object map class; `className`
+   truyền vào được ghép sau cùng qua `cn()` nên đè được mọi class mặc định.
+   Màu dùng token brand (`navy-700`, `gold-400`…) — cả site lẫn admin đều nạp
+   `styles/tailwind.css` nên dùng được ở hai nơi.
 3. **Component có nghiệp vụ không đặt ở đây.** `DataTable`, `GenericForm`,
    `LibraryPicker` thuộc `app/admin/_components`; `Header`, `Footer`,
    `SectionRenderer` thuộc `app/(site)/_components`.
-4. Thêm component mới: tạo file `ten-component.tsx`, thêm class vào `ui.css`,
+4. Thêm component mới: tạo file `ten-component.tsx` (style bằng Tailwind),
    export trong `index.ts`.

@@ -9,7 +9,9 @@ import type { SocialKey, SocialLinks } from "@/lib/settings";
 const ICONS: Record<SocialKey, { label: string; path: ReactNode }> = {
   facebook: {
     label: "Facebook",
-    path: <path d="M14 8.5h2.2V5.6h-2.6c-2.3 0-3.6 1.4-3.6 3.7v1.6H7.8v2.9H10V21h3v-7.2h2.3l.4-2.9H13V9.6c0-.8.3-1.1 1-1.1Z" />,
+    path: (
+      <path d="M14 8.5h2.2V5.6h-2.6c-2.3 0-3.6 1.4-3.6 3.7v1.6H7.8v2.9H10V21h3v-7.2h2.3l.4-2.9H13V9.6c0-.8.3-1.1 1-1.1Z" />
+    ),
   },
   youtube: {
     label: "YouTube",
@@ -24,15 +26,33 @@ const ICONS: Record<SocialKey, { label: string; path: ReactNode }> = {
     label: "Instagram",
     path: (
       <>
-        <rect x="3.4" y="3.4" width="17.2" height="17.2" rx="5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <rect
+          x="3.4"
+          y="3.4"
+          width="17.2"
+          height="17.2"
+          rx="5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
         <circle cx="17.1" cy="6.9" r="1.2" />
       </>
     ),
   },
   tiktok: {
     label: "TikTok",
-    path: <path d="M14.4 3h2.7c.2 1.7 1.2 3.1 2.9 3.4v2.7a6.4 6.4 0 0 1-3.4-1.1v5.9a5.4 5.4 0 1 1-4.6-5.3v2.8a2.6 2.6 0 1 0 1.8 2.5V3Z" />,
+    path: (
+      <path d="M14.4 3h2.7c.2 1.7 1.2 3.1 2.9 3.4v2.7a6.4 6.4 0 0 1-3.4-1.1v5.9a5.4 5.4 0 1 1-4.6-5.3v2.8a2.6 2.6 0 1 0 1.8 2.5V3Z" />
+    ),
   },
 };
 
@@ -40,11 +60,14 @@ const ORDER: SocialKey[] = ["facebook", "youtube", "instagram", "tiktok"];
 
 export function SocialIcons({
   links,
-  className = "social-icons",
+  className,
+  linkClassName,
   label = "Social media",
 }: {
   links?: SocialLinks | null;
   className?: string;
+  /** Class cho từng nút icon (thẻ <a>). */
+  linkClassName?: string;
   label?: string;
 }) {
   const items = ORDER.filter((key) => links?.[key]?.trim());
@@ -58,6 +81,7 @@ export function SocialIcons({
           href={links![key]!}
           target="_blank"
           rel="noreferrer noopener"
+          className={linkClassName}
           aria-label={ICONS[key].label}
           title={ICONS[key].label}
         >

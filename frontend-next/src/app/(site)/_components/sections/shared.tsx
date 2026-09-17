@@ -1,5 +1,12 @@
 import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/utils/cn";
+import {
+  Eyebrow,
+  SECTION,
+  SECTION_DARK,
+  SECTION_FLOW,
+  SECTION_TINT,
+} from "@/app/(site)/_components/ui";
 import { mediaUrl } from "@/app/(site)/_lib/cms";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 import type { PageSection } from "@/types/cms";
@@ -15,29 +22,12 @@ import type { PageSection } from "@/types/cms";
  *
  * `section` có thể thiếu (trang dựng tay) — mọi helper đều chịu null.
  *
- * TAILWIND: mọi component trong thư mục này đã chuyển xong (GenericBlock.tsx
- * không có gì để chuyển — xem comment trong file đó). Phần còn lại của site.css
- * là HẠ TẦNG DÙNG CHUNG chưa chuyển: `.container`, `.section*`, `.btn*`,
- * `.eyebrow`, `.icon-badge`, `.photo-frame`, `.reveal` + hệ hiệu ứng cuộn,
- * `.post-content`, header/footer, trang tin, form, hero-slider.
- * CSS cũ nằm hai bên `utilities` — xem comment đầu styles/tailwind.css:
- *   base.css  (@layer base,   TRƯỚC utilities) — token + reset theo TÊN THẺ
- *   site.css  (@layer legacy, SAU utilities)   — CSS component theo .class
- * Ba điều cần nhớ khi chuyển tiếp:
- * 1. Reset theo tên thẻ (h1-h4, p, ul/ol, a, button, img/svg) nằm ở `base` nên
- *    class Tailwind THẮNG bình thường — viết `mb-2`, `m-0`, `pt-xl` như mọi dự
- *    án Tailwind khác, KHÔNG cần hậu tố `!`.
- * 2. Nhưng rule theo .class trong site.css thì vẫn thắng utilities. Đè lên một
- *    thuộc tính mà class hạ tầng kể trên có set (VD đổi cỡ `.icon-badge`, đổi
- *    margin `.quote-checklist`) thì mới cần `!`. Cả repo hiện chỉ còn 3 chỗ như
- *    vậy — thấy `!` ở đâu thì phải có lý do class cụ thể, không rắc đại.
- * 3. Vài tên class cũ được GIỮ LẠI dù không còn style: chúng là móc cho
- *    SiteEffects.tsx (`.reveal`, `.doc-grid`, `.config-list`, `.photo-strip`,
- *    `.ps-steps`, `.why-grid`, `.hero-copy`, `.tilt-card`) hoặc cho rule dùng
- *    chung còn lại trong site.css. Mỗi chỗ đều ghi rõ lý do ở đầu component.
- *
- * `npm run lint:layers` dò giúp cả hai chiều: chỗ thiếu `!` mà cần, và chỗ đeo
- * `!` thừa.
+ * GIAO DIỆN viết bằng class Tailwind ngay trong JSX. Chuỗi class dùng chung
+ * nhiều nơi (nền section, khung ảnh, ghi chú…) và Eyebrow nằm ở
+ * `_components/ui.tsx`. Ba file CSS còn lại và vai trò — xem đầu
+ * styles/tailwind.css. Điều duy nhất cần nhớ: `.reveal` / `.reveal-group`
+ * thuộc layer effects (thắng class Tailwind), nên đừng đặt opacity /
+ * transform / transition lên chính phần tử đó.
  */
 export type SectionProps = { section?: PageSection | null; index?: number };
 
@@ -298,15 +288,22 @@ export function iconFor(name: string | undefined, index: number): ReactNode {
 
 export const ALMOND_ICON = ICONS.almond;
 
+/** Huy hiệu tròn chứa icon; `className` ghép đè (đổi cỡ, màu, hiệu ứng hover). */
 export function IconBadge({
   children,
-  className = "icon-badge",
+  className,
 }: {
   children: ReactNode;
   className?: string;
 }) {
   return (
-    <span className={className} aria-hidden="true">
+    <span
+      className={cn(
+        "inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-navy-100 bg-navy-50 text-navy-700 transition-transform duration-250 ease-brand motion-reduce:transition-none [&>svg]:h-6 [&>svg]:w-6",
+        className,
+      )}
+      aria-hidden="true"
+    >
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -323,10 +320,13 @@ export function IconBadge({
 
 /* ---------- Khung & đầu khối ---------- */
 
+/** Kiểu chữ đoạn giới thiệu dưới tiêu đề section. */
+const INTRO = "max-w-176 text-lg text-ink-soft [&_p:last-child]:mb-0";
+
 /** Đoạn intro rich-text (đã sanitize); rỗng thì không render. */
 export function RichIntro({
   html,
-  className = "section-intro",
+  className = INTRO,
 }: {
   html: string | null | undefined;
   className?: string;
@@ -374,14 +374,23 @@ export function Head({
   if (!section?.heading && !section?.subheading && !(intro && section?.content))
     return null;
   return (
-    <div className={`section-head${light ? "section-head-light" : ""} reveal`}>
+    <div className="reveal mx-auto mb-[clamp(2.5rem,5vw,4rem)] max-w-[54rem] text-center">
       {section?.subheading ? (
-        <p className={`eyebrow${light ? "eyebrow-gold" : ""}`}>
+        <Eyebrow gold={light} heading>
           {section.subheading}
-        </p>
+        </Eyebrow>
       ) : null}
-      {section?.heading ? <h2>{section.heading}</h2> : null}
-      {intro ? <RichIntro html={section?.content} /> : null}
+      {section?.heading ? (
+        <h2 className={cn("text-h2", light && "text-light")}>
+          {section.heading}
+        </h2>
+      ) : null}
+      {intro ? (
+        <RichIntro
+          html={section?.content}
+          className={cn(INTRO, "mx-auto", light && "text-light-soft")}
+        />
+      ) : null}
     </div>
   );
 }
@@ -402,17 +411,17 @@ export function Shell({
   className?: string;
   children: ReactNode;
 }) {
-  const cls = [
-    "section",
-    dark ? "section-dark" : tint ? "section-tint" : "",
-    flow ? "section-flow" : "",
-    className ?? "",
-  ]
-    .filter(Boolean)
-    .join(" ");
   return (
-    <section className={cls} id={id}>
-      <div className="container">{children}</div>
+    <section
+      className={cn(
+        SECTION,
+        dark ? SECTION_DARK : tint && SECTION_TINT,
+        flow && SECTION_FLOW,
+        className,
+      )}
+      id={id}
+    >
+      <div className="site-container">{children}</div>
     </section>
   );
 }
@@ -448,7 +457,7 @@ function StatValue({ value, band }: { value: string; band?: boolean }) {
     <dd
       className={cn(
         // m-0 để dẹp margin-left mặc định của trình duyệt cho thẻ <dd>
-        "m-0 mb-[0.35rem] font-display text-[clamp(2.1rem,3.5vw,2.9rem)] leading-none font-semibold",
+        "m-0 mb-1 font-display text-h2 leading-none font-semibold",
         band ? "text-gold-500" : "text-gold-300",
       )}
       data-count={count}
@@ -473,9 +482,6 @@ function StatValue({ value, band }: { value: string; band?: boolean }) {
  *
  * Nhãn nằm DƯỚI con số dù trong DOM nó đứng trước (dt rồi mới dd) — đảo bằng
  * `order-2` chứ không đổi thứ tự thẻ, để trình đọc màn hình vẫn đọc "nhãn: giá trị".
- *
- * Đã chuyển sang Tailwind: `.hero-stats`, `.stat`, `.stat-suffix`, `.stats-band`
- * đã xoá khỏi site.css.
  */
 export function StatsList({
   stats,
@@ -491,8 +497,8 @@ export function StatsList({
   return (
     <dl
       className={cn(
-        "mt-[3.2rem] mb-0 flex flex-wrap gap-[clamp(1.5rem,4vw,3.5rem)] border-t pt-8 max-[640px]:justify-between max-[640px]:gap-[1.6rem]",
-        band ? "border-t-line" : "border-t-[rgba(245,241,227,0.18)]",
+        "mt-13 mb-0 flex flex-wrap gap-[clamp(1.5rem,4vw,3.5rem)] border-t pt-8 max-[640px]:justify-between max-[640px]:gap-6",
+        band ? "border-t-line" : "border-t-light/20",
         className,
       )}
     >
@@ -500,7 +506,7 @@ export function StatsList({
         <div className="flex flex-col" key={stat.label}>
           <dt
             className={cn(
-              "order-2 text-[0.76rem] tracking-[0.26em] uppercase",
+              "order-2 text-xs tracking-xl uppercase",
               band ? "text-ink-faint" : "text-light-soft",
             )}
           >

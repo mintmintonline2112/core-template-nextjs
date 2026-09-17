@@ -63,7 +63,7 @@ export const COLOR_TOKENS: Array<{
   darkDefault: string;
   lightDefault: string;
 }> = [
-  // Mặc định theo bảng màu site (src/styles/site.css): navy #1A2744 + vàng hạnh nhân.
+  // Mặc định theo bảng màu site (src/styles/base.css): navy #1A2744 + vàng hạnh nhân.
   { key: 'bg', label: 'Nền trang', darkDefault: '#1a2744', lightDefault: '#faf8f3' },
   { key: 'surface', label: 'Nền card', darkDefault: '#25375e', lightDefault: '#ffffff' },
   { key: 'ink', label: 'Chữ chính', darkDefault: '#f5f1e3', lightDefault: '#1a2236' },

@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  ARCH,
+  CtaBand,
+  PageHero,
+  PHOTO_FRAME,
+  SECTION,
+  SECTION_NOTE,
+  SECTION_PHOTO,
+} from "@/app/(site)/_components/ui";
 import { getBlogPost, mediaUrl } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
 import { getSiteSettings, POST_TITLE_DEFAULT } from "@/lib/settings";
 import { siteRoutes } from "@/config/routes";
+import { cn } from "@/utils/cn";
 
 export async function generateMetadata({
   params,
@@ -42,7 +52,10 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [post, settings] = await Promise.all([getBlogPost(slug), getSiteSettings()]);
+  const [post, settings] = await Promise.all([
+    getBlogPost(slug),
+    getSiteSettings(),
+  ]);
   if (!post) notFound();
 
   const cover = mediaUrl(post.coverImagePath);
@@ -54,24 +67,17 @@ export default async function NewsDetailPage({
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container page-hero-inner">
-          <p className="eyebrow eyebrow-gold reveal">
-            {post.category?.name ?? "News & Insights"}
-          </p>
-          <h1 className="reveal" style={titleSize ? { fontSize: titleSize } : undefined}>
-            {post.title}
-          </h1>
-          <p className="lead reveal">
-            {formatDate(post.publishedAt)} · Prime Nuts USA Editorial
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={post.category?.name ?? "News & Insights"}
+        title={post.title}
+        titleStyle={titleSize ? { fontSize: titleSize } : undefined}
+        lead={`${formatDate(post.publishedAt)} · Prime Nuts USA Editorial`}
+      />
 
-      <section className="section">
-        <div className="container post-layout">
+      <section className={SECTION}>
+        <div className="site-container max-w-[52rem]">
           {cover ? (
-            <figure className="photo-frame section-photo reveal">
+            <figure className={cn(PHOTO_FRAME, SECTION_PHOTO, ARCH, "reveal")}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={cover} alt={post.title} />
             </figure>
@@ -83,23 +89,24 @@ export default async function NewsDetailPage({
             dangerouslySetInnerHTML={{ __html: sanitizeRichText(post.content) }}
           />
 
-          <p className="section-note reveal">
+          <p className={cn(SECTION_NOTE, "reveal")}>
             <Link href={siteRoutes.news}>← Back to News &amp; Insights</Link>
           </p>
         </div>
       </section>
 
-      <section className="cta-band">
-        <div className="container reveal">
-          <p className="eyebrow eyebrow-gold">Work With Us</p>
-          <h2>Looking for California Almond Supply?</h2>
-          <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
-          <div className="cta-band-actions">
-            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href={siteRoutes.news} className="btn btn-ghost">More Articles</Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand
+        eyebrow="Work With Us"
+        title="Looking for California Almond Supply?"
+        text="Tell us your requirements and our team will prepare a commercial quotation."
+      >
+        <Link href={siteRoutes.contact} className="btn btn-gold">
+          Request a B2B Quote
+        </Link>
+        <Link href={siteRoutes.news} className="btn btn-ghost">
+          More Articles
+        </Link>
+      </CtaBand>
     </>
   );
 }

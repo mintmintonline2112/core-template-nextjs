@@ -1,17 +1,12 @@
 /* ============================================================
    PRIME NUTS USA — NỀN TẢNG (design token + reset theo tên thẻ)
    ============================================================
-   Tách khỏi site.css để nạp vào @layer base — tức là TRƯỚC utilities.
-   Nhờ vậy class Tailwind thắng mấy rule chọn theo TÊN THẺ ở đây
-   (h1-h4, p, ul/ol, a, button, img/svg) theo đúng lẽ thường, không phải
-   đeo hậu tố `!` nữa.
+   Nạp vào @layer base — TRƯỚC utilities, nên class Tailwind luôn đè được
+   các rule chọn theo TÊN THẺ ở đây (h1-h4, p, ul/ol, a, button, img/svg).
 
-   ĐỪNG đưa rule theo .class vào file này. Class dùng chung (.container,
-   .section*, .btn*, .eyebrow, .icon-badge, .photo-frame, .reveal…) vẫn ở
-   site.css / @layer legacy, nằm SAU utilities — cố ý, vì .container trùng
-   tên với utility `container` của Tailwind.
-
-   Thứ tự layer khai ở tailwind.css: theme, base, utilities, legacy.
+   ĐỪNG đưa rule theo .class vào file này: giao diện component viết bằng
+   class Tailwind trong JSX; class thật cho HTML từ CMS nằm ở components.css,
+   trạng thái hiệu ứng do JS bật/tắt nằm ở effects.css.
    ============================================================ */
 
 :root {
@@ -59,6 +54,15 @@
   --shadow-soft: 0 1px 2px rgba(15, 23, 41, 0.05), 0 12px 32px -16px rgba(15, 23, 41, 0.18);
   --shadow-lift: 0 2px 4px rgba(15, 23, 41, 0.06), 0 20px 44px -20px rgba(15, 23, 41, 0.28);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Viền + nền báo lỗi form */
+  --danger: #A33B2E;
+
+  /* Hoa văn hạt hạnh nhân mờ lót nền các dải navy (hero, page-hero) */
+  --pattern-almonds: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cpath d='M40 18 C 52 30 59 44 55 55 C 52 64 28 64 25 55 C 21 44 28 30 40 18 Z' fill='none' stroke='%23F5F1E3' stroke-opacity='0.05' stroke-width='1.4'/%3E%3Cpath d='M120 96 C 132 108 139 122 135 133 C 132 142 108 142 105 133 C 101 122 108 108 120 96 Z' fill='none' stroke='%23F5F1E3' stroke-opacity='0.04' stroke-width='1.4'/%3E%3C/svg%3E");
+
+  /* Hạt phim mịn phủ các dải navy (hero, page-hero, dải CTA) — chất "thủ công" */
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ============ RESET & BASE ============ */
@@ -73,12 +77,20 @@ html {
 body {
   margin: 0;
   font-family: var(--font-main);
-  font-size: 1.125rem;
-  line-height: 1.65;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
   color: var(--ink);
   background-color: var(--cream);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 640px) {
+  body { font-size: 1.06rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 img, svg { display: block; max-width: 100%; }
@@ -88,7 +100,7 @@ img, svg { display: block; max-width: 100%; }
 h1, h2, h3, h4 {
   font-family: var(--font-main);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: var(--leading-tight);
   margin: 0 0 0.6em;
   color: inherit;
   text-wrap: balance;
@@ -98,8 +110,8 @@ h1, h2, h3, h4 {
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 h1 em, h2 em, h3 em {

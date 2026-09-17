@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NewsletterForm } from "@/app/(site)/_components/forms";
-import { getBlogCategories, getBlogPosts, getCmsPage, mediaUrl } from "@/app/(site)/_lib/cms";
+import {
+  CtaBand,
+  PageHero,
+  SECTION,
+  SECTION_NOTE,
+} from "@/app/(site)/_components/ui";
+import { cn } from "@/utils/cn";
+import {
+  getBlogCategories,
+  getBlogPosts,
+  getCmsPage,
+  mediaUrl,
+} from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import type { BlogPost } from "@/types/cms";
 import { siteRoutes } from "@/config/routes";
@@ -21,6 +33,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const POSTS_PER_PAGE = 7;
 
+/** Chip lọc danh mục; `active` = danh mục đang xem. */
+const chip = (active: boolean) =>
+  cn(
+    "inline-block rounded-full border px-5 py-2 font-main text-base font-medium tracking-xs [transition:background-color_200ms_var(--ease),color_200ms_var(--ease),border-color_200ms_var(--ease),transform_200ms_var(--ease)] hover:border-navy-700 hover:bg-navy-700 hover:text-cream hover:[transform:translateY(-2px)]",
+    active
+      ? "border-navy-700 bg-navy-700 text-cream [transform:translateY(-2px)]"
+      : "border-line bg-paper text-ink-soft",
+  );
+
+/** Dòng danh mục + ngày đăng. */
+const META =
+  "mb-4 flex flex-wrap items-center gap-3 text-xs tracking-md uppercase";
+const TAG = "rounded-full border border-gold-400 px-3 py-1 font-semibold";
+
 function formatDate(value: string | null): string {
   if (!value) return "";
   return new Date(value).toLocaleDateString("en-US", {
@@ -30,17 +56,29 @@ function formatDate(value: string | null): string {
 }
 
 function readingTime(post: BlogPost): string {
-  const words = post.content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+  const words = post.content
+    .replace(/<[^>]+>/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
   return `${Math.max(1, Math.round(words / 200))} min read`;
 }
 
-function Thumb({ post, className }: { post: BlogPost; className: string }) {
+/**
+ * Ảnh bìa trên đầu thẻ (tràn ra mép thẻ bằng margin âm). `news-card-thumb` là
+ * móc cho hiệu ứng mở khẩu độ GSAP (SiteEffects.tsx).
+ */
+function Thumb({ post }: { post: BlogPost }) {
   const src = mediaUrl(post.coverImagePath);
   if (!src) return null;
   return (
-    <div className={className}>
+    <div className="news-card-thumb -mx-7 -mt-7 mb-6 aspect-video overflow-hidden border-b border-b-line">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={post.title} loading="lazy" />
+      <img
+        className="block h-full w-full object-cover [transition:transform_400ms_var(--ease)] group-hover:[transform:scale(1.04)] motion-reduce:transition-none"
+        src={src}
+        alt={post.title}
+        loading="lazy"
+      />
     </div>
   );
 }
@@ -80,31 +118,24 @@ export default async function NewsPage({
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container page-hero-inner">
-          <p className="eyebrow eyebrow-gold reveal">News &amp; Insights</p>
-          <h1 className="reveal">From the Orchard to the Market</h1>
-          <p className="lead reveal">
-            Crop updates, market perspectives, and company news for our buyers and distribution
-            partners around the world.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="News & Insights"
+        title="From the Orchard to the Market"
+        lead="Crop updates, market perspectives, and company news for our buyers and distribution partners around the world."
+      />
 
-      <section className="section">
-        <div className="container">
+      <section className={SECTION}>
+        <div className="site-container">
           {categories.length > 0 ? (
-            <div className="region-chips reveal" style={{ marginTop: 0 }}>
-              <Link href={siteRoutes.news} className={!activeCategory ? "active chip-link" : "chip-link"}>
+            <div className="reveal mt-0 mb-4 flex flex-wrap justify-center gap-2">
+              <Link href={siteRoutes.news} className={chip(!activeCategory)}>
                 All
               </Link>
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={siteRoutes.newsCategory(category.slug)}
-                  className={
-                    activeCategory?.slug === category.slug ? "active chip-link" : "chip-link"
-                  }
+                  className={chip(activeCategory?.slug === category.slug)}
                 >
                   {category.name}
                 </Link>
@@ -113,52 +144,85 @@ export default async function NewsPage({
           ) : null}
 
           {featured ? (
-            <article className="news-featured reveal">
-              <div className="news-featured-body">
-                <div className="news-meta">
+            <article className="reveal mb-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-stretch overflow-hidden rounded-lg border border-navy-700 bg-[linear-gradient(170deg,var(--navy-700)_0%,var(--navy-800)_100%)] text-light shadow-lift max-[900px]:grid-cols-1">
+              <div className="p-[clamp(2rem,4vw,3rem)]">
+                <div className={META}>
                   {featured.category ? (
-                    <span className="news-tag">{featured.category.name}</span>
+                    <span className={cn(TAG, "bg-gold-400 text-navy-900")}>
+                      {featured.category.name}
+                    </span>
                   ) : null}
-                  <span className="news-date">{formatDate(featured.publishedAt)}</span>
+                  <span className="text-light-soft">
+                    {formatDate(featured.publishedAt)}
+                  </span>
                 </div>
-                <h2>
-                  <Link href={siteRoutes.newsPost(featured.slug)} className="news-title-link">
+                <h2 className="text-h3 text-light">
+                  <Link
+                    href={siteRoutes.newsPost(featured.slug)}
+                    className="text-inherit hover:text-gold-300"
+                  >
                     {featured.title}
                   </Link>
                 </h2>
-                <p>{featured.excerpt}</p>
-                <p className="news-card-foot" style={{ borderColor: "rgba(217,180,95,0.3)", color: "var(--light-soft)" }}>
+                <p className="text-light-soft">{featured.excerpt}</p>
+                <p className="mt-5 border-t border-t-gold-300/30 pt-4 text-sm text-light-soft italic">
                   {readingTime(featured)} · Prime Nuts USA Editorial
                 </p>
               </div>
-              <div className="news-featured-art news-featured-photo">
+              {/* `news-featured-photo`: móc GSAP (mở khẩu độ + trượt dọc theo cuộn). */}
+              <div className="news-featured-photo relative flex items-center justify-center border-l border-l-gold-300/30 bg-[radial-gradient(120%_100%_at_50%_100%,rgba(217,180,95,0.14)_0%,rgba(217,180,95,0)_60%)] p-0 max-[900px]:border-t max-[900px]:border-l-0 max-[900px]:border-t-gold-300/30">
                 {mediaUrl(featured.coverImagePath) ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={mediaUrl(featured.coverImagePath)!} alt={featured.title} />
+                  <img
+                    className="block h-full min-h-[280px] w-full object-cover"
+                    src={mediaUrl(featured.coverImagePath)!}
+                    alt={featured.title}
+                  />
                 ) : null}
               </div>
             </article>
           ) : null}
 
           {gridPosts.length > 0 ? (
-            <div className="news-grid">
+            <div
+              data-stagger="90"
+              className="grid grid-cols-3 gap-6 max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1"
+            >
               {gridPosts.map((post) => (
-                <article className="news-card reveal" key={post.id}>
-                  <Link href={siteRoutes.newsPost(post.slug)} className="news-card-link">
-                    <Thumb post={post} className="news-card-thumb" />
-                    <div className="news-meta">
-                      {post.category ? <span className="news-tag">{post.category.name}</span> : null}
-                      <span className="news-date">{formatDate(post.publishedAt)}</span>
+                <article
+                  className="tilt-card group reveal flex flex-col overflow-hidden rounded-lg border border-line bg-paper px-7 pt-7 pb-6 shadow-soft hover:border-gold-400 hover:shadow-lift"
+                  key={post.id}
+                >
+                  <Link
+                    href={siteRoutes.newsPost(post.slug)}
+                    className="flex grow flex-col text-inherit"
+                  >
+                    <Thumb post={post} />
+                    <div className={META}>
+                      {post.category ? (
+                        <span className={cn(TAG, "text-gold-500")}>
+                          {post.category.name}
+                        </span>
+                      ) : null}
+                      <span className="text-ink-faint">
+                        {formatDate(post.publishedAt)}
+                      </span>
                     </div>
-                    <h3>{post.title}</h3>
-                    <p>{post.excerpt}</p>
-                    <p className="news-card-foot">{readingTime(post)}</p>
+                    <h3 className="mb-2 text-2xl transition-[color] duration-200 ease-brand group-hover:text-navy-700">
+                      {post.title}
+                    </h3>
+                    <p className="m-0 grow text-base text-ink-soft">
+                      {post.excerpt}
+                    </p>
+                    <p className="m-0 grow border-t border-t-line-soft pt-4 text-base text-ink-soft italic">
+                      {readingTime(post)}
+                    </p>
                   </Link>
                 </article>
               ))}
             </div>
           ) : posts.length === 0 ? (
-            <p className="section-note reveal">
+            <p className={cn(SECTION_NOTE, "reveal")}>
               {result
                 ? "No articles published yet — check back soon."
                 : "Could not load articles right now — please try again later."}
@@ -166,26 +230,36 @@ export default async function NewsPage({
           ) : null}
 
           {totalPages > 1 ? (
-            <nav className="news-pagination reveal" aria-label="Pagination">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                <Link
-                  key={page}
-                  href={pageHref(page)}
-                  className={page === pageNumber ? "active" : undefined}
-                  aria-current={page === pageNumber ? "page" : undefined}
-                >
-                  {page}
-                </Link>
-              ))}
+            <nav
+              className="reveal mt-[clamp(2rem,4vw,3rem)] flex justify-center gap-2"
+              aria-label="Pagination"
+            >
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) => (
+                  <Link
+                    key={page}
+                    href={pageHref(page)}
+                    className={cn(
+                      "inline-flex h-[42px] min-w-[42px] items-center justify-center rounded border px-3 font-medium [transition:background-color_200ms_var(--ease),color_200ms_var(--ease),border-color_200ms_var(--ease)] hover:border-navy-700 hover:bg-navy-700 hover:text-cream",
+                      page === pageNumber
+                        ? "border-navy-700 bg-navy-700 text-cream"
+                        : "border-line bg-paper text-ink-soft",
+                    )}
+                    aria-current={page === pageNumber ? "page" : undefined}
+                  >
+                    {page}
+                  </Link>
+                ),
+              )}
             </nav>
           ) : null}
 
-          <div className="newsletter reveal">
+          <div className="reveal mt-[clamp(3rem,6vw,4.5rem)] grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] items-center gap-8 rounded-lg border border-line bg-paper p-[clamp(2rem,4vw,3rem)] shadow-soft max-[900px]:grid-cols-1">
             <div>
-              <h2>Stay in the Loop</h2>
-              <p>
-                Market updates and availability notes for commercial buyers — a short email, a
-                few times per season.
+              <h2 className="mb-1 text-3xl">Stay in the Loop</h2>
+              <p className="m-0 text-ink-soft">
+                Market updates and availability notes for commercial buyers — a
+                short email, a few times per season.
               </p>
             </div>
             <div>
@@ -195,17 +269,18 @@ export default async function NewsPage({
         </div>
       </section>
 
-      <section className="cta-band">
-        <div className="container reveal">
-          <p className="eyebrow eyebrow-gold">Work With Us</p>
-          <h2>Looking for California Almond Supply?</h2>
-          <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
-          <div className="cta-band-actions">
-            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href={siteRoutes.products} className="btn btn-ghost">Browse Our Products</Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand
+        eyebrow="Work With Us"
+        title="Looking for California Almond Supply?"
+        text="Tell us your requirements and our team will prepare a commercial quotation."
+      >
+        <Link href={siteRoutes.contact} className="btn btn-gold">
+          Request a B2B Quote
+        </Link>
+        <Link href={siteRoutes.products} className="btn btn-ghost">
+          Browse Our Products
+        </Link>
+      </CtaBand>
     </>
   );
 }

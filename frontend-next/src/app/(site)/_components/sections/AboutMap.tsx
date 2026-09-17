@@ -2,6 +2,7 @@ import {
   AboutMapRegionsClient,
   type RegionEntry,
 } from "@/app/(site)/_components/AboutMapRegionsClient";
+import { SECTION } from "@/app/(site)/_components/ui";
 import { WorldMap } from "@/app/(site)/_components/WorldMap";
 import { DEFAULT_MAP_REGIONS, countriesInRegion } from "@/config/markets";
 import { Head, anchorId, layoutOf, metaOf, type SectionProps } from "./shared";
@@ -18,10 +19,7 @@ type CmsRegion = { key?: string; name?: string; countries?: string[] };
  * CMS: heading, subheading, content, metadata.regions [{key,name,countries[]}]
  * (key thuộc us/na/ap/sa/me/eu; trống thì dùng 6 khu vực của bản đồ).
  *
- * Section này không có CSS riêng — toàn bộ hình thức nằm ở hai widget
- * WorldMap.tsx và AboutMapRegionsClient.tsx, cả hai đã chuyển sang Tailwind
- * (khối `.world-*`, `.map-pin*`, `.amr-*` đã xoá khỏi site.css). Class
- * `about-map-regions` cũ vốn không có rule nào nên bỏ luôn.
+ * Hình thức bản đồ nằm ở hai widget WorldMap.tsx và AboutMapRegionsClient.tsx.
  */
 export function AboutMap({ section }: SectionProps) {
   const layout = layoutOf(section, LAYOUTS, "pins");
@@ -47,8 +45,8 @@ export function AboutMap({ section }: SectionProps) {
           }));
 
     return (
-      <section className="section" id={anchorId(section, "about-map")}>
-        <div className="container">
+      <section className={SECTION} id={anchorId(section, "about-map")}>
+        <div className="site-container">
           <Head section={section} />
           <AboutMapRegionsClient regions={regions} />
         </div>
@@ -61,8 +59,8 @@ export function AboutMap({ section }: SectionProps) {
     label: region.name!,
   }));
   return (
-    <section className="section" id={anchorId(section, "about-map")}>
-      <div className="container">
+    <section className={SECTION} id={anchorId(section, "about-map")}>
+      <div className="site-container">
         <Head section={section} />
         <WorldMap regions={pins && pins.length > 0 ? pins : undefined} />
       </div>

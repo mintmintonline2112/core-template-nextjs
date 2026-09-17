@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageSections } from "@/app/(site)/_components/SectionRenderer";
+import { PageHero } from "@/app/(site)/_components/ui";
 import { getCmsPage } from "@/app/(site)/_lib/cms";
 import { fallbackPage } from "@/app/(site)/_lib/fallback";
 import { getSiteSettings } from "@/lib/settings";
@@ -23,7 +24,10 @@ export async function generateMetadata(): Promise<Metadata> {
  * API lỗi → bản dự phòng sinh từ seed (src/content/cms-fallback.json).
  */
 export default async function ContactPage() {
-  const [cmsPage, settings] = await Promise.all([getCmsPage("contact"), getSiteSettings()]);
+  const [cmsPage, settings] = await Promise.all([
+    getCmsPage("contact"),
+    getSiteSettings(),
+  ]);
   const page = cmsPage ?? fallbackPage("contact");
   const hero = settings.contactPage?.hero ?? {};
   const eyebrow = hero.eyebrow?.trim() || page.eyebrow;
@@ -31,13 +35,11 @@ export default async function ContactPage() {
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container page-hero-inner">
-          {eyebrow ? <p className="eyebrow eyebrow-gold reveal">{eyebrow}</p> : null}
-          <h1 className="reveal">{hero.title?.trim() || page.title}</h1>
-          {lead ? <p className="lead reveal">{lead}</p> : null}
-        </div>
-      </section>
+      <PageHero
+        eyebrow={eyebrow}
+        title={hero.title?.trim() || page.title}
+        lead={lead}
+      />
 
       <PageSections page={page} />
     </>

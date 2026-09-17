@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { Eyebrow, SECTION } from "@/app/(site)/_components/ui";
 import {
   Cta,
   Head,
@@ -27,15 +28,6 @@ const BLOB_RADIUS = "[border-radius:62%_38%_56%_44%/48%_60%_40%_52%]";
  * CMS: heading, subheading, content, metadata.items [{title,text,icon}],
  * ctaLabel/ctaHref, image + imageAlt (ảnh lớn), image2 + image2Alt (ảnh blob),
  * badge (nhãn trên ảnh blob, dùng | để xuống dòng).
- *
- * Đã chuyển sang Tailwind: `.split`, `.split-copy`, `.orders-*`, `.blob-*`,
- * `.config-rows` và phần hình thức của `.config-list` đã xoá khỏi site.css.
- * Hai thứ vẫn buộc giữ class cũ:
- * - `config-list` trên <ul> bố cục `list`: SiteEffects.tsx bắt `.config-list.reveal`
- *   để rải `--reveal-delay` cho từng dòng (hiện dần so le), và site.css còn rule
- *   `.config-list li:hover .icon-badge` (xoay icon khi rê chuột) — cả hai nằm
- *   trong khối dùng chung với .doc-grid/.chain/.photo-strip, chưa chuyển.
- * - `icon-badge` trên huy hiệu icon: hạ tầng dùng chung 3 component.
  */
 export function IconCardList({ section, index = 0 }: SectionProps) {
   const id = anchorId(section, "icon-card-list");
@@ -46,17 +38,15 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
     const image2 = str(section, "image2");
     const badge = str(section, "badge");
     return (
-      <section className="section" id={id}>
-        <div className="container">
+      <section className={SECTION} id={id}>
+        <div className="site-container">
           <div className="grid grid-cols-2 items-start gap-[clamp(3rem,6vw,5.5rem)] max-[900px]:grid-cols-1">
             <div className="reveal self-stretch">
               {section?.subheading ? (
-                <p className="eyebrow">{section.subheading}</p>
+                <Eyebrow>{section.subheading}</Eyebrow>
               ) : null}
               {section?.heading ? (
-                <h2 className="text-[clamp(2rem,3.6vw,2.85rem)]">
-                  {section.heading}
-                </h2>
+                <h2 className="text-h2">{section.heading}</h2>
               ) : null}
               <RichIntro html={section?.content} />
               <Cta
@@ -80,7 +70,7 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
               ) : null}
             </div>
 
-            <div className="reveal flex flex-col gap-[1.8rem]">
+            <div className="reveal flex flex-col gap-7">
               {image2 ? (
                 <figure className="relative m-0 mx-auto w-full max-w-[520px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -92,7 +82,7 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
                   />
                   {badge ? (
                     <span
-                      className="absolute -bottom-[10px] -left-[12px] grid h-[94px] w-[94px] [rotate:-6deg] place-items-center rounded-full border-4 border-cream bg-gold-400 text-center text-[0.88rem] leading-[1.25] font-bold tracking-[0.04em] text-navy-900 shadow-[0_10px_22px_-10px_rgba(15,23,41,0.45)]"
+                      className="absolute -bottom-[10px] -left-[12px] grid h-[94px] w-[94px] [rotate:-6deg] place-items-center rounded-full border-4 border-cream bg-gold-400 text-center text-sm leading-snug font-bold tracking-xs text-navy-900 shadow-badge"
                       aria-hidden="true"
                     >
                       {badge.split(/\s*\|\s*|\n/).map((line, i, all) => (
@@ -110,17 +100,15 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
                   {rows.map((row, i) => (
                     <li
                       key={`${row.title ?? row.label}-${i}`}
-                      className="flex items-center gap-[1.1rem] border-b border-line-soft px-[0.2rem] py-[0.95rem] last:border-b-0"
+                      className="flex items-center gap-4 border-b border-line-soft px-1 py-4 last:border-b-0"
                     >
-                      <IconBadge className="icon-badge shrink-0">
-                        {iconFor(row.icon, i)}
-                      </IconBadge>
+                      <IconBadge>{iconFor(row.icon, i)}</IconBadge>
                       <div>
-                        <h4 className="m-0 text-[1.08rem]">
+                        <h4 className="m-0 text-lg">
                           {row.title ?? row.label}
                         </h4>
                         {row.text ? (
-                          <p className="mt-[0.15rem] mb-0 text-[0.95rem] text-ink-soft">
+                          <p className="mt-1 mb-0 text-base text-ink-soft">
                             {row.text}
                           </p>
                         ) : null}
@@ -140,21 +128,22 @@ export function IconCardList({ section, index = 0 }: SectionProps) {
     <Shell tint={index % 2 === 1} id={id}>
       <Head section={section} />
       {rows.length > 0 ? (
-        <ul className="config-list reveal flex flex-col gap-[0.9rem]">
+        <ul
+          data-stagger="70"
+          className="reveal reveal-group flex flex-col gap-4"
+        >
           {rows.map((row, i) => (
             <li
               key={`${row.title ?? row.label}-${i}`}
-              className="flex items-center gap-[1.2rem] rounded-lg border border-line bg-paper px-[1.4rem] py-[1.15rem] shadow-soft transition-[transform,border-color] duration-[220ms] ease-brand hover:translate-x-[6px] hover:border-gold-400"
+              className="group flex items-center gap-5 rounded-lg border border-line bg-paper px-6 py-5 shadow-soft hover:translate-x-[6px] hover:border-gold-400"
             >
-              <IconBadge>{iconFor(row.icon, i)}</IconBadge>
+              <IconBadge className="group-hover:scale-110 group-hover:rotate-[-5deg]">
+                {iconFor(row.icon, i)}
+              </IconBadge>
               <div>
-                <h4 className="mb-[0.15rem] text-[1.22rem]">
-                  {row.title ?? row.label}
-                </h4>
+                <h4 className="mb-1 text-xl">{row.title ?? row.label}</h4>
                 {row.text ? (
-                  <p className="m-0 text-[0.98rem] text-ink-soft">
-                    {row.text}
-                  </p>
+                  <p className="m-0 text-base text-ink-soft">{row.text}</p>
                 ) : null}
               </div>
             </li>

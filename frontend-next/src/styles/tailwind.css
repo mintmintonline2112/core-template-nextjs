@@ -1,38 +1,40 @@
 /**
- * Điểm vào Tailwind cho website public. CSS cũ chia làm HAI file, nằm hai bên
- * `utilities` — đây là điểm quan trọng nhất của kiến trúc này:
+ * Điểm vào CSS của website public (admin nạp thêm admin.css riêng).
  *
- *   base.css  → @layer base    (TRƯỚC utilities)  design token + reset theo TÊN THẺ
- *   site.css  → @layer legacy  (SAU utilities)    CSS component theo .class
+ * Giao diện viết bằng class Tailwind ngay trong JSX. Ngoài utilities chỉ còn
+ * ba file CSS, mỗi file một layer, và THỨ TỰ LAYER là điều quan trọng nhất:
  *
- * Vì sao tách: rule theo tên thẻ (h1-h4, p, ul/ol, a, button, img/svg) mà nằm
- * sau utilities thì nó nuốt mọi class Tailwind đặt lên đúng mấy thẻ đó —
- * `<p className="m-0">` không có tác dụng, build vẫn xanh, cực khó thấy. Đẩy
- * chúng vào `base` là trả lại lẽ thường: utility thắng reset.
+ *   base.css        → base        design token + reset theo TÊN THẺ
+ *   components.css  → components  class thật cho HTML do CMS sinh ra (.btn, .post-content)
+ *   (utilities)     → utilities   class Tailwind trong JSX
+ *   effects.css     → effects     trạng thái hiệu ứng do JS bật/tắt (.reveal → .is-visible…)
  *
- * Vì sao phần .class VẪN phải nằm sau utilities: site.css dùng class
- * `.container` (max-width bố cục riêng) ở khắp nơi, trùng tên với utility
- * `container` có sẵn của Tailwind — để `utilities` thắng thì layout toàn site
- * vỡ ngay. Nên `.section*`, `.btn*`, `.eyebrow`, `.icon-badge`, `.photo-frame`,
- * `.reveal`, header/footer, trang tin, form, hero-slider… vẫn thắng utility
- * trùng thuộc tính; chuyển mảng nào sang Tailwind thì XOÁ khối CSS cũ của mảng
- * đó đi, hết đối thủ là xong.
+ * Layer đứng sau thắng layer đứng trước, BẤT KỂ specificity:
+ * - base, components nằm TRƯỚC utilities → class Tailwind luôn đè được
+ *   (`<a className="btn btn-gold ml-3">`, `<p className="m-0">`), không cần `!`.
+ * - effects nằm SAU utilities, có chủ đích: đó là trạng thái lúc chạy (ẩn chờ
+ *   cuộn tới, trễ so le…) giống như style inline JS gán vào — phải thắng class
+ *   tĩnh. Hệ quả: đừng đặt `opacity`/`transform`/`transition` lên phần tử có
+ *   `.reveal` (hoặc con trực tiếp của `.reveal-group`) — effects sẽ nuốt. Cần
+ *   hiệu ứng hover thì đặt lên phần tử con. `npm run lint:layers` dò lỗi này.
  *
- * CHỦ ĐÍCH KHÔNG nạp preflight.css (reset mặc định của Tailwind) — base.css đã
- * là reset riêng của site, nạp thêm sẽ đổi giao diện hiện có. Đổi lại phải tự
- * lo vài thứ preflight hay làm hộ: `button` không được reset nền/viền/padding,
- * `img`/`video` không có `height:auto`, `h5`/`h6` không reset cỡ chữ.
+ * CHỦ ĐÍCH KHÔNG nạp preflight.css (reset mặc định của Tailwind) — base.css là
+ * reset riêng của site. Đổi lại phải tự lo vài thứ preflight hay làm hộ:
+ * `button` không được reset nền/viền/padding, `img`/`video` không có
+ * `height:auto`, `h5`/`h6` không reset cỡ chữ.
  */
-@layer theme, base, utilities, legacy;
+@layer theme, base, components, utilities, effects;
 
 @import "tailwindcss/theme.css" layer(theme);
 @import "./base.css" layer(base);
+@import "./components.css" layer(components);
 @import "tailwindcss/utilities.css" layer(utilities);
+@import "./effects.css" layer(effects);
 
 /**
- * Ánh xạ design token sẵn có (site.css :root) sang theme của Tailwind, dùng
- * `inline` để Tailwind đọc thẳng var() gốc thay vì tạo bản sao — đổi giá trị
- * trong site.css là mọi utility bên dưới đổi theo, không cần sửa 2 nơi.
+ * Ánh xạ design token (base.css :root) sang theme của Tailwind, dùng `inline`
+ * để utility đọc thẳng var() gốc — đổi giá trị trong base.css là mọi utility
+ * đổi theo, không cần sửa 2 nơi.
  */
 @theme inline {
   /* Navy thương hiệu */
@@ -63,6 +65,9 @@
   --color-light: var(--light);
   --color-light-soft: var(--light-soft);
 
+  /* Màu báo lỗi form */
+  --color-danger: var(--danger);
+
   /* Font — dùng font-main / font-display (không đổi tên default font-sans) */
   --font-main: var(--font-main);
   --font-display: var(--font-display);
@@ -83,16 +88,91 @@
      sẵn, không phải giá trị mới:
          sm = 0.5rem  (= 2)      lg = 1.5rem  (= 6)
          md = 1rem    (= 4)      xl = 2rem    (= 8)
-     nên `pt-md` và `pt-4` ra đúng một kết quả — dùng lẫn lộn cũng không lệch.
-     Thang số mặc định vẫn nguyên vẹn, token này chỉ THÊM chứ không thay thế.
-
-     Dùng thẳng `pt-xl`, KHÔNG cần hậu tố `!`: reset theo tên thẻ nằm ở base.css
-     (@layer base, trước utilities). Chỉ khi đè lên một rule theo .class còn ở
-     site.css mới cần `!` — xem comment đầu sections/shared.tsx. */
+     nên `pt-md` và `pt-4` ra đúng một kết quả — dùng lẫn lộn cũng không lệch. */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
 }
 
-@import "./site.css" layer(legacy);
+/**
+ * THANG THIẾT KẾ của site — thay hẳn thang mặc định của Tailwind cho cỡ chữ,
+ * giãn chữ, khoảng cách dòng (cùng tên quen thuộc nhưng giá trị theo thiết kế
+ * Prime Nuts). Viết `text-sm`, `tracking-md`, `leading-relaxed`…; KHÔNG viết
+ * giá trị tuỳ ý kiểu `text-[0.93rem]`, `tracking-[0.13em]`, `leading-[1.6]`.
+ * Khoảng cách (padding/margin/gap) dùng thang số mặc định: bước 0,25rem.
+ *
+ * Cỡ chữ CỐ Ý không khai `--text-*--line-height`: class cỡ chữ chỉ đổi
+ * font-size, line-height giữ theo thẻ / khối cha, đổi cỡ chữ không xô dòng.
+ *
+ * `static`: luôn xuất biến ra :root để base.css / components.css dùng được.
+ * Thêm hoặc đổi tên mốc thì cập nhật luôn `src/utils/cn.ts` (tailwind-merge).
+ */
+@theme static {
+  /* Cỡ chữ cố định */
+  --text-*: initial;
+  --text-2xs: 0.65rem; /* 10.4px — nhãn số, badge nhỏ, chú thích thước */
+  --text-xs: 0.8rem; /* 12.8px — eyebrow, meta viết hoa, chú thích */
+  --text-sm: 0.9rem; /* 14.4px — ghi chú, chip, nút */
+  --text-base: 1rem; /* 16px   — chữ trong thẻ, danh sách, form */
+  --text-lg: 1.125rem; /* 18px   — cỡ chữ thân bài, đoạn dẫn */
+  --text-xl: 1.25rem; /* 20px   — tiêu đề nhỏ, dòng dẫn nổi bật */
+  --text-2xl: 1.4rem; /* 22.4px — tiêu đề thẻ */
+  --text-3xl: 1.7rem; /* 27.2px — tiêu đề form, khối phụ */
+
+  /* Cỡ chữ co giãn theo màn hình (tiêu đề, số lớn) */
+  --text-display: clamp(2.5rem, 5.3vw, 3.9rem); /* hero trang chủ */
+  --text-h1: clamp(2.4rem, 4.6vw, 3.4rem); /* tiêu đề trang con */
+  --text-h2: clamp(2.1rem, 3.8vw, 3rem); /* tiêu đề section, số liệu */
+  --text-h3: clamp(1.8rem, 3vw, 2.4rem); /* dải CTA, thẻ lớn, tin nổi bật */
+  --text-h4: clamp(1.35rem, 2.6vw, 1.9rem); /* chữ chạy */
+  --text-h5: clamp(1.05rem, 1.6vw, 1.45rem); /* số trên thước cỡ hạt */
+
+  /* Giãn chữ — chữ in hoa nhỏ dùng mốc lớn */
+  --tracking-*: initial;
+  --tracking-tight: -0.01em; /* tiêu đề h1–h3 */
+  --tracking-normal: 0em;
+  --tracking-xs: 0.04em;
+  --tracking-sm: 0.08em;
+  --tracking-md: 0.14em; /* nút, nhãn */
+  --tracking-lg: 0.2em;
+  --tracking-xl: 0.26em; /* meta viết hoa */
+  --tracking-2xl: 0.32em; /* eyebrow */
+
+  /* Khoảng cách dòng */
+  --leading-*: initial;
+  --leading-none: 1;
+  --leading-tight: 1.15; /* tiêu đề */
+  --leading-snug: 1.25;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.65; /* thân bài */
+  --leading-loose: 1.75; /* nội dung bài viết */
+}
+
+/**
+ * Bóng đổ theo vai trò (bổ sung cho `shadow-soft` / `shadow-lift` ở trên):
+ *   badge  — huy hiệu, số tròn, chip nhỏ nổi trên ảnh
+ *   float  — mảng nổi lớn: menu thả, form, vòng tròn bước, hộp thoại
+ *   glow / glow-lg — quầng vàng quanh ghim bản đồ
+ * Viền focus / viền nhấn dùng `ring-*` (VD `focus:ring-3 focus:ring-navy-700/15`).
+ */
+@theme {
+  --shadow-badge: 0 8px 18px -10px rgb(15 23 41 / 0.5);
+  --shadow-float: 0 24px 48px -24px rgb(15 23 41 / 0.4);
+  --shadow-glow: 0 0 10px rgb(217 180 95 / 0.7);
+  --shadow-glow-lg: 0 0 18px rgb(217 180 95 / 0.95);
+}
+
+/**
+ * Khung nội dung căn giữa của site (rộng tối đa --container, chừa lề 2 bên).
+ * KHÔNG đặt tên `container`: Tailwind có sẵn utility `container` với
+ * max-width theo từng breakpoint — trùng tên là layout lệch ở màn trung bình.
+ */
+@utility site-container {
+  width: min(var(--container), 100% - 3rem);
+  margin-inline: auto;
+
+  @media (max-width: 640px) {
+    width: min(var(--container), 100% - 2.2rem);
+  }
+}

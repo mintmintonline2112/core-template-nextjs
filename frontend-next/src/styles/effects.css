@@ -1,0 +1,169 @@
+/* ============================================================
+   HIỆU ỨNG THEO TRẠNG THÁI — @layer effects (SAU utilities)
+   ============================================================
+   Các rule ở đây phụ thuộc class do JavaScript bật/tắt lúc chạy
+   (SiteEffects.tsx): `html.js`, `html.gsap`, `.reveal` → `.is-visible`.
+   Nằm SAU utilities có chủ đích — trạng thái lúc chạy phải thắng class tĩnh,
+   giống style inline. Vì vậy ĐỪNG đặt `opacity` / `transform` / `transition`
+   bằng class Tailwind lên chính phần tử `.reveal` hay con trực tiếp của
+   `.reveal-group`: sẽ bị nuốt im lặng (`npm run lint:layers` dò giúp).
+
+   Móc dùng trong markup:
+     .reveal          phần tử trồi lên khi cuộn tới
+     .reveal-group    các con trực tiếp trồi lên lần lượt — đặt cùng `.reveal`
+                      trên chính nó, hoặc nằm trong một `.reveal` bao ngoài
+     data-stagger="N" (SiteEffects.tsx) mỗi con trễ thêm N ms
+     .eyebrow         gạch vàng dưới eyebrow tự vẽ ra khi khối hiện
+     .photo-frame     ảnh trong khung phóng nhẹ rồi thu về; GSAP mở khẩu độ +
+                      trượt dọc theo cuộn (bắt `.photo-frame img`)
+
+   Chỉ ẩn khi có JS (`html.js`) — người tắt JS vẫn thấy đủ nội dung.
+   ============================================================ */
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal.reveal-group > *,
+html.js .reveal .reveal-group > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 550ms var(--ease), transform 550ms var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js .reveal.is-visible.reveal-group > *,
+html.js .reveal.is-visible .reveal-group > * {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal .eyebrow::after,
+html.js .eyebrow.reveal::after {
+  width: 0;
+  transition: width 700ms var(--ease) 350ms;
+}
+
+html.js .reveal.is-visible .eyebrow::after,
+html.js .eyebrow.reveal.is-visible::after {
+  width: 3rem;
+}
+
+html.js :is(.photo-frame.reveal, .reveal .photo-frame) img {
+  transform: scale(1.07);
+  transition: transform 1400ms var(--ease), filter 350ms var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js :is(.photo-frame.reveal.is-visible, .reveal.is-visible .photo-frame) img {
+  transform: none;
+}
+
+/* GSAP đang điều khiển → giao hẳn transform cho nó, CSS chỉ giữ filter */
+html.gsap :is(.photo-frame, .photo-frame.reveal, .reveal .photo-frame) img {
+  transition: filter 350ms var(--ease);
+  animation: none;
+  will-change: transform, clip-path;
+}
+
+/* Nút nam châm (GSAP dịch x/y) — bỏ transform khỏi transition để khỏi giật */
+html.gsap :is(.btn-gold, .btn-primary) {
+  transition-property: background-color, color, border-color, box-shadow;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal,
+  html.js .reveal.reveal-group > *,
+  html.js .reveal .reveal-group > *,
+  html.js :is(.photo-frame.reveal, .reveal .photo-frame) img {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html.js .reveal .eyebrow::after,
+  html.js .eyebrow.reveal::after {
+    width: 3rem;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   KEYFRAMES — Tailwind chỉ gọi được TÊN animation
+   (`animate-[faq-in_300ms_var(--ease)_both]`), keyframes phải khai ở CSS.
+   ============================================================ */
+
+/* Bản đồ thế giới: đường hàng hải nét đứt chạy + sóng lan ở ghim gốc (WorldMap.tsx) */
+@keyframes arc-flow {
+  to { stroke-dashoffset: -12; }
+}
+
+@keyframes pin-pulse {
+  0%   { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* Mở danh sách nước theo khu vực (AboutMapRegionsClient.tsx) */
+@keyframes amr-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Chữ chạy "Who we serve" (Marquee.tsx) */
+@keyframes marquee-left {
+  to { transform: translateX(calc(-50% - 0.7rem)); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(calc(-50% - 0.7rem)); }
+  to { transform: translateX(0); }
+}
+
+/* Hạt hạnh nhân trôi trong hero tĩnh (Hero.tsx) */
+@keyframes floaty {
+  from { transform: translateY(-20px) rotate(-8deg); }
+  to   { transform: translateY(22px) rotate(10deg); }
+}
+
+/* Vòng nét đứt quanh ảnh tròn (FeatureList.tsx) */
+@keyframes doc-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Đường nối nét đứt giữa các bước (Steps.tsx) */
+@keyframes ps-dash {
+  to { stroke-dashoffset: -18; }
+}
+
+/* Hero slider: nội dung slide trồi lên + vạch tiến độ (HeroSlides.tsx) */
+@keyframes hs-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hs-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Mở câu trả lời FAQ, đổi mô tả thẻ (Faq.tsx, MediaCards.tsx bố cục `toggle`) */
+@keyframes faq-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Icon gửi form thành công bật ra (forms.tsx) */
+@keyframes pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}

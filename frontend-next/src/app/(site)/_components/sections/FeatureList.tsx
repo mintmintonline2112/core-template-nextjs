@@ -1,3 +1,4 @@
+import { SECTION } from "@/app/(site)/_components/ui";
 import {
   Head,
   Shell,
@@ -14,7 +15,7 @@ import {
 const LAYOUTS = ["split", "grid"] as const;
 
 /** Ghi chú nhỏ in nghiêng dưới mỗi mục. */
-const NOTE = "text-[0.82rem] text-ink-faint italic";
+const NOTE = "text-xs text-ink-faint italic";
 
 /**
  * SECTION `feature-list` — danh sách mục có ghi chú + dải chip.
@@ -23,16 +24,6 @@ const NOTE = "text-[0.82rem] text-ink-faint italic";
  * layout `grid`:  lưới mục có dấu tick + dải chip.
  * CMS: heading, subheading, content, metadata.items [{label,note}], chips [],
  * image (ảnh tròn trung tâm), note (câu trong dải chip).
- *
- * Đã chuyển sang Tailwind — `.doc-grid`, `.doc-note`, `.doc-features`,
- * `.doc-col*`, `.doc-num`, `.doc-body`, `.doc-center*`, `.incoterm-*` đã xoá
- * khỏi site.css. Hai thứ còn lại:
- * - `@keyframes doc-ring-spin` (Tailwind chỉ gọi được tên animation).
- * - class `doc-grid` vẫn giữ trên <ul> bố cục `grid`: SiteEffects.tsx bắt
- *   `.doc-grid.reveal` để rải `--reveal-delay` (hiện dần so le), và khối
- *   prefers-reduced-motion còn tắt transition cho `.doc-grid li`.
- * Dấu tick viết thẳng bằng Tailwind chứ không dùng class `.doc-check` — class
- * đó vẫn còn trong site.css vì forms.tsx (chưa chuyển) dùng.
  */
 export function FeatureList({ section, index = 0 }: SectionProps) {
   const id = anchorId(section, "feature-list");
@@ -44,19 +35,19 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
 
   const band =
     note || chips.length > 0 ? (
-      <div className="reveal mt-[2.6rem] flex flex-wrap items-center justify-between gap-6 rounded-lg border border-navy-100 bg-navy-50 px-8 py-[1.6rem] max-[640px]:flex-col max-[640px]:items-start">
+      <div className="reveal mt-10 flex flex-wrap items-center justify-between gap-6 rounded-lg border border-navy-100 bg-navy-50 px-8 py-6 max-[640px]:flex-col max-[640px]:items-start">
         {note ? (
           <p
-            className="m-0 max-w-[34rem] text-[1.05rem] text-ink-soft"
+            className="m-0 max-w-[34rem] text-base text-ink-soft"
             dangerouslySetInnerHTML={{ __html: inlineHtml(note) }}
           />
         ) : null}
         {chips.length > 0 ? (
-          <div className="flex gap-[0.7rem]">
+          <div className="flex gap-3">
             {chips.map((chip) => (
               <span
                 key={chip}
-                className="rounded bg-navy-700 px-[1.4rem] py-[0.55rem] text-[0.95rem] font-semibold tracking-[0.14em] text-cream"
+                className="rounded bg-navy-700 px-6 py-2 text-base font-semibold tracking-md text-cream"
               >
                 {chip}
               </span>
@@ -71,15 +62,18 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
       <Shell tint={index % 2 === 1} id={id}>
         <Head section={section} />
         {rows.length > 0 ? (
-          <ul className="doc-grid reveal grid grid-cols-4 gap-[0.9rem] max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1">
+          <ul
+            data-stagger="70"
+            className="reveal reveal-group grid grid-cols-4 gap-4 max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1"
+          >
             {rows.map((row) => (
               <li
                 key={row.label}
-                className="flex flex-wrap items-center gap-[0.8rem] rounded border border-line bg-paper px-[1.2rem] py-[1.05rem] text-[1.02rem] transition-[border-color,transform] duration-200 ease-brand hover:-translate-y-0.5 hover:border-gold-400"
+                className="flex flex-wrap items-center gap-3 rounded border border-line bg-paper px-5 py-4 text-base hover:-translate-y-0.5 hover:border-gold-400"
               >
                 <span
                   aria-hidden="true"
-                  className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-navy-100 bg-navy-50 text-[0.8rem] font-bold text-navy-700"
+                  className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-navy-100 bg-navy-50 text-xs font-bold text-navy-700"
                 >
                   ✓
                 </span>
@@ -114,17 +108,15 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
           }
         >
           <span
-            className="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-full border border-gold-400 bg-paper font-display text-[1.02rem] font-semibold text-gold-500 italic shadow-soft"
+            className="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-full border border-gold-400 bg-paper font-display text-base font-semibold text-gold-500 italic shadow-soft"
             aria-hidden="true"
           >
             {String(offset + i + 1).padStart(2, "0")}
           </span>
           <div>
-            <h4 className="m-0 text-[1.05rem]">{row.label}</h4>
+            <h4 className="m-0 text-base">{row.label}</h4>
             {row.note ? (
-              <span className={`block ${NOTE} mt-[0.15rem] text-[0.88rem]`}>
-                {row.note}
-              </span>
+              <span className={`block ${NOTE} mt-1 text-sm`}>{row.note}</span>
             ) : null}
           </div>
         </li>
@@ -133,8 +125,8 @@ export function FeatureList({ section, index = 0 }: SectionProps) {
   );
 
   return (
-    <section className="section" id={id}>
-      <div className="container">
+    <section className={SECTION} id={id}>
+      <div className="site-container">
         <Head section={section} />
 
         {rows.length > 0 ? (

@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { SectionRenderer } from "@/app/(site)/_components/SectionRenderer";
+import {
+  CtaBand,
+  PageHero,
+  SECTION,
+  SECTION_NOTE,
+} from "@/app/(site)/_components/ui";
+import { cn } from "@/utils/cn";
 import { getCmsPage } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { siteRoutes } from "@/config/routes";
@@ -51,41 +58,34 @@ export default async function CmsGenericPage({
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container page-hero-inner">
-          {page.eyebrow ? (
-            <p className="eyebrow eyebrow-gold reveal">{page.eyebrow}</p>
-          ) : null}
-          <h1 className="reveal">{page.title}</h1>
-          {page.lead ? <p className="lead reveal">{page.lead}</p> : null}
-        </div>
-      </section>
+      <PageHero eyebrow={page.eyebrow} title={page.title} lead={page.lead} />
 
       {sections.map((section, index) => (
         <SectionRenderer key={section.id} section={section} index={index} />
       ))}
 
       {sections.length === 0 ? (
-        <section className="section">
-          <div className="container">
-            <p className="section-note reveal">
+        <section className={SECTION}>
+          <div className="site-container">
+            <p className={cn(SECTION_NOTE, "reveal")}>
               This page has no content yet — add sections in the CMS.
             </p>
           </div>
         </section>
       ) : null}
 
-      <section className="cta-band">
-        <div className="container reveal">
-          <p className="eyebrow eyebrow-gold">Work With Us</p>
-          <h2>Looking for California Almond Supply?</h2>
-          <p>Tell us your requirements and our team will prepare a commercial quotation.</p>
-          <div className="cta-band-actions">
-            <Link href={siteRoutes.contact} className="btn btn-gold">Request a B2B Quote</Link>
-            <Link href={siteRoutes.products} className="btn btn-ghost">Browse Our Products</Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand
+        eyebrow="Work With Us"
+        title="Looking for California Almond Supply?"
+        text="Tell us your requirements and our team will prepare a commercial quotation."
+      >
+        <Link href={siteRoutes.contact} className="btn btn-gold">
+          Request a B2B Quote
+        </Link>
+        <Link href={siteRoutes.products} className="btn btn-ghost">
+          Browse Our Products
+        </Link>
+      </CtaBand>
     </>
   );
 }

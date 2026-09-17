@@ -11,11 +11,8 @@ export type RegionEntry = { key: string; label: string; countries: string[] };
  * danh sách khu vực bên trái — bấm một khu vực để mở danh sách nước — và bản đồ
  * bên phải sáng đúng khu vực đang chọn (ghim + đường hàng hải).
  *
- * Đã chuyển sang Tailwind, khối `.amr-*` đã xoá khỏi site.css; chỉ còn
- * `@keyframes amr-in` (Tailwind chỉ gọi được tên animation). Khu vực đang chọn
- * KHÔNG dùng `hover:` — trong CSS cũ rule `.amr-item.is-active .amr-trigger`
- * thắng `.amr-trigger:hover` nhờ độ ưu tiên, nên ở đây chỉ gắn hover cho mục
- * chưa chọn để giữ đúng hành vi.
+ * Khu vực đang chọn KHÔNG nhận `hover:` (chỉ gắn hover cho mục chưa chọn) —
+ * giữ đúng hành vi cũ: màu mục đang chọn không đổi khi rê chuột.
  */
 export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
   const [active, setActive] = useState<string | null>(regions[0]?.key ?? null);
@@ -34,7 +31,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
               <button
                 type="button"
                 className={cn(
-                  "grid min-h-[56px] w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto_18px] items-center gap-[0.8rem] rounded border-0 bg-transparent px-[0.95rem] py-[0.85rem] text-left font-display text-[1.08rem] font-semibold text-ink transition-[background-color,color] duration-200 ease-brand",
+                  "grid min-h-[56px] w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto_18px] items-center gap-3 rounded border-0 bg-transparent px-4 py-3 text-left font-display text-lg font-semibold text-ink transition-[background-color,color] duration-200 ease-brand",
                   isActive ? "bg-navy-700 text-light" : "hover:bg-navy-50",
                 )}
                 aria-expanded={isActive}
@@ -45,7 +42,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
                 <span>{region.label}</span>
                 <span
                   className={cn(
-                    "font-main text-[0.82rem] font-medium tracking-[0.06em]",
+                    "font-main text-xs font-medium tracking-sm",
                     isActive ? "text-gold-300" : "text-ink-faint",
                   )}
                 >
@@ -70,13 +67,13 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
               </button>
               {isActive && region.countries.length > 0 ? (
                 <ul
-                  className="flex animate-[amr-in_350ms_var(--ease)_both] flex-wrap gap-[0.4rem] px-[0.95rem] pt-[0.9rem] pb-[1.1rem] motion-reduce:animate-none"
+                  className="flex animate-[amr-in_350ms_var(--ease)_both] flex-wrap gap-2 px-4 pt-4 pb-4 motion-reduce:animate-none"
                   id={panelId}
                 >
                   {region.countries.map((country) => (
                     <li
                       key={country}
-                      className="rounded-[100px] border border-line bg-paper px-[0.7rem] py-[0.25rem] text-[0.88rem] text-ink-soft"
+                      className="rounded-full border border-line bg-paper px-3 py-1 text-sm text-ink-soft"
                     >
                       {country}
                     </li>
@@ -89,8 +86,8 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
       </ul>
 
       <div className="max-[900px]:order-[-1]">
-        <WorldMapPanel active={active} className="mb-[0.8rem]" />
-        <p className="m-0 text-right text-[0.95rem] text-ink-faint italic max-[900px]:text-left">
+        <WorldMapPanel active={active} className="mb-3" />
+        <p className="m-0 text-right text-base text-ink-faint italic max-[900px]:text-left">
           Additional destinations on request.
         </p>
       </div>

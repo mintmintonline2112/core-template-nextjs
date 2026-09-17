@@ -1,4 +1,9 @@
 import { SizeRuler } from "@/app/(site)/_components/SizeRuler";
+import {
+  SECTION,
+  SECTION_FLOW,
+  SECTION_TINT,
+} from "@/app/(site)/_components/ui";
 import { cn } from "@/utils/cn";
 import {
   Head,
@@ -16,7 +21,7 @@ function PanelTitle({ text, center }: { text: string; center?: boolean }) {
   return (
     <h3
       className={cn(
-        "mb-[1.8rem] flex items-center gap-4 text-[1.05rem] font-semibold tracking-[0.26em] text-navy-700 uppercase",
+        "mb-7 flex items-center gap-4 text-base font-semibold tracking-xl text-navy-700 uppercase",
         center && "justify-center",
       )}
     >
@@ -28,9 +33,7 @@ function PanelTitle({ text, center }: { text: string; center?: boolean }) {
 
 /** Chú thích dưới thước — giữ margin-bottom 1em mặc định của thẻ <p>. */
 function Footnote({ text }: { text: string }) {
-  return (
-    <p className="mt-[1.5rem] text-[0.98rem] text-ink-faint italic">{text}</p>
-  );
+  return <p className="mt-6 text-base text-ink-faint italic">{text}</p>;
 }
 
 /**
@@ -40,12 +43,7 @@ function Footnote({ text }: { text: string }) {
  *                   liền dưới khối khác được (section-flow).
  * CMS: heading, subheading, content, metadata.items [] (kernels/oz),
  * scaleNote (chữ vàng trong thước), footnote (chú thích dưới thước).
- *
- * Đã chuyển sang Tailwind: `.product-sizes-band`, `.panel-title`,
- * `.panel-title-line`, `.panel-footnote` đã xoá khỏi site.css (class
- * `.product-sizes` vốn không có style, bỏ luôn). Thước nằm ở SizeRuler.tsx.
- * `section`/`section-tint`/`section-flow`/`container`/`reveal` là hạ tầng dùng
- * chung, chưa chuyển nên giữ nguyên tên class.
+ * Thước nằm ở SizeRuler.tsx.
  */
 export function SizeScale({ section }: SectionProps) {
   const id = anchorId(section, "size-scale");
@@ -55,8 +53,8 @@ export function SizeScale({ section }: SectionProps) {
 
   if (layoutOf(section, LAYOUTS, "section") === "band") {
     return (
-      <section className="section section-tint section-flow" id={id}>
-        <div className="container">
+      <section className={cn(SECTION, SECTION_TINT, SECTION_FLOW)} id={id}>
+        <div className="site-container">
           <div className="reveal mx-auto mt-[clamp(2.5rem,5vw,3.5rem)] max-w-[58rem]">
             {section?.heading ? (
               <PanelTitle text={section.heading} center />
@@ -72,8 +70,8 @@ export function SizeScale({ section }: SectionProps) {
   }
 
   return (
-    <section className="section" id={id}>
-      <div className="container">
+    <section className={SECTION} id={id}>
+      <div className="site-container">
         <Head section={section} />
         <div className="reveal">
           {sizes.length > 0 ? (

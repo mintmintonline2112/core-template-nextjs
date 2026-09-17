@@ -15,11 +15,7 @@ import {
  * equirectangular, đường hàng hải từ California, spotlight theo khu vực.
  * Dữ liệu thị trường nằm ở src/config/markets.ts.
  *
- * Đã chuyển sang Tailwind — `.world-*`, `.map-pin*`, `.region-chips button`
- * đã xoá khỏi site.css. Ba keyframes ở lại CSS (`arc-flow`, `pin-pulse`,
- * `amr-in`) vì Tailwind chỉ gọi được tên animation. `.region-chips` và
- * `.region-chips .chip-link` KHÔNG xoá: trang tin (app/(site)/news/page.tsx)
- * còn dùng, chưa chuyển.
+ * Keyframes `arc-flow`, `pin-pulse` ở styles/effects.css.
  *
  * Hiệu ứng "làm mờ hết, chỉ sáng khu vực đang trỏ" trước đây làm bằng CSS
  * (`.world-panel.hl .map-pin` / `.hot`); giờ tính thẳng trong JS vì `active`
@@ -47,10 +43,10 @@ function arcPath(region: string): string {
 
 /** Chấm ghim + nhãn tên hiện khi rê chuột (nhãn lấy từ thuộc tính data-name). */
 const PIN_BASE =
-  "pointer-events-auto absolute -mt-[5px] -ml-[5px] h-[10px] w-[10px] cursor-pointer rounded-full bg-gold-300 shadow-[0_0_0_3px_rgba(217,180,95,0.22),0_0_10px_rgba(217,180,95,0.7)] transition-[transform,opacity,box-shadow] duration-250 ease-brand hover:z-4 hover:scale-150 max-[640px]:-mt-[4px] max-[640px]:-ml-[4px] max-[640px]:h-2 max-[640px]:w-2";
+  "pointer-events-auto absolute -mt-[5px] -ml-[5px] h-[10px] w-[10px] cursor-pointer rounded-full bg-gold-300 shadow-glow ring-3 ring-gold-300/20 transition-[transform,opacity,box-shadow] duration-250 ease-brand hover:z-4 hover:scale-150 max-[640px]:-mt-[4px] max-[640px]:-ml-[4px] max-[640px]:h-2 max-[640px]:w-2";
 
 const PIN_LABEL =
-  "after:pointer-events-none after:absolute after:bottom-[calc(100%_+_9px)] after:left-1/2 after:z-5 after:-translate-x-1/2 after:translate-y-[4px] after:rounded-[4px] after:border after:border-[rgba(217,180,95,0.5)] after:bg-navy-900 after:px-[0.65rem] after:py-[0.25rem] after:text-[0.8rem] after:tracking-[0.06em] after:whitespace-nowrap after:text-light after:opacity-0 after:transition-[opacity,transform] after:duration-200 after:ease-brand after:content-[attr(data-name)] hover:after:translate-y-0 hover:after:opacity-100 max-[640px]:after:text-[0.72rem]";
+  "after:pointer-events-none after:absolute after:bottom-[calc(100%_+_9px)] after:left-1/2 after:z-5 after:-translate-x-1/2 after:translate-y-[4px] after:rounded-sm after:border after:border-gold-300/50 after:bg-navy-900 after:px-3 after:py-1 after:text-xs after:tracking-sm after:whitespace-nowrap after:text-light after:opacity-0 after:transition-[opacity,transform] after:duration-200 after:ease-brand after:content-[attr(data-name)] hover:after:translate-y-0 hover:after:opacity-100 max-[640px]:after:text-2xs";
 
 /** Ghim gốc California: to hơn, có vòng sóng lan và nhãn hiện sẵn. */
 const PIN_ORIGIN =
@@ -78,7 +74,7 @@ export function WorldMapPanel({
       // Đang trỏ một khu vực: ghim ngoài khu vực mờ đi, ghim trong khu vực sáng lên
       active &&
         (active === region
-          ? "scale-[1.55] opacity-100 shadow-[0_0_0_4px_rgba(217,180,95,0.28),0_0_18px_rgba(217,180,95,0.95)]"
+          ? "scale-[1.55] opacity-100 shadow-glow-lg ring-4 ring-gold-300/30"
           : "opacity-[0.16]"),
     );
   const origin = project(ORIGIN);
@@ -86,8 +82,8 @@ export function WorldMapPanel({
   return (
     <div
       className={cn(
-        "reveal relative overflow-hidden rounded-lg border border-[rgba(217,180,95,0.35)] bg-[radial-gradient(110%_90%_at_18%_0%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(165deg,var(--navy-800),var(--navy-900))] shadow-lift",
-        className ?? "mb-[1.1rem]",
+        "reveal relative overflow-hidden rounded-lg border border-gold-300/35 bg-[radial-gradient(110%_90%_at_18%_0%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(165deg,var(--navy-800),var(--navy-900))] shadow-lift",
+        className ?? "mb-4",
       )}
       id={id}
     >
@@ -141,19 +137,21 @@ export function WorldMapPanel({
         />
       </div>
       <div
-        className="absolute bottom-[0.9rem] left-[1.1rem] flex flex-wrap gap-x-[1.3rem] gap-y-[0.4rem] rounded-[100px] border border-[rgba(217,180,95,0.35)] bg-[rgba(15,23,41,0.75)] px-[1.1rem] py-[0.45rem] text-[0.8rem] tracking-[0.08em] text-light backdrop-blur-[4px] max-[640px]:static max-[640px]:px-4 max-[640px]:pt-[0.7rem] max-[640px]:pb-[0.9rem]"
+        className="absolute bottom-[0.9rem] left-[1.1rem] flex flex-wrap gap-x-5 gap-y-2 rounded-full border border-gold-300/35 bg-navy-900/75 px-4 py-2 text-xs tracking-sm text-light backdrop-blur-[4px] max-[640px]:static max-[640px]:px-4 max-[640px]:pt-3 max-[640px]:pb-4"
         aria-hidden="true"
       >
-        <span className="inline-flex items-center gap-[0.45rem]">
-          <i className="h-[10px] w-[10px] rounded-full bg-gold-300 shadow-[0_0_6px_rgba(217,180,95,0.8)] outline-[1.5px] outline-offset-2 outline-[rgba(217,180,95,0.6)]" />
+        <span className="inline-flex items-center gap-2">
+          <i className="h-[10px] w-[10px] rounded-full bg-gold-300 shadow-glow outline-[1.5px] outline-offset-2 outline-gold-300/60" />
           California — Origin
         </span>
-        <span className="inline-flex items-center gap-[0.45rem]">
-          <i className="h-2 w-2 rounded-full bg-gold-300 shadow-[0_0_6px_rgba(217,180,95,0.8)]" />
+        <span className="inline-flex items-center gap-2">
+          <i className="h-2 w-2 rounded-full bg-gold-300 shadow-glow" />
           Export Markets
         </span>
-        <span className="inline-flex items-center gap-[0.45rem]">
-          <i className="w-6 border-t-2 border-dashed border-gold-300 opacity-85" />
+        <span className="inline-flex items-center gap-2">
+          {/* Chỉ viền trên nét đứt: `border-dashed` của Tailwind đổi kiểu cả 4 cạnh
+              (thành khung đứt nét), nên khai thẳng shorthand border-top. */}
+          <i className="w-6 opacity-85 [border-top:2px_dashed_var(--gold-300)]" />
           Trade Routes
         </span>
       </div>
@@ -171,15 +169,15 @@ export function WorldMap({ regions }: { regions?: MapRegion[] }) {
     <>
       <WorldMapPanel active={active} id="world-panel" />
 
-      <div className="reveal mt-6 mb-[1.1rem] flex flex-wrap justify-center gap-[0.6rem]">
+      <div className="reveal mt-6 mb-4 flex flex-wrap justify-center gap-2">
         {REGIONS.map((region) => (
           <button
             key={region.key}
             type="button"
             className={cn(
-              "cursor-pointer rounded-[100px] border border-line bg-paper px-[1.35rem] py-[0.55rem] text-[0.98rem] font-medium tracking-[0.04em] text-ink-soft transition-[background-color,color,border-color,transform,box-shadow] duration-200 ease-brand hover:-translate-y-[2px] hover:border-navy-700 hover:bg-navy-700 hover:text-cream hover:shadow-[0_10px_20px_-12px_rgba(15,23,41,0.5)]",
+              "cursor-pointer rounded-full border border-line bg-paper px-5 py-2 text-base font-medium tracking-xs text-ink-soft transition-[background-color,color,border-color,transform,box-shadow] duration-200 ease-brand hover:-translate-y-[2px] hover:border-navy-700 hover:bg-navy-700 hover:text-cream hover:shadow-badge",
               active === region.key &&
-                "-translate-y-[2px] border-navy-700 bg-navy-700 text-cream shadow-[0_10px_20px_-12px_rgba(15,23,41,0.5)]",
+                "-translate-y-[2px] border-navy-700 bg-navy-700 text-cream shadow-badge",
             )}
             onMouseEnter={() => setActive(region.key)}
             onMouseLeave={() => setActive(null)}
@@ -190,7 +188,7 @@ export function WorldMap({ regions }: { regions?: MapRegion[] }) {
           </button>
         ))}
       </div>
-      <p className="mx-auto my-0 max-w-[46rem] text-center text-[0.98rem] text-ink-faint italic">
+      <p className="mx-auto my-0 max-w-[46rem] text-center text-base text-ink-faint italic">
         Hover a region — its markets light up. Additional destinations on
         request.
       </p>

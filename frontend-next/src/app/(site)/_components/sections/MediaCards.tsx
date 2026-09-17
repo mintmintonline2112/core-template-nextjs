@@ -1,4 +1,13 @@
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import {
+  ARCH,
+  PHOTO_FRAME,
+  SECTION,
+  SECTION_FLOW,
+  SECTION_NOTE,
+  SECTION_PHOTO,
+  SECTION_TINT,
+} from "@/app/(site)/_components/ui";
 import { cn } from "@/utils/cn";
 import {
   ALMOND_ICON,
@@ -25,7 +34,7 @@ const pad = (n: number) => String(n + 1).padStart(2, "0");
 
 /** Thẻ nổi lên khi rê chuột — dùng chung cho bố cục `names`, `photo`, `badge`. */
 const CARD_BASE =
-  "rounded-lg border border-line bg-paper shadow-soft ease-brand hover:border-gold-400 hover:shadow-lift motion-reduce:transition-none";
+  "rounded-lg border border-line bg-paper shadow-soft hover:border-gold-400 hover:shadow-lift";
 
 /** Ảnh trong thẻ phóng nhẹ khi rê chuột (thẻ bọc ngoài phải có class `group`). */
 const CARD_ZOOM =
@@ -43,16 +52,8 @@ const CARD_ZOOM =
  * sizes [] + toggleLabel (toggle), image (photo), photos [{image,caption}] + note (badge),
  * ctaLabel/ctaHref (toggle), itemLabel (photo/badge: chữ trước số thứ tự).
  *
- * Đã chuyển sang Tailwind — `.variety-*`, `.vc-*`, `.why-card`, `.natural-*`,
- * `.processed-*`, `.selection-band`, `.avc-*`, `.photo-strip*` đã xoá khỏi
- * site.css. Những tên class CÒN giữ và lý do:
- * - `why-grid` (bố cục `names`) và `photo-strip` (bố cục `badge`): SiteEffects.tsx
- *   bắt chúng để rải `--reveal-delay`, cho hiệu ứng hiện dần so le từng thẻ.
- * - `tilt-card`: SiteEffects.tsx nghiêng thẻ theo chuột (thay cho `why-card` cũ).
- * - `icon-badge`, `photo-frame`, `section-*`, `container`, `reveal`: hạ tầng
- *   dùng chung, chưa chuyển. Riêng `.icon-badge` đặt sẵn cỡ/nền/màu và vẫn nằm
- *   ở layer legacy (sau utilities), nên hai chỗ đổi cỡ/màu huy hiệu bên dưới
- *   phải dùng hậu tố `!` — đó là 2 trong 3 chỗ còn `!` của cả repo.
+ * Thẻ `.reveal` không tự khai transition: layer effects giữ transition của
+ * hiệu ứng hiện dần (xem styles/effects.css), hover đổi viền/bóng tức thì.
  */
 export function MediaCards({ section, index = 0 }: SectionProps) {
   const id = anchorId(section, "media-cards");
@@ -71,19 +72,22 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
       <Shell tint={index % 2 === 1} id={id}>
         <Head section={section} />
         {cards.length > 0 ? (
-          <div className="why-grid grid grid-cols-3 gap-[1.4rem] max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1">
+          <div
+            data-stagger="90"
+            className="grid grid-cols-3 gap-6 max-[1080px]:grid-cols-2 max-[640px]:grid-cols-1"
+          >
             {cards.map((card) => (
               <article
                 className={cn(
-                  "tilt-card group reveal px-[1.8rem] pt-8 pb-[1.7rem] transition-[transform,box-shadow,border-color] duration-250 hover:-translate-y-1",
+                  "tilt-card group reveal px-7 pt-8 pb-7 hover:-translate-y-1",
                   CARD_BASE,
                 )}
                 key={card.title}
               >
-                <IconBadge className="icon-badge mb-[1.3rem] group-hover:scale-110 group-hover:rotate-[-5deg]">
+                <IconBadge className="mb-5 group-hover:scale-110 group-hover:rotate-[-5deg]">
                   {ALMOND_ICON}
                 </IconBadge>
-                <h3 className="mb-[0.4rem] text-[1.4rem]">{card.title}</h3>
+                <h3 className="mb-2 text-2xl">{card.title}</h3>
               </article>
             ))}
           </div>
@@ -93,8 +97,8 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
   }
 
   return (
-    <section className="section section-tint section-flow" id={id}>
-      <div className="container">
+    <section className={cn(SECTION, SECTION_TINT, SECTION_FLOW)} id={id}>
+      <div className="site-container">
         <Head section={section} />
         {cards.length > 0 ? (
           <ul className="reveal mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-4 gap-[clamp(1.5rem,3vw,2.5rem)] text-center max-[900px]:grid-cols-2 max-[900px]:gap-y-10">
@@ -102,7 +106,7 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
               <li className="group" key={`${card.title}-${i}`}>
                 <div className="relative mx-auto aspect-square w-[clamp(150px,15vw,210px)]">
                   <span
-                    className="absolute top-0 left-0 z-1 grid h-[46px] w-[46px] place-items-center rounded-full border-[3px] border-cream-2 bg-gold-400 text-[0.95rem] font-bold text-navy-900 shadow-[0_6px_14px_-6px_rgba(15,23,41,0.4)]"
+                    className="absolute top-0 left-0 z-1 grid h-[46px] w-[46px] place-items-center rounded-full border-[3px] border-cream-2 bg-gold-400 text-base font-bold text-navy-900 shadow-badge"
                     aria-hidden="true"
                   >
                     {pad(i)}
@@ -117,13 +121,9 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
                     />
                   ) : null}
                 </div>
-                <h4 className="mt-[1.2rem] mb-[0.4rem] text-[1.24rem]">
-                  {card.title}
-                </h4>
+                <h4 className="mt-5 mb-2 text-xl">{card.title}</h4>
                 {card.text ? (
-                  <p className="m-0 text-[0.98rem] text-ink-soft">
-                    {card.text}
-                  </p>
+                  <p className="m-0 text-base text-ink-soft">{card.text}</p>
                 ) : null}
               </li>
             ))}
@@ -145,8 +145,7 @@ const PHOTO_CARD_SCRIM =
   'before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(180deg,rgba(15,23,41,0.72)_0%,rgba(15,23,41,0.28)_42%,rgba(15,23,41,0.05)_62%,rgba(15,23,41,0.45)_100%)] before:content-[""]';
 
 /** Đoạn mô tả trong thẻ — dùng cho cả bản ngắn và các đoạn của bản đầy đủ. */
-const CARD_TEXT =
-  "mt-[0.75rem] max-w-[44ch] text-[1.02rem] leading-[1.6] text-[rgba(255,255,255,0.9)]";
+const CARD_TEXT = "mt-3 max-w-[44ch] text-base leading-relaxed text-white/90";
 
 /**
  * Thẻ lớn + công tắc "Short version".
@@ -167,8 +166,8 @@ function ToggleCards({
   const ctaHref = str(section, "ctaHref");
 
   return (
-    <section className="section section-tint" id={id}>
-      <div className="container">
+    <section className={cn(SECTION, SECTION_TINT)} id={id}>
+      <div className="site-container">
         <Head section={section} />
 
         {cards.length > 0 ? (
@@ -178,7 +177,7 @@ function ToggleCards({
               return (
                 <article
                   className={cn(
-                    "group reveal relative isolate min-h-[clamp(380px,36vw,480px)] overflow-hidden rounded-[24px] text-white shadow-soft max-[900px]:min-h-[360px] max-[640px]:min-h-[340px] max-[640px]:rounded-[18px]",
+                    "group reveal relative isolate min-h-[clamp(380px,36vw,480px)] overflow-hidden rounded-3xl text-white shadow-soft max-[900px]:min-h-[360px] max-[640px]:min-h-[340px] max-[640px]:rounded-2xl",
                     card.image ? PHOTO_CARD_SCRIM : GRADIENT_CARD,
                   )}
                   key={`${card.title}-${i}`}
@@ -197,7 +196,7 @@ function ToggleCards({
                     <div className="flex items-center justify-between gap-4">
                       <label
                         className={cn(
-                          "inline-flex cursor-pointer items-center gap-[0.7rem] select-none",
+                          "inline-flex cursor-pointer items-center gap-3 select-none",
                           // Thẻ không có mô tả ngắn thì không có gì để đổi
                           !card.short && "invisible",
                         )}
@@ -209,24 +208,24 @@ function ToggleCards({
                           defaultChecked
                         />
                         <span
-                          className="relative h-[22px] w-[38px] shrink-0 rounded-full border border-[rgba(255,255,255,0.55)] bg-[rgba(255,255,255,0.28)] transition-colors duration-[220ms] ease-brand peer-checked:bg-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-gold-300 peer-checked:[&>span]:translate-x-4 peer-checked:[&>span]:bg-navy-700"
+                          className="relative h-[22px] w-[38px] shrink-0 rounded-full border border-white/55 bg-white/30 transition-colors duration-[220ms] ease-brand peer-checked:bg-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-gold-300 peer-checked:[&>span]:translate-x-4 peer-checked:[&>span]:bg-navy-700"
                           aria-hidden="true"
                         >
                           <span className="absolute top-[3px] left-[3px] h-[14px] w-[14px] rounded-full bg-white transition-[transform,background-color] duration-[240ms] ease-brand motion-reduce:transition-none" />
                         </span>
-                        <span className="text-[0.95rem] font-medium">
+                        <span className="text-base font-medium">
                           {toggleLabel}
                         </span>
                       </label>
                       <span
-                        className="font-display text-[0.85rem] font-bold tracking-[0.08em] text-gold-300"
+                        className="font-display text-sm font-bold tracking-sm text-gold-300"
                         aria-hidden="true"
                       >
                         {pad(i)}
                       </span>
                     </div>
 
-                    <h3 className="mt-[1.1rem] mb-0 font-display text-[clamp(1.7rem,2.8vw,2.35rem)] leading-[1.12] text-white">
+                    <h3 className="mt-4 mb-0 font-display text-h3 leading-tight text-white">
                       {card.title}
                     </h3>
 
@@ -234,7 +233,7 @@ function ToggleCards({
                       <p
                         className={cn(
                           CARD_TEXT,
-                          "mb-[1.5rem] group-has-[input:not(:checked)]:hidden",
+                          "mb-6 group-has-[input:not(:checked)]:hidden",
                         )}
                       >
                         {card.short}
@@ -242,7 +241,7 @@ function ToggleCards({
                     ) : null}
                     <div
                       className={cn(
-                        "mb-[1.5rem]",
+                        "mb-6",
                         card.short
                           ? "hidden group-has-[input:not(:checked)]:block group-has-[input:not(:checked)]:animate-[faq-in_300ms_var(--ease)_both] motion-reduce:animate-none"
                           : "block",
@@ -255,13 +254,13 @@ function ToggleCards({
                       ))}
                       {sizes.length > 0 ? (
                         <ul
-                          className="mt-[1.1rem] flex flex-wrap gap-[0.45rem]"
+                          className="mt-4 flex flex-wrap gap-2"
                           aria-label="Available sizes"
                         >
                           {sizes.map((size) => (
                             <li
                               key={size}
-                              className="rounded-full border border-[rgba(255,255,255,0.32)] bg-[rgba(255,255,255,0.14)] px-3 py-[0.3rem] text-[0.85rem] font-semibold tracking-[0.03em]"
+                              className="rounded-full border border-white/30 bg-white/15 px-3 py-1 text-sm font-semibold tracking-xs"
                             >
                               {size}
                             </li>
@@ -273,7 +272,7 @@ function ToggleCards({
                     {ctaLabel ? (
                       // Nút kính mờ ở đáy thẻ
                       <a
-                        className="mt-auto inline-flex items-center gap-[0.6rem] self-start rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] px-[1.2rem] py-3 text-[0.98rem] font-semibold text-white backdrop-blur-[8px] transition-[background-color,color,border-color] duration-[220ms] ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900"
+                        className="mt-auto inline-flex items-center gap-2 self-start rounded-full border border-white/60 bg-white/10 px-5 py-3 text-base font-semibold text-white backdrop-blur-[8px] transition-[background-color,color,border-color] duration-[220ms] ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900"
                         href={ctaHref || "#request-quote"}
                       >
                         <span
@@ -292,7 +291,7 @@ function ToggleCards({
 
         <InlineNote
           text={str(section, "note")}
-          className="section-note reveal"
+          className={cn(SECTION_NOTE, "reveal")}
         />
       </div>
     </section>
@@ -310,12 +309,12 @@ function PhotoCards({
   const itemLabel = str(section, "itemLabel") ?? "Variety";
 
   return (
-    <section className="section" id={id}>
-      <div className="container">
+    <section className={SECTION} id={id}>
+      <div className="site-container">
         <Head section={section} />
 
         {image ? (
-          <figure className="photo-frame section-photo reveal">
+          <figure className={cn(PHOTO_FRAME, SECTION_PHOTO, ARCH, "reveal")}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={resolveImage(image)}
@@ -329,7 +328,7 @@ function PhotoCards({
             {cards.map((card, i) => (
               <article
                 className={cn(
-                  "group reveal grid min-h-[290px] grid-cols-[minmax(190px,0.9fr)_minmax(0,1.1fr)] overflow-hidden transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 max-[640px]:grid-cols-1",
+                  "group reveal grid min-h-[290px] grid-cols-[minmax(190px,0.9fr)_minmax(0,1.1fr)] overflow-hidden hover:-translate-y-1 max-[640px]:grid-cols-1",
                   CARD_BASE,
                 )}
                 key={`${card.title}-${i}`}
@@ -353,14 +352,14 @@ function PhotoCards({
                     />
                   </figure>
                 ) : null}
-                <div className="flex flex-col justify-center px-[1.6rem] py-[1.7rem]">
-                  <div className="mb-[1.15rem] flex items-center gap-[0.8rem] text-[0.7rem] font-bold tracking-[0.13em] text-ink-faint uppercase">
-                    <IconBadge className="icon-badge h-[42px]! w-[42px]! flex-none">
+                <div className="flex flex-col justify-center px-6 py-7">
+                  <div className="mb-5 flex items-center gap-3 text-2xs font-bold tracking-md text-ink-faint uppercase">
+                    <IconBadge className="h-[42px] w-[42px] flex-none">
                       {ALMOND_ICON}
                     </IconBadge>
                     <span>{`${itemLabel} ${pad(i)}`}</span>
                   </div>
-                  <h3 className="mb-[0.55rem] text-[1.45rem]">{card.title}</h3>
+                  <h3 className="mb-2 text-2xl">{card.title}</h3>
                   {card.text ? (
                     <p className="m-0 text-ink-soft">{card.text}</p>
                   ) : null}
@@ -386,8 +385,8 @@ function BadgeCards({
   const itemLabel = str(section, "itemLabel") ?? "Format";
 
   return (
-    <section className="section section-tint" id={id}>
-      <div className="container">
+    <section className={cn(SECTION, SECTION_TINT)} id={id}>
+      <div className="site-container">
         <Head section={section} />
 
         {cards.length > 0 ? (
@@ -395,7 +394,7 @@ function BadgeCards({
             {cards.map((card, i) => (
               <article
                 className={cn(
-                  "group reveal overflow-hidden transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-[5px]",
+                  "group reveal overflow-hidden hover:-translate-y-[5px]",
                   CARD_BASE,
                 )}
                 key={`${card.title}-${i}`}
@@ -412,15 +411,15 @@ function BadgeCards({
                       className={CARD_ZOOM}
                     />
                   ) : null}
-                  <span className="absolute top-4 left-4 z-1 rounded-full border border-[rgba(217,180,95,0.48)] bg-[rgba(15,23,41,0.9)] px-[0.72rem] py-[0.42rem] text-[0.7rem] leading-none font-bold tracking-[0.13em] text-cream uppercase">
+                  <span className="absolute top-4 left-4 z-1 rounded-full border border-gold-300/50 bg-navy-900/90 px-3 py-2 text-2xs leading-none font-bold tracking-md text-cream uppercase">
                     {`${itemLabel} ${pad(i)}`}
                   </span>
                 </div>
-                <div className="relative min-h-[190px] border-t-[3px] border-gold-400 px-[1.6rem] pt-[1.55rem] pb-[1.7rem]">
-                  <IconBadge className="icon-badge absolute -top-[1.8rem] right-[1.3rem] border-cream! bg-navy-700! text-cream! shadow-[0_8px_18px_-10px_rgba(15,23,41,0.72)]">
+                <div className="relative min-h-[190px] border-t-[3px] border-gold-400 px-6 pt-6 pb-7">
+                  <IconBadge className="absolute -top-[1.8rem] right-[1.3rem] border-cream bg-navy-700 text-cream shadow-badge">
                     {iconFor(card.icon, i)}
                   </IconBadge>
-                  <h3 className="mb-[0.55rem] max-w-[calc(100%-3.2rem)] text-[1.4rem]">
+                  <h3 className="mb-2 max-w-[calc(100%-3.2rem)] text-2xl">
                     {card.title}
                   </h3>
                   {card.text ? (
@@ -434,14 +433,15 @@ function BadgeCards({
 
         {photos.length > 0 ? (
           <div
+            data-stagger="70"
             className={cn(
-              "photo-strip reveal mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-3 gap-[1.4rem]",
+              "reveal reveal-group mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-3 gap-6",
               photos.length === 2 && "grid-cols-2",
             )}
           >
             {photos.map((photo, i) => (
               <figure className="m-0" key={`${photo.image}-${i}`}>
-                <div className="photo-frame aspect-4/3">
+                <div className={cn(PHOTO_FRAME, "aspect-4/3")}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={resolveImage(photo.image)}
@@ -450,7 +450,7 @@ function BadgeCards({
                   />
                 </div>
                 {photo.caption ? (
-                  <figcaption className="mt-[0.7rem] text-center font-display text-[0.95rem] text-ink-faint italic">
+                  <figcaption className="mt-3 text-center font-display text-base text-ink-faint italic">
                     {photo.caption}
                   </figcaption>
                 ) : null}
@@ -460,7 +460,7 @@ function BadgeCards({
         ) : null}
 
         {note ? (
-          <div className="reveal mt-[clamp(2.5rem,5vw,4rem)] rounded-lg border border-l-2 border-navy-100 border-l-gold-400 bg-navy-50 px-8 py-[1.6rem] text-[1.08rem] text-ink-soft">
+          <div className="reveal mt-[clamp(2.5rem,5vw,4rem)] rounded-lg border border-l-2 border-navy-100 border-l-gold-400 bg-navy-50 px-8 py-6 text-lg text-ink-soft">
             <p
               className="m-0 max-w-none [&_strong]:text-navy-700"
               dangerouslySetInnerHTML={{ __html: sanitizeRichText(note) }}

@@ -3,7 +3,14 @@ import {
   HeroSlides,
   type HeroSlide,
 } from "@/app/(site)/_components/HeroSlides";
+import {
+  Eyebrow,
+  HERO_TEXT,
+  NAVY_GRAIN,
+  NAVY_PATTERN,
+} from "@/app/(site)/_components/ui";
 import { sanitizeRichText } from "@/app/(site)/_lib/sanitize";
+import { cn } from "@/utils/cn";
 import {
   Cta,
   StatsList,
@@ -19,7 +26,7 @@ import {
 const LAYOUTS = ["slider", "static"] as const;
 
 /** Hàng nút CTA — dùng cho cả hai bố cục. */
-const ACTIONS_ROW = "mt-[2.2rem] flex flex-wrap gap-4";
+const ACTIONS_ROW = "mt-9 flex flex-wrap gap-4";
 
 const ALMOND_GLYPH = (
   <>
@@ -30,8 +37,8 @@ const ALMOND_GLYPH = (
 
 /**
  * Hạt hạnh nhân mờ trôi lơ lửng trong hero. Chu kỳ và độ trễ truyền qua biến
- * `--float-dur` / `--float-delay` để mỗi hạt lệch nhịp nhau; keyframes `floaty`
- * vẫn ở site.css vì Tailwind chỉ gọi được tên animation.
+ * `--float-dur` / `--float-delay` để mỗi hạt lệch nhịp nhau (keyframes `floaty`
+ * ở effects.css).
  */
 function FloatGlyph({
   style,
@@ -73,21 +80,8 @@ function FloatGlyph({
  * CMS: subheading (eyebrow), heading, content, metadata.slides [{image,title,text,alt}],
  * stats [{label,value}], image (ảnh layout static), ctaLabel/ctaHref, cta2Label/cta2Href.
  *
- * Đã chuyển sang Tailwind — `.hero` (phần hộp), `.hero-inner`, `.hero h1`,
- * `.hero-actions`, `.hero-stats`/`.stat*`, `.hero-float`, `.hero-figure-bleed`
- * đã xoá khỏi site.css, cùng loạt rule chết của bản demo tĩnh cũ (`.hero .lead`,
- * `.hero-sub`, `.hero-figure`, `.hero-frame*`, `.hero-illustration`,
- * `.hero-photo`, `.hero-seal` — không component nào render). Những thứ CÒN lại
- * và lý do:
- * - class `hero` trên <section>: site.css còn `.hero::before` (hoa văn hạt mờ)
- *   và `.hero::after` (hạt phim, dùng chung với .page-hero/.cta-band), cả hai
- *   là ảnh nền data-URI dài nên để nguyên ở CSS; SiteEffects.tsx cũng bắt
- *   `.hero h1` để tách chữ chạy hiệu ứng GSAP (rule `.hero h1 .w`).
- * - class `hero-copy`: SiteEffects.tsx bắt để rải `--reveal-delay` cho từng
- *   dòng, và site.css dùng `.hero-copy .eyebrow` trong rule ẩn eyebrow.
- * - class `hero-cms`: dùng chung với HeroSlides.tsx (chưa chuyển) — nó định kiểu
- *   các đoạn <p> do CMS sinh ra.
- * - `@keyframes floaty`.
+ * Bố cục static: h1 mang `data-headline` để SiteEffects.tsx tách chữ chạy hiệu
+ * ứng GSAP; cột chữ mang `data-stagger` để các dòng hiện dần so le.
  */
 export function Hero({ section }: SectionProps) {
   const id = anchorId(section, "hero");
@@ -136,7 +130,11 @@ export function Hero({ section }: SectionProps) {
   const image = str(section, "image");
   return (
     <section
-      className="hero relative overflow-hidden bg-[radial-gradient(120%_90%_at_85%_10%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_78%)] text-light"
+      className={cn(
+        "relative overflow-hidden bg-[radial-gradient(120%_90%_at_85%_10%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_78%)] text-light",
+        NAVY_PATTERN,
+        NAVY_GRAIN,
+      )}
       id={id}
     >
       <div
@@ -169,19 +167,24 @@ export function Hero({ section }: SectionProps) {
           delay="-8s"
         />
       </div>
-      <div className="relative z-1 container grid grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-[clamp(2.5rem,6vw,5rem)] py-[clamp(4.5rem,9vw,7.5rem)] max-[900px]:grid-cols-1">
-        <div className="hero-copy">
+      <div className="relative z-1 site-container grid grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-[clamp(2.5rem,6vw,5rem)] py-[clamp(4.5rem,9vw,7.5rem)] max-[900px]:grid-cols-1">
+        <div data-stagger="90">
           {section?.subheading ? (
-            <p className="eyebrow eyebrow-gold reveal">{section.subheading}</p>
+            <Eyebrow gold heading className="reveal">
+              {section.subheading}
+            </Eyebrow>
           ) : null}
           {section?.heading ? (
-            <h1 className="reveal mb-[0.5em] text-[clamp(2.5rem,5.4vw,3.9rem)] font-semibold text-light">
+            <h1
+              data-headline
+              className="reveal mb-[0.5em] text-display font-semibold text-light"
+            >
               {section.heading}
             </h1>
           ) : null}
           {section?.content ? (
             <div
-              className="hero-cms reveal"
+              className={cn(HERO_TEXT, "reveal")}
               dangerouslySetInnerHTML={{
                 __html: sanitizeRichText(section.content),
               }}

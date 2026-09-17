@@ -18,6 +18,7 @@ import {
   items,
   layoutOf,
   resolveImage,
+  showsEyebrow,
   str,
   toHtml,
   type SectionProps,
@@ -120,7 +121,12 @@ export function Hero({ section }: SectionProps) {
   // Không có slide thì rơi về bố cục tĩnh (không để hero trống).
   if (layoutOf(section, LAYOUTS, "slider") === "slider" && slides.length > 0) {
     return (
-      <HeroSlides id={id} eyebrow={section?.subheading} slides={slides}>
+      <HeroSlides
+        id={id}
+        eyebrow={section?.subheading}
+        showEyebrow={showsEyebrow(section)}
+        slides={slides}
+      >
         {hasActions ? <div className={ACTIONS_ROW}>{actions}</div> : null}
         <StatsList stats={stats} className="reveal" />
       </HeroSlides>
@@ -170,7 +176,12 @@ export function Hero({ section }: SectionProps) {
       <div className="relative z-1 site-container grid grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-[clamp(2.5rem,6vw,5rem)] py-[clamp(4.5rem,9vw,7.5rem)] max-[900px]:grid-cols-1">
         <div data-stagger="90">
           {section?.subheading ? (
-            <Eyebrow gold heading className="reveal">
+            <Eyebrow
+              gold
+              heading
+              show={showsEyebrow(section)}
+              className="reveal"
+            >
               {section.subheading}
             </Eyebrow>
           ) : null}

@@ -22,12 +22,15 @@ export type HeroSlide = {
 export function HeroSlides({
   id,
   eyebrow,
+  showEyebrow = false,
   slides,
   interval = 6500,
   children,
 }: {
   id: string;
   eyebrow?: string | null;
+  /** Section tick "Hiện eyebrow" trong admin → hiện dù toàn site đang ẩn eyebrow. */
+  showEyebrow?: boolean;
   slides: HeroSlide[];
   interval?: number;
   /** Phần cố định dưới nội dung slide (nút CTA, số liệu) — render phía server. */
@@ -110,7 +113,7 @@ export function HeroSlides({
       <div className="site-container grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[clamp(2rem,6vw,5rem)] py-[clamp(5rem,10vw,7.5rem)] max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-8">
         <div className="max-w-[41rem]">
           {eyebrow ? (
-            <Eyebrow gold heading>
+            <Eyebrow gold heading show={showEyebrow}>
               {eyebrow}
             </Eyebrow>
           ) : null}

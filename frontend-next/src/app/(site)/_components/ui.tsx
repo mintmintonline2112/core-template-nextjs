@@ -57,14 +57,16 @@ export const HERO_TEXT =
   "[&>p]:max-w-[36rem] [&>p]:text-base [&>p]:text-light-soft [&>p:first-child]:text-xl [&>p:first-child]:text-light";
 
 /**
- * Eyebrow đứng trên tiêu đề (section, hero, page-hero) đang ẩn toàn site —
- * "Sếp không thích subtitle". Đổi `false` là hiện lại tất cả.
+ * Eyebrow đứng trên tiêu đề (section, hero, page-hero) mặc định ẩn toàn site —
+ * "Sếp không thích subtitle". Section nào tick "Hiện eyebrow" trong admin
+ * (metadata.showEyebrow) thì vẫn hiện riêng section đó. Đổi `false` là hiện lại tất cả.
  */
 const HIDE_HEADING_EYEBROWS = true;
 
 /**
  * Chữ nhỏ viết hoa giãn rộng + gạch vàng bên dưới (gạch tự vẽ ra khi khối hiện).
  * `heading` = eyebrow đứng trên tiêu đề, theo quy ước HIDE_HEADING_EYEBROWS.
+ * `show`    = vẫn hiện dù là eyebrow trên tiêu đề (section tick "Hiện eyebrow").
  * `center`  = eyebrow đứng một mình làm tiêu đề dải (gạch căn giữa).
  */
 export function Eyebrow({
@@ -72,12 +74,14 @@ export function Eyebrow({
   gold = false,
   center = false,
   heading = false,
+  show = false,
   className,
 }: {
   children: ReactNode;
   gold?: boolean;
   center?: boolean;
   heading?: boolean;
+  show?: boolean;
   className?: string;
 }) {
   return (
@@ -86,7 +90,7 @@ export function Eyebrow({
         "eyebrow m-0 mb-4 text-xs font-semibold tracking-2xl uppercase after:mt-4 after:block after:h-px after:w-12 after:bg-gold-400 after:content-['']",
         gold ? "text-gold-300" : "text-navy-700",
         center && "inline-block after:mx-auto",
-        heading && HIDE_HEADING_EYEBROWS && "hidden",
+        heading && HIDE_HEADING_EYEBROWS && !show && "hidden",
         className,
       )}
     >

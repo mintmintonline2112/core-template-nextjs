@@ -5,6 +5,7 @@ import {
   InlineNote,
   RichIntro,
   anchorId,
+  showsEyebrow,
   str,
   strings,
   type SectionProps,
@@ -32,7 +33,7 @@ export function QuoteForm({ section }: SectionProps) {
       <div className="relative site-container grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] items-start gap-[clamp(2.5rem,6vw,5rem)] max-[900px]:grid-cols-1">
         <div className="reveal">
           {section?.subheading ? (
-            <Eyebrow gold heading>
+            <Eyebrow gold heading show={showsEyebrow(section)}>
               {section.subheading}
             </Eyebrow>
           ) : null}

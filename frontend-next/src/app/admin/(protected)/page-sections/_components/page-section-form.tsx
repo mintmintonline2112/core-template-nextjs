@@ -41,12 +41,14 @@ import { adminRoutes } from '@/config/routes';
 const CUSTOM_KEY = '__custom';
 
 /** Key metadata quyết định cách render — không nằm trong bản dịch. */
-const STRUCTURAL_META_KEYS = ['_component', 'layout'];
+const STRUCTURAL_META_KEYS = ['_component', 'layout', 'showEyebrow'];
 
 interface FormValues {
   sectionKeyCustom: string;
   heading: string;
   subheading: string;
+  /** metadata.showEyebrow — hiện eyebrow dù toàn site đang ẩn. */
+  showEyebrow: boolean;
   content: string;
   mediaPath: string;
   isActive: boolean;
@@ -62,6 +64,7 @@ const EMPTY: FormValues = {
   sectionKeyCustom: '',
   heading: '',
   subheading: '',
+  showEyebrow: false,
   content: '',
   mediaPath: '',
   isActive: true,
@@ -187,6 +190,7 @@ export function PageSectionForm({ id, presetPageId }: { id?: number; presetPageI
       sectionKeyCustom: data.sectionKey ?? '',
       heading: data.heading ?? '',
       subheading: data.subheading ?? '',
+      showEyebrow: meta.showEyebrow === true,
       content: data.content ?? '',
       mediaPath: data.mediaPath ?? '',
       isActive: data.isActive ?? true,
@@ -272,6 +276,12 @@ export function PageSectionForm({ id, presetPageId }: { id?: number; presetPageI
           : 'Key phải duy nhất trong mỗi trang. Đặt tên riêng khi dùng cùng một component nhiều lần trên một trang (VD: 2 slider).',
       },
       { key: 'subheading', label: 'Eyebrow (dòng nhỏ phía trên)', type: 'text', placeholder: 'VD: Global Distribution' },
+      {
+        key: 'showEyebrow',
+        label: 'Hiện eyebrow trên website',
+        type: 'checkbox',
+        hint: 'Eyebrow phía trên tiêu đề đang ẩn trên toàn site (sếp không thích subtitle). Tick để hiện riêng ở section này.',
+      },
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Tiêu đề khối nội dung' },
       {
         key: 'content',
@@ -383,6 +393,8 @@ export function PageSectionForm({ id, presetPageId }: { id?: number; presetPageI
     const metaOut: Meta = { ...metaObj };
     if (componentKey) metaOut._component = componentKey;
     else delete metaOut._component;
+    if (values.showEyebrow) metaOut.showEyebrow = true;
+    else delete metaOut.showEyebrow;
 
     // Bản dịch: chữ (heading/eyebrow/nội dung) + metadata đã dịch (nếu có).
     const viMeta = cleanTranslationMeta(metaViObj);

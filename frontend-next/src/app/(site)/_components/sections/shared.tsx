@@ -36,6 +36,10 @@ export type Meta = Record<string, unknown>;
 export const meta = (section?: PageSection | null): Meta =>
   (section?.metadata ?? {}) as Meta;
 
+/** Section tick "Hiện eyebrow" trong admin → hiện eyebrow dù toàn site đang ẩn (HIDE_HEADING_EYEBROWS). */
+export const showsEyebrow = (section?: PageSection | null): boolean =>
+  meta(section).showEyebrow === true;
+
 /** metadata[key] nguyên bản, `undefined` khi thiếu / null. */
 export function metaOf<T>(
   section: PageSection | null | undefined,
@@ -376,7 +380,7 @@ export function Head({
   return (
     <div className="reveal mx-auto mb-[clamp(2.5rem,5vw,4rem)] max-w-[54rem] text-center">
       {section?.subheading ? (
-        <Eyebrow gold={light} heading>
+        <Eyebrow gold={light} heading show={showsEyebrow(section)}>
           {section.subheading}
         </Eyebrow>
       ) : null}

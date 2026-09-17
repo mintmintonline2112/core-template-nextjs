@@ -26,6 +26,8 @@
     "db:create": "npm run typeorm -- migration:create",
     "db:seed": "ts-node -r tsconfig-paths/register src/seed.ts",
     "content:export": "ts-node -r tsconfig-paths/register src/scripts/export-content.ts",
+    "layout:export": "ts-node -r tsconfig-paths/register src/scripts/layout-sync/layout-export.ts",
+    "layout:import": "ts-node -r tsconfig-paths/register src/scripts/layout-sync/layout-import.ts",
     "db:run:prod": "node -r dotenv/config ./node_modules/typeorm/cli migration:run -d dist/database/data-source.js",
     "db:seed:prod": "node -r dotenv/config dist/seed.js",
     "db:drop": "npm run typeorm -- schema:drop -d src/database/data-source.ts",

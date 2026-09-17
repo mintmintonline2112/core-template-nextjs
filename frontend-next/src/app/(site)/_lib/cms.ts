@@ -86,6 +86,12 @@ export function mediaUrl(path: string | null | undefined): string | null {
   return `${base}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+/** Ảnh do CMS lưu: /images/... là ảnh có sẵn của frontend, còn lại là file upload phía API. */
+export function heroImageUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  return path.startsWith("/images/") ? path : mediaUrl(path);
+}
+
 /** Map sections theo sectionKey để component tra cứu nhanh. */
 export function sectionMap(page: CmsPage | null) {
   const map = new Map<string, CmsPage["sections"][number]>();

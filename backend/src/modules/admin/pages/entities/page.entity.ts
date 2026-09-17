@@ -10,6 +10,14 @@ export class Page extends SeoContentEntity {
   @Column({ type: 'text', nullable: true })
   lead: string | null;
 
+  /** Ảnh nền dải tiêu đề đầu trang (PageHero); trống = ảnh mặc định của website. */
+  @Column({ name: 'hero_image_path', type: 'varchar', length: 500, nullable: true })
+  heroImagePath: string | null;
+
+  /** Điểm lấy nét của ảnh nền (CSS object-position, VD "50% 62%"). */
+  @Column({ name: 'hero_image_position', type: 'varchar', length: 40, nullable: true })
+  heroImagePosition: string | null;
+
   @Column({
     name: 'template_key',
     type: 'varchar',

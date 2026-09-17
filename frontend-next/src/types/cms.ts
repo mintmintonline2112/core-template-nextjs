@@ -1,7 +1,9 @@
 export type PublishStatus = "draft" | "published" | "archived";
 
 /** Bản dịch lưu trong cột JSON `translations` — { vi: { <field>: value } }. */
-export type Translations = Partial<Record<"vi", Record<string, unknown>>> | null;
+export type Translations = Partial<
+  Record<"vi", Record<string, unknown>>
+> | null;
 
 export type BaseEntityFields = {
   id: number;
@@ -62,6 +64,10 @@ export type PageSection = BaseEntityFields & {
 export type CmsPage = SeoContentFields & {
   eyebrow: string | null;
   lead: string | null;
+  /** Ảnh nền dải tiêu đề đầu trang (PageHero); trống = ảnh mặc định. */
+  heroImagePath?: string | null;
+  /** Điểm lấy nét của ảnh nền (CSS object-position). */
+  heroImagePosition?: string | null;
   templateKey: string | null;
   sections: PageSection[];
 };

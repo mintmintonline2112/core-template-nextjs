@@ -20,6 +20,8 @@ export interface SitePage {
   status: PublishStatus;
   eyebrow: string | null;
   lead: string | null;
+  heroImagePath?: string | null;
+  heroImagePosition?: string | null;
   templateKey: string | null;
   sortOrder: number;
   sections?: PageSectionSummary[];

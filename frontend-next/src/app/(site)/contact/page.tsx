@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageSections } from "@/app/(site)/_components/SectionRenderer";
 import { PageHero } from "@/app/(site)/_components/ui";
-import { getCmsPage } from "@/app/(site)/_lib/cms";
+import { getCmsPage, heroImageUrl } from "@/app/(site)/_lib/cms";
 import { fallbackPage } from "@/app/(site)/_lib/fallback";
 import { getSiteSettings } from "@/lib/settings";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
@@ -39,6 +39,8 @@ export default async function ContactPage() {
         eyebrow={eyebrow}
         title={hero.title?.trim() || page.title}
         lead={lead}
+        image={heroImageUrl(page.heroImagePath)}
+        imagePosition={page.heroImagePosition}
       />
 
       <PageSections page={page} />

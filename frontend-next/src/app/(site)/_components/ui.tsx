@@ -99,31 +99,54 @@ export function Eyebrow({
   );
 }
 
+/** Ảnh nền dải tiêu đề đầu trang khi trang chưa chọn ảnh (Admin → Trang). */
+export const DEFAULT_PAGE_HERO_IMAGE = "/images/orchard-rows.jpg";
+
 /**
  * Dải tiêu đề đầu trang con (Products, News, bài viết, Contact, trang CMS tự do):
- * nền navy có hoa văn + hạt phim. h1 mang `data-headline` để SiteEffects.tsx
- * tách chữ chạy hiệu ứng.
+ * ảnh nền nhoè nhẹ + lớp navy đậm bên trái (chữ dễ đọc) nhạt dần sang phải +
+ * hạt phim. Ảnh chọn trong Admin → Trang (kèm điểm lấy nét), trống thì dùng
+ * DEFAULT_PAGE_HERO_IMAGE. h1 mang `data-headline` để SiteEffects.tsx tách chữ.
  */
 export function PageHero({
   eyebrow,
   title,
   lead,
   titleStyle,
+  image,
+  imagePosition,
 }: {
   eyebrow?: ReactNode;
   title: ReactNode;
   lead?: ReactNode;
   titleStyle?: CSSProperties;
+  /** URL ảnh nền đã resolve (heroImageUrl); trống = ảnh mặc định. */
+  image?: string | null;
+  /** CSS object-position, VD "50% 62%". */
+  imagePosition?: string | null;
 }) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-[radial-gradient(120%_100%_at_85%_0%,rgba(37,55,94,0.5)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_85%)] text-light",
-        NAVY_PATTERN,
+        "relative isolate overflow-hidden bg-navy-900 text-light",
         NAVY_GRAIN,
       )}
     >
-      <div className="relative site-container max-w-[52rem] py-[clamp(3.5rem,7vw,5.5rem)]">
+      {/* Phóng nhẹ (scale-110) để mép ảnh nhoè không lộ viền sáng quanh khung. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image || DEFAULT_PAGE_HERO_IMAGE}
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        className="absolute inset-0 -z-2 h-full w-full scale-110 object-cover blur-xs"
+        style={imagePosition ? { objectPosition: imagePosition } : undefined}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-1 bg-linear-to-r from-navy-900/95 via-navy-900/80 to-navy-900/40 max-[640px]:via-navy-900/85 max-[640px]:to-navy-900/70"
+      />
+      <div className="relative site-container max-w-[52rem] py-[clamp(4rem,8vw,6.5rem)]">
         {eyebrow ? (
           <Eyebrow gold heading className="reveal">
             {eyebrow}

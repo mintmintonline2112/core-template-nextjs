@@ -25,6 +25,7 @@ import {
 } from '@/app/admin/_lib/translation-fields';
 import { pageService, PAGE_QUERY_KEY } from '@/app/admin/(protected)/pages/_lib/page.service';
 import { PageSectionsPanel } from '@/app/admin/(protected)/pages/_components/page-sections-panel';
+import { HeroImageField } from '@/app/admin/(protected)/pages/_components/hero-image-field';
 import { adminRoutes } from '@/config/routes';
 
 interface FormValues extends SeoFormValues {
@@ -80,6 +81,9 @@ export function PageForm({ id }: { id?: number }) {
   const [submitting, setSubmitting] = useState(false);
   const [initialValues, setInitialValues] = useState<FormValues>(EMPTY);
   const [formKey, setFormKey] = useState(0);
+  // Ảnh nền đầu trang + điểm lấy nét: giữ ngoài GenericForm vì ô chọn ảnh là UI riêng.
+  const [heroImage, setHeroImage] = useState('');
+  const [heroPosition, setHeroPosition] = useState('');
 
   const { data } = useQuery({
     queryKey: [...PAGE_QUERY_KEY, 'detail', id],
@@ -98,9 +102,32 @@ export function PageForm({ id }: { id?: number }) {
         ...seoValuesFrom(data),
         ...zhValuesFrom(data.translations, ZH_KEYS),
       });
+      setHeroImage(data.heroImagePath ?? '');
+      setHeroPosition(data.heroImagePosition ?? '');
       setFormKey((k) => k + 1);
     }
   }, [data]);
+
+  // Ô "Ảnh nền đầu trang" hiện ngay dưới Đoạn dẫn.
+  const fields = useMemo<GenericFormField[]>(
+    () =>
+      FIELDS.map((field) =>
+        field.key === 'lead'
+          ? {
+              ...field,
+              renderExtra: () => (
+                <HeroImageField
+                  image={heroImage}
+                  position={heroPosition}
+                  onImageChange={setHeroImage}
+                  onPositionChange={setHeroPosition}
+                />
+              ),
+            }
+          : field,
+      ),
+    [heroImage, heroPosition],
+  );
 
   const sections = useMemo(
     () => (data?.sections ?? []).slice().sort((a, b) => a.sortOrder - b.sortOrder),
@@ -117,11 +144,23 @@ export function PageForm({ id }: { id?: number }) {
           eyebrow: values.eyebrow.trim() ? values.eyebrow : null,
           lead: values.lead.trim() ? values.lead : null,
           templateKey: values.templateKey.trim() ? values.templateKey : null,
+          heroImagePath: heroImage.trim() || null,
+          heroImagePosition: heroImage.trim() && heroPosition ? heroPosition : null,
           status: values.status,
           ...seoPayload(values),
           translations: zhTranslationsPayload(values, ZH_KEYS, data?.translations),
         },
-        { keepNull: ['translations', 'eyebrow', 'lead', 'templateKey', ...SEO_NULLABLE_KEYS] },
+        {
+          keepNull: [
+            'translations',
+            'eyebrow',
+            'lead',
+            'templateKey',
+            'heroImagePath',
+            'heroImagePosition',
+            ...SEO_NULLABLE_KEYS,
+          ],
+        },
       );
 
       if (isEdit) await pageService.edit(id!, payload);
@@ -147,7 +186,7 @@ export function PageForm({ id }: { id?: number }) {
           { label: 'Trang nội dung', link: adminRoutes.pages.list },
           { label: isEdit ? 'Sửa' : 'Tạo mới' },
         ]}
-        fields={FIELDS}
+        fields={fields}
         groups={[ZH_GROUP]}
         defaultValues={initialValues}
         loading={submitting}

@@ -9,7 +9,7 @@ import {
   SECTION_NOTE,
 } from "@/app/(site)/_components/ui";
 import { cn } from "@/utils/cn";
-import { getCmsPage } from "@/app/(site)/_lib/cms";
+import { getCmsPage, heroImageUrl } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { siteRoutes } from "@/config/routes";
 
@@ -58,7 +58,13 @@ export default async function CmsGenericPage({
 
   return (
     <>
-      <PageHero eyebrow={page.eyebrow} title={page.title} lead={page.lead} />
+      <PageHero
+        eyebrow={page.eyebrow}
+        title={page.title}
+        lead={page.lead}
+        image={heroImageUrl(page.heroImagePath)}
+        imagePosition={page.heroImagePosition}
+      />
 
       {sections.map((section, index) => (
         <SectionRenderer key={section.id} section={section} index={index} />

@@ -12,6 +12,7 @@ import {
   getBlogCategories,
   getBlogPosts,
   getCmsPage,
+  heroImageUrl,
   mediaUrl,
 } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
@@ -91,6 +92,8 @@ export default async function NewsPage({
   const params = await searchParams;
   const pageNumber = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
 
+  // Ảnh nền đầu trang lấy từ trang CMS "news" (Admin → Trang); chữ của dải giữ cố định.
+  const cmsPage = await getCmsPage("news");
   const categories = (await getBlogCategories()).filter(
     (category) => category.isActive !== false && !category.parentId,
   );
@@ -122,6 +125,8 @@ export default async function NewsPage({
         eyebrow="News & Insights"
         title="From the Orchard to the Market"
         lead="Crop updates, market perspectives, and company news for our buyers and distribution partners around the world."
+        image={heroImageUrl(cmsPage?.heroImagePath)}
+        imagePosition={cmsPage?.heroImagePosition}
       />
 
       <section className={SECTION}>
@@ -190,7 +195,7 @@ export default async function NewsPage({
             >
               {gridPosts.map((post) => (
                 <article
-                  className="tilt-card group reveal flex flex-col overflow-hidden rounded-lg border border-line bg-paper px-7 pt-7 pb-6 shadow-soft hover:border-gold-400 hover:shadow-lift"
+                  className="tilt-card group reveal flex flex-col overflow-hidden rounded-lg border border-line bg-paper px-7 pt-7 pb-6"
                   key={post.id}
                 >
                   <Link

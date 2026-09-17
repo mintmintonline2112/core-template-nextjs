@@ -33,6 +33,18 @@ export class CreatePageDto {
   @IsString()
   lead?: string;
 
+  @ApiPropertyOptional({ example: '/uploads/almonds/almond-orchard-wide-view.jpg' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  heroImagePath?: string;
+
+  @ApiPropertyOptional({ example: '50% 62%' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  heroImagePosition?: string;
+
   @ApiPropertyOptional({ example: 'about' })
   @IsOptional()
   @IsString()

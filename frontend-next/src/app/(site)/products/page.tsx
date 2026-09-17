@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSections } from "@/app/(site)/_components/SectionRenderer";
 import { CtaBand, PageHero } from "@/app/(site)/_components/ui";
-import { getCmsPage } from "@/app/(site)/_lib/cms";
+import { getCmsPage, heroImageUrl } from "@/app/(site)/_lib/cms";
 import { fallbackPage } from "@/app/(site)/_lib/fallback";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
 import { siteRoutes } from "@/config/routes";
@@ -28,7 +28,13 @@ export default async function ProductsPage() {
 
   return (
     <>
-      <PageHero eyebrow={page.eyebrow} title={page.title} lead={page.lead} />
+      <PageHero
+        eyebrow={page.eyebrow}
+        title={page.title}
+        lead={page.lead}
+        image={heroImageUrl(page.heroImagePath)}
+        imagePosition={page.heroImagePosition}
+      />
 
       <PageSections page={page} />
 

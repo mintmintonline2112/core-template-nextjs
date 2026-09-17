@@ -380,7 +380,7 @@ export function Head({
   return (
     <div className="reveal mx-auto mb-[clamp(2.5rem,5vw,4rem)] max-w-[54rem] text-center">
       {section?.subheading ? (
-        <Eyebrow gold={light} heading show={showsEyebrow(section)}>
+        <Eyebrow gold={light} center heading show={showsEyebrow(section)}>
           {section.subheading}
         </Eyebrow>
       ) : null}

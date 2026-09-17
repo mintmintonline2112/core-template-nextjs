@@ -20,11 +20,11 @@ const LAYOUTS = ["form", "list"] as const;
 
 /**
  * SECTION `contact` — thông tin liên hệ.
- * layout `form`: cột trái tên công ty + địa điểm / địa chỉ / email / điện thoại + ghi
- *                chú + ảnh; cột phải form liên hệ (gửi API thật).
+ * layout `form`: cột trái tên công ty + địa điểm / địa chỉ / email / điện thoại / giờ
+ *                mở cửa + ghi chú + ảnh; cột phải form liên hệ (gửi API thật).
  * layout `list`: đầu khối + danh sách thông tin (không form).
  * Thông tin ưu tiên: metadata của section → Admin → Trang Liên hệ → config mặc định.
- * CMS: heading, subheading, content, metadata.location/address/email/phone,
+ * CMS: heading, subheading, content, metadata.location/address/email/phone/hours,
  * note (ghi chú dưới danh sách), image (ảnh dưới ghi chú, layout form).
  */
 export async function Contact({ section, index = 0 }: SectionProps) {
@@ -36,6 +36,7 @@ export async function Contact({ section, index = 0 }: SectionProps) {
     address: str(section, "address") ?? base.address,
     email: str(section, "email") ?? base.email,
     phone: str(section, "phone") ?? base.phone,
+    hours: str(section, "hours") ?? base.hours,
   };
   const phoneHref = `tel:${info.phone.replace(/[^\d+]/g, "")}`;
 
@@ -60,9 +61,15 @@ export async function Contact({ section, index = 0 }: SectionProps) {
     },
     {
       key: "phone",
-      label: "Phone / WhatsApp",
+      label: "Phone",
       icon: ICONS.phone,
       body: <a href={phoneHref}>{info.phone}</a>,
+    },
+    {
+      key: "hours",
+      label: "Opening Hours",
+      icon: ICONS.clock,
+      body: info.hours,
     },
   ].filter((row) => row.body);
 

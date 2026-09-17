@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react';
 import { getErrorMessage } from '@/app/admin/_lib/utils';
 import { settingsService, SETTINGS_QUERY_KEY } from '@/app/admin/(protected)/settings/_lib/settings.service';
+import { SITE_CONTACT } from '@/config/contact';
 import { siteRoutes } from '@/config/routes';
 import type { ContactInterest, ContactPageConfig } from '@/lib/contact-page';
 import { DEFAULT_INTERESTS } from '@/lib/contact-page';
@@ -21,7 +22,7 @@ import { DEFAULT_INTERESTS } from '@/lib/contact-page';
 type Hero = { eyebrow: string; title: string; lead: string; zhEyebrow: string; zhTitle: string; zhLead: string };
 type Social = { facebook: string; youtube: string; instagram: string; tiktok: string };
 type Company = {
-  name: string; location: string; address: string; phone: string; email: string;
+  name: string; location: string; address: string; phone: string; email: string; hours: string;
   mapUrl: string; zhName: string; zhLocation: string; zhAddress: string;
 };
 type FormCfg = { enabled: boolean; kicker: string; title: string; note: string; zhKicker: string; zhTitle: string; zhNote: string };
@@ -30,7 +31,7 @@ type Interest = { value: string; zh: string };
 const EMPTY_HERO: Hero = { eyebrow: '', title: '', lead: '', zhEyebrow: '', zhTitle: '', zhLead: '' };
 const EMPTY_SOCIAL: Social = { facebook: '', youtube: '', instagram: '', tiktok: '' };
 const EMPTY_COMPANY: Company = {
-  name: '', location: '', address: '', phone: '', email: '', mapUrl: '',
+  name: '', location: '', address: '', phone: '', email: '', hours: '', mapUrl: '',
   zhName: '', zhLocation: '', zhAddress: '',
 };
 const EMPTY_FORM: FormCfg = { enabled: true, kicker: '', title: '', note: '', zhKicker: '', zhTitle: '', zhNote: '' };
@@ -72,7 +73,7 @@ export function ContactPageScreen() {
     setCompany({
       name: s(cfg.company?.name), location: s(cfg.company?.location),
       address: s(cfg.company?.address), phone: s(cfg.company?.phone),
-      email: s(cfg.company?.email), mapUrl: s(cfg.company?.mapUrl),
+      email: s(cfg.company?.email), hours: s(cfg.company?.hours), mapUrl: s(cfg.company?.mapUrl),
       zhName: s(cfg.company?.vi?.name), zhLocation: s(cfg.company?.vi?.location),
       zhAddress: s(cfg.company?.vi?.address),
     });
@@ -117,7 +118,7 @@ export function ContactPageScreen() {
         social: clean({ ...social }),
         company: clean({
           name: company.name, location: company.location, address: company.address,
-          phone: company.phone, email: company.email, mapUrl: company.mapUrl,
+          phone: company.phone, email: company.email, hours: company.hours, mapUrl: company.mapUrl,
           vi: clean({ name: company.zhName, location: company.zhLocation, address: company.zhAddress }),
         }),
         form: clean({
@@ -221,15 +222,19 @@ export function ContactPageScreen() {
       <section className="gf-card st-section">
         <h2 className="st-section-title">Thông tin công ty</h2>
         <p className="gf-hint" style={{ marginTop: -6 }}>
-          Hiện ở trang Liên hệ và chân trang. Để trống ô nào thì website dùng giá trị mặc định trong code.
+          Hiện ở trang Liên hệ, chân trang và thanh trên cùng (điện thoại, email). Để trống ô nào
+          thì website dùng giá trị mặc định trong code (chữ mờ trong ô).
         </p>
         {field('Tên công ty', company.name, (v) => setCompany({ ...company, name: v }), { placeholder: 'Prime Nuts USA' })}
         <div className="st-media-row">
-          <div style={{ flex: 1 }}>{field('Quốc gia / khu vực', company.location, (v) => setCompany({ ...company, location: v }), { placeholder: 'Việt Nam' })}</div>
-          <div style={{ flex: 1 }}>{field('Điện thoại', company.phone, (v) => setCompany({ ...company, phone: v }), { placeholder: '090 119 3378', type: 'tel' })}</div>
+          <div style={{ flex: 1 }}>{field('Quốc gia / khu vực', company.location, (v) => setCompany({ ...company, location: v }), { placeholder: SITE_CONTACT.location })}</div>
+          <div style={{ flex: 1 }}>{field('Điện thoại', company.phone, (v) => setCompany({ ...company, phone: v }), { placeholder: SITE_CONTACT.phone, type: 'tel' })}</div>
         </div>
-        {field('Địa chỉ', company.address, (v) => setCompany({ ...company, address: v }), { rows: 2, placeholder: 'Số nhà, đường, phường, quận, thành phố' })}
-        {field('Email', company.email, (v) => setCompany({ ...company, email: v }), { placeholder: 'hello@primenuts.vn', type: 'email' })}
+        {field('Địa chỉ', company.address, (v) => setCompany({ ...company, address: v }), { rows: 2, placeholder: SITE_CONTACT.address })}
+        <div className="st-media-row">
+          <div style={{ flex: 1 }}>{field('Email', company.email, (v) => setCompany({ ...company, email: v }), { placeholder: SITE_CONTACT.email, type: 'email' })}</div>
+          <div style={{ flex: 1 }}>{field('Giờ mở cửa', company.hours, (v) => setCompany({ ...company, hours: v }), { placeholder: SITE_CONTACT.hours })}</div>
+        </div>
         {field('Link Google Maps (tùy chọn)', company.mapUrl, (v) => setCompany({ ...company, mapUrl: v }), { placeholder: 'https://maps.app.goo.gl/...', type: 'url' })}
         <details className="gf-group">
           <summary className="gf-group-summary"><strong>Bản dịch tiếng Việt</strong><small>Điện thoại / email dùng chung, chỉ dịch tên và địa chỉ.</small></summary>

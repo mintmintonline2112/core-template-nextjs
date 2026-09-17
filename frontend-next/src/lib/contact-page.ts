@@ -33,6 +33,8 @@ export type ContactPageConfig = {
     address?: string;
     phone?: string;
     email?: string;
+    /** Giờ mở cửa, hiện nguyên văn (VD "Mon–Fri 9AM - 5PM"). */
+    hours?: string;
     /** Link Google Maps cho nút "Xem bản đồ" (tùy chọn). */
     mapUrl?: string;
     vi?: { name?: string; location?: string; address?: string };

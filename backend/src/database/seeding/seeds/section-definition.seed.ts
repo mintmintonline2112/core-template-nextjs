@@ -18,7 +18,7 @@ type DefinitionSeed = {
 const IMAGE_HINT =
   'Ảnh: bấm "Thư viện" để chọn ảnh đã upload, hoặc dán /images/... (ảnh có sẵn của thiết kế).';
 const ICON_HINT =
-  'Icon (tuỳ chọn) — tên trong bộ icon chung: pin, leaf, scale, tune, ship, heart, almond, product, ruler, grade, calendar, box, pallet, building, mail, phone, blanched, sliced, slivered, diced, flour. Trống thì xoay vòng theo thứ tự.';
+  'Icon (tuỳ chọn) — tên trong bộ icon chung: pin, leaf, scale, tune, ship, heart, almond, product, ruler, grade, calendar, box, pallet, building, mail, phone, clock, blanched, sliced, slivered, diced, flour. Trống thì xoay vòng theo thứ tự.';
 const CTA_HINT = 'Chữ trên nút để trống thì ẩn nút. Link: #tên-section trên cùng trang (VD #request-quote) hoặc /duong-dan.';
 
 /* ---------- helper dựng spec ---------- */
@@ -385,7 +385,7 @@ const DEFINITIONS: DefinitionSeed[] = [
   {
     pageSlug: 'shared', sectionKey: 'contact', sortOrder: 18,
     label: 'Thông tin liên hệ',
-    description: 'Contact.tsx — địa điểm / địa chỉ / email / điện thoại. Bố cục "Có form": cột trái thông tin + ghi chú + ảnh, cột phải form liên hệ. Bố cục "Danh sách": chỉ danh sách thông tin.',
+    description: 'Contact.tsx — địa điểm / địa chỉ / email / điện thoại / giờ mở cửa. Bố cục "Có form": cột trái thông tin + ghi chú + ảnh, cột phải form liên hệ. Bố cục "Danh sách": chỉ danh sách thông tin.',
     fields: [
       layout([
         { value: 'form', label: 'Có form liên hệ' },
@@ -395,7 +395,8 @@ const DEFINITIONS: DefinitionSeed[] = [
         { name: 'location', label: 'Địa điểm' },
         { name: 'address', label: 'Địa chỉ' },
         { name: 'email', label: 'Email' },
-        { name: 'phone', label: 'Điện thoại / WhatsApp' },
+        { name: 'phone', label: 'Điện thoại' },
+        { name: 'hours', label: 'Giờ mở cửa' },
       ], 'Để trống ô nào thì lấy từ Admin → Trang Liên hệ (rồi tới cấu hình mặc định).'),
       textMap('Ghi chú', [
         { name: 'note', label: 'Ghi chú dưới danh sách' },

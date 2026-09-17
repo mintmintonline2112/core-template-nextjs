@@ -75,6 +75,7 @@ export function resolveContact(settings: SiteSettings) {
     email: company.email?.trim() || SITE_CONTACT.email,
     phone,
     phoneHref: `tel:${phone.replace(/[^\d+]/g, "")}`,
+    hours: company.hours?.trim() || SITE_CONTACT.hours,
     mapUrl: company.mapUrl?.trim() || null,
   };
 }

@@ -11,6 +11,7 @@ import { Hero } from "./Hero";
 import { IconCardList } from "./IconCardList";
 import { Marquee } from "./Marquee";
 import { MediaCards } from "./MediaCards";
+import { PhotoSlider } from "./PhotoSlider";
 import { PhotoStrip } from "./PhotoStrip";
 import { QuoteForm } from "./QuoteForm";
 import { SizeScale } from "./SizeScale";
@@ -36,6 +37,7 @@ export const SECTION_COMPONENTS: Record<string, ComponentType<SectionProps>> = {
   "media-cards": MediaCards,
   "size-scale": SizeScale,
   "photo-strip": PhotoStrip,
+  "photo-slider": PhotoSlider,
   "icon-card-list": IconCardList,
   steps: Steps,
   "feature-list": FeatureList,
@@ -111,6 +113,7 @@ export {
   IconCardList,
   Marquee,
   MediaCards,
+  PhotoSlider,
   PhotoStrip,
   QuoteForm,
   SizeScale,

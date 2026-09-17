@@ -191,7 +191,19 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'icon-card-list', sortOrder: 6,
+    pageSlug: 'shared', sectionKey: 'photo-slider', sortOrder: 6,
+    label: 'Dải ảnh trượt (slider) + ghi chú',
+    description: 'PhotoSlider.tsx — như "Dải ảnh + ghi chú" nhưng dải ảnh là slider: máy tính hiện 3 ảnh, tablet 2, điện thoại 1; trượt vòng từng ảnh bằng mũi tên, chấm hoặc vuốt (không tự chạy). Dưới là dòng ghi chú + nút. Có Heading thì hiện đầu khối.',
+    fields: [
+      itemList('items', 'Ảnh', [
+        { name: 'image', label: 'Ảnh', kind: 'image' },
+        { name: 'caption', label: 'Chú thích', kind: 'text' },
+      ], IMAGE_HINT + ' Từ 3 ảnh trở lên thì trượt được trên mọi màn hình (ảnh cuối nối lại ảnh đầu); 2 ảnh thì máy tính đứng yên, tablet và điện thoại vẫn trượt.'),
+      textMap('Ghi chú + nút', [{ name: 'note', label: 'Dòng ghi chú' }, ...CTA_FIELDS], CTA_HINT),
+    ],
+  },
+  {
+    pageSlug: 'shared', sectionKey: 'icon-card-list', sortOrder: 7,
     label: 'Danh sách dòng có icon',
     description: 'IconCardList.tsx — mỗi dòng một mục có icon (tiêu đề + mô tả). Bố cục "Danh sách": đầu khối + danh sách. Bố cục "Chia đôi": chữ + nút + ảnh lớn bên trái, ảnh blob có nhãn + danh sách bên phải (thông số sản phẩm).',
     fields: [
@@ -215,7 +227,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'steps', sortOrder: 7,
+    pageSlug: 'shared', sectionKey: 'steps', sortOrder: 8,
     label: 'Các bước quy trình',
     description: 'Steps.tsx — quy trình theo bước. Bố cục "Slider + ô bước": nền navy, slider ảnh tự chạy, bấm ô bước N chuyển tới ảnh N, có nút. Bố cục "Vòng tròn": bước đánh số trong vòng tròn nối bằng đường cong nét đứt, nền kem có bản đồ mờ.',
     fields: [
@@ -236,7 +248,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'feature-list', sortOrder: 8,
+    pageSlug: 'shared', sectionKey: 'feature-list', sortOrder: 9,
     label: 'Danh sách mục + chip',
     description: 'FeatureList.tsx — mục có ghi chú nhỏ + dải chip. Bố cục "Kẹp ảnh tròn": mục đánh số hai bên ảnh tròn trung tâm, dưới là câu mục tiêu + chip. Bố cục "Lưới tick": lưới mục có dấu tick + chip.',
     fields: [
@@ -254,13 +266,13 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'marquee', sortOrder: 9,
+    pageSlug: 'shared', sectionKey: 'marquee', sortOrder: 10,
     label: 'Chữ chạy ngang',
     description: 'Marquee.tsx — tiêu đề nhỏ (Heading) + chữ chạy ngang; đủ mục thì chia 2 dòng chạy ngược chiều; câu ghi chú lấy từ Nội dung.',
     fields: [stringList('items', 'Các mục chạy', 'Heading = tiêu đề nhỏ phía trên; Nội dung = câu ghi chú phía dưới.')],
   },
   {
-    pageSlug: 'shared', sectionKey: 'feature-cards', sortOrder: 10,
+    pageSlug: 'shared', sectionKey: 'feature-cards', sortOrder: 11,
     label: 'Lưới thẻ icon',
     description: 'FeatureCards.tsx — lưới thẻ icon + tiêu đề + mô tả trên nền kem (VD lý do chọn chúng tôi).',
     fields: [
@@ -272,7 +284,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'faq', sortOrder: 11,
+    pageSlug: 'shared', sectionKey: 'faq', sortOrder: 12,
     label: 'FAQ (accordion)',
     description: 'Faq.tsx — câu hỏi bấm mở. Bố cục "2 cột": thẻ trắng viền trái có dấu +, tự chia 2 cột hoặc theo nhóm. Bố cục "Chia đôi có ảnh": accordion 1 cột bên trái, ảnh lớn bo góc bên phải, ghi chú cuối cột.',
     fields: [
@@ -297,7 +309,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'quote-form', sortOrder: 12,
+    pageSlug: 'shared', sectionKey: 'quote-form', sortOrder: 13,
     label: 'Form báo giá + checklist',
     description: 'QuoteForm.tsx — nền navy: tiêu đề + checklist "Please include" bên trái, form báo giá B2B (gửi API thật) bên phải.',
     fields: [
@@ -306,7 +318,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'checklist', sortOrder: 13,
+    pageSlug: 'shared', sectionKey: 'checklist', sortOrder: 14,
     label: 'Lưới checklist',
     description: 'Checklist.tsx — lưới mục có dấu tick, dưới là dòng ghi chú (có thể chứa link) + nút.',
     fields: [
@@ -318,7 +330,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'contact', sortOrder: 14,
+    pageSlug: 'shared', sectionKey: 'contact', sortOrder: 15,
     label: 'Thông tin liên hệ',
     description: 'Contact.tsx — địa điểm / địa chỉ / email / điện thoại. Bố cục "Có form": cột trái thông tin + ghi chú + ảnh, cột phải form liên hệ. Bố cục "Danh sách": chỉ danh sách thông tin.',
     fields: [
@@ -340,7 +352,7 @@ const DEFINITIONS: DefinitionSeed[] = [
     ],
   },
   {
-    pageSlug: 'shared', sectionKey: 'stats', sortOrder: 15,
+    pageSlug: 'shared', sectionKey: 'stats', sortOrder: 16,
     label: 'Dải số liệu',
     description: 'Stats.tsx — đầu khối + dải số liệu nổi bật (số ở đầu tự chạy đếm).',
     fields: [

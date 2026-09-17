@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { RotateCcw, X } from 'lucide-react';
@@ -9,13 +9,19 @@ import { getErrorMessage, resolveImageUrl } from '@/app/admin/_lib/utils';
 import {
   settingsService,
   SETTINGS_QUERY_KEY,
-  COLOR_TOKENS,
   FONT_OPTIONS,
   POST_TITLE_DEFAULT,
   POST_TITLE_MAX,
   POST_TITLE_MIN,
-  type ThemeColorOverrides,
 } from '@/app/admin/(protected)/settings/_lib/settings.service';
+import {
+  BRAND_COLOR_DEFAULTS,
+  BRAND_COLOR_FIELDS,
+  BRAND_SHADES,
+  isBrandHex,
+  type BrandColorKey,
+  type BrandColors,
+} from '@/lib/brand-colors';
 
 type PickerTarget = 'logo' | 'footerLogo' | 'favicon' | 'hero' | 'og' | null;
 
@@ -37,8 +43,7 @@ export function SettingsScreen() {
   const [ogImageUrl, setOgImageUrl] = useState('');
   const [fontFamily, setFontFamily] = useState('');
   const [postTitleSize, setPostTitleSize] = useState(POST_TITLE_DEFAULT);
-  const [colorsDark, setColorsDark] = useState<ThemeColorOverrides>({});
-  const [colorsLight, setColorsLight] = useState<ThemeColorOverrides>({});
+  const [brandColors, setBrandColors] = useState<BrandColors>({});
   const [zhSiteTitle, setZhSiteTitle] = useState('');
   const [zhSiteDescription, setZhSiteDescription] = useState('');
   const [zhBrandName, setZhBrandName] = useState('');
@@ -69,8 +74,7 @@ export function SettingsScreen() {
     setPostTitleSize(
       typeof data.postTitleSize === 'number' ? data.postTitleSize : POST_TITLE_DEFAULT,
     );
-    setColorsDark(data.colorsDark ?? {});
-    setColorsLight(data.colorsLight ?? {});
+    setBrandColors(data.brandColors ?? {});
     setZhSiteTitle(data.translations?.vi?.siteTitle ?? '');
     setZhSiteDescription(data.translations?.vi?.siteDescription ?? '');
     setZhBrandName(data.translations?.vi?.brandName ?? '');
@@ -85,16 +89,20 @@ export function SettingsScreen() {
     });
   }, [data]);
 
-  function setColor(theme: 'dark' | 'light', key: string, value: string) {
-    const setter = theme === 'dark' ? setColorsDark : setColorsLight;
-    setter((prev) => ({ ...prev, [key]: value }));
+  /** Màu admin đang chọn, chưa chọn / không hợp lệ thì là màu mặc định. */
+  const brandColorOf = (key: BrandColorKey) => {
+    const value = brandColors[key];
+    return isBrandHex(value) ? value.toUpperCase() : BRAND_COLOR_DEFAULTS[key];
+  };
+
+  function setBrandColor(key: BrandColorKey, value: string) {
+    setBrandColors((prev) => ({ ...prev, [key]: value.toUpperCase() }));
   }
 
-  function clearColor(theme: 'dark' | 'light', key: string) {
-    const setter = theme === 'dark' ? setColorsDark : setColorsLight;
-    setter((prev) => {
+  function clearBrandColor(key: BrandColorKey) {
+    setBrandColors((prev) => {
       const next = { ...prev };
-      delete next[key as keyof ThemeColorOverrides];
+      delete next[key];
       return next;
     });
   }
@@ -117,8 +125,18 @@ export function SettingsScreen() {
         fontFamily: fontFamily || null,
         // Bằng mặc định thì xóa key (null) — DB chỉ giữ giá trị admin thực sự đổi
         postTitleSize: postTitleSize !== POST_TITLE_DEFAULT ? postTitleSize : null,
-        colorsDark: Object.keys(colorsDark).length ? colorsDark : null,
-        colorsLight: Object.keys(colorsLight).length ? colorsLight : null,
+        // Chỉ lưu màu khác mặc định — DB gọn, đổi mặc định trong code vẫn ăn.
+        brandColors: (() => {
+          const changed = Object.fromEntries(
+            BRAND_COLOR_FIELDS.map((field) => [field.key, brandColorOf(field.key)]).filter(
+              ([key, value]) => value !== BRAND_COLOR_DEFAULTS[key as BrandColorKey],
+            ),
+          );
+          return Object.keys(changed).length ? changed : null;
+        })(),
+        // Màu theme cũ (tối/sáng) không còn dùng — xoá khỏi DB.
+        colorsDark: null,
+        colorsLight: null,
         copyProtection,
         showPostMeta,
         socialLinks: (() => {
@@ -171,7 +189,7 @@ export function SettingsScreen() {
       <div className="adm-page-header is-row">
         <div>
           <h1 className="adm-page-title">Cài đặt website</h1>
-          <p className="adm-page-subtitle">Thương hiệu · Hình ảnh · Font chữ · Màu sắc · Tính năng</p>
+          <p className="adm-page-subtitle">Thương hiệu · Hình ảnh · Font chữ · Màu thương hiệu · Tính năng</p>
         </div>
         <button
           type="button"
@@ -497,59 +515,85 @@ export function SettingsScreen() {
       </section>
 
       <section className="gf-card st-section">
-        <h2 className="st-section-title">Màu sắc theme</h2>
-        <p className="gf-hint st-soon">⏳ Chưa nối với giao diện site hiện tại — giá trị vẫn lưu và sẽ áp dụng khi nối.</p>
+        <h2 className="st-section-title">Màu thương hiệu</h2>
         <p className="gf-hint">
-          Ghi đè token màu của theme. Ô nào chưa đổi sẽ dùng màu mặc định; bấm ↺ để trả một màu về mặc định.
+          4 màu gốc của website. Các sắc đậm/nhạt (nền tối, viền, chữ phụ…) tự suy ra từ đây nên
+          chỉ cần đổi 4 ô này. Bấm ↺ để trả một màu về mặc định.
         </p>
-        <div className="st-colors-grid">
-          {(['dark', 'light'] as const).map((theme) => {
-            const overrides = theme === 'dark' ? colorsDark : colorsLight;
-            return (
-              <div key={theme} className="st-color-group">
-                <h3>{theme === 'dark' ? '🌙 Theme tối (mặc định)' : '☀️ Theme sáng'}</h3>
-                {COLOR_TOKENS.map((token) => {
-                  const fallback = theme === 'dark' ? token.darkDefault : token.lightDefault;
-                  const current = overrides[token.key] ?? fallback;
-                  const isOverridden = overrides[token.key] != null;
-                  return (
-                    <div key={token.key} className="st-color-row">
-                      <span className="st-color-label">
-                        {token.label}
-                        {isOverridden && <em> (đã đổi)</em>}
-                      </span>
-                      <div className="st-color-controls">
-                        <input
-                          type="color"
-                          value={current}
-                          onChange={(e) => setColor(theme, token.key, e.target.value)}
-                        />
-                        <code>{current}</code>
-                        {isOverridden && (
-                          <button
-                            type="button"
-                            className="st-color-reset"
-                            onClick={() => clearColor(theme, token.key)}
-                            title="Trả về màu mặc định"
-                          >
-                            <RotateCcw size={13} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+        <div
+          className="st-brand"
+          style={
+            Object.fromEntries(
+              BRAND_COLOR_FIELDS.map((field) => [`--brand-${field.key}`, brandColorOf(field.key)]),
+            ) as CSSProperties
+          }
+        >
+          <div className="st-color-group">
+            {BRAND_COLOR_FIELDS.map((field) => {
+              const current = brandColorOf(field.key);
+              const isChanged = current !== field.defaultValue;
+              return (
+                <div key={field.key} className="st-color-row">
+                  <span className="st-color-label">
+                    {field.label}
+                    {isChanged && <em> (đã đổi)</em>}
+                    <small>{field.hint}</small>
+                  </span>
+                  <div className="st-color-controls">
+                    <input
+                      type="color"
+                      value={current.toLowerCase()}
+                      onChange={(e) => setBrandColor(field.key, e.target.value)}
+                      aria-label={field.label}
+                    />
+                    <code>{current}</code>
+                    {/* Chưa đổi vẫn giữ chỗ nút ↺ để mã màu các hàng thẳng cột. */}
+                    <button
+                      type="button"
+                      className="st-color-reset"
+                      onClick={() => clearBrandColor(field.key)}
+                      title={`Trả về màu mặc định (${field.defaultValue})`}
+                      style={isChanged ? undefined : { visibility: 'hidden' }}
+                      tabIndex={isChanged ? undefined : -1}
+                    >
+                      <RotateCcw size={13} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="st-brand-preview" aria-hidden="true">
+            <div className="st-brand-mock">
+              <span className="st-brand-mock-bar">Prime Nuts USA · Hotline · Email</span>
+              <div className="st-brand-mock-hero">
+                <strong>California Almonds</strong>
+                <span>Direct from the orchard to your warehouse.</span>
+                <em>Request a B2B Quote</em>
               </div>
-            );
-          })}
+              <div className="st-brand-mock-card">
+                <strong>Nonpareil Supreme</strong>
+                <span>Size 23/25 · Crop 2026 · 22.68 kg carton</span>
+              </div>
+            </div>
+            <ul className="st-brand-shades">
+              {BRAND_SHADES.map((shade) => (
+                <li key={shade.label}>
+                  <i style={{ background: shade.css }} />
+                  {shade.label}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
       <section className="gf-card st-section">
         <h2 className="st-section-title">Mạng xã hội</h2>
-        <p className="gf-hint st-soon">⏳ Chưa nối với giao diện site hiện tại — giá trị vẫn lưu và sẽ áp dụng khi nối.</p>
         <p className="gf-hint" style={{ marginTop: -6 }}>
-          Để trống mạng nào thì ẩn mạng đó khi được hiển thị ngoài website.
+          Hiện thành biểu tượng ở thanh trên cùng và trong menu mobile. Để trống mạng nào thì ẩn
+          mạng đó.
         </p>
         {(
           [
@@ -574,7 +618,6 @@ export function SettingsScreen() {
 
       <section className="gf-card st-section">
         <h2 className="st-section-title">Tính năng website</h2>
-        <p className="gf-hint st-soon">⏳ Hai tuỳ chọn này chưa nối với giao diện site hiện tại.</p>
         <label className="gf-check st-feature">
           <input
             type="checkbox"
@@ -583,7 +626,7 @@ export function SettingsScreen() {
           />
           <span>
             <strong>Hiện ngày đăng &amp; số phút đọc trên bài viết</strong>
-            <small>Dòng &ldquo;23/08/2026 · 2 phút đọc&rdquo; trên thẻ bài viết và trang chi tiết. Tắt để ẩn trên toàn website.</small>
+            <small>Ngày đăng và dòng &ldquo;2 min read&rdquo; ở trang News (bài nổi bật, thẻ bài viết) và đầu trang chi tiết bài. Tắt để ẩn trên toàn website.</small>
           </span>
         </label>
         <label className="gf-check st-feature">
@@ -594,7 +637,7 @@ export function SettingsScreen() {
           />
           <span>
             <strong>Hạn chế sao chép nội dung</strong>
-            <small>Chặn chuột phải, bôi đen và Ctrl+C trên website. Là rào mềm phía trình duyệt, không chặn tuyệt đối được người dùng kỹ thuật.</small>
+            <small>Chặn chuột phải, bôi đen, Ctrl+C và kéo ảnh trên website (ô nhập của form báo giá vẫn gõ/dán bình thường). Là rào mềm phía trình duyệt, không chặn tuyệt đối được người dùng kỹ thuật.</small>
           </span>
         </label>
       </section>

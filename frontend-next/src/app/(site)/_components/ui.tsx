@@ -17,7 +17,7 @@ export const SECTION_TINT =
 
 /** Nền navy đậm, chữ sáng. */
 export const SECTION_DARK =
-  "bg-[radial-gradient(110%_80%_at_15%_0%,rgba(37,55,94,0.5)_0%,rgba(20,31,56,0)_55%),linear-gradient(200deg,var(--navy-800)_0%,var(--navy-900)_85%)] text-light";
+  "bg-[radial-gradient(110%_80%_at_15%_0%,color-mix(in_oklab,var(--navy-600)_50%,transparent)_0%,transparent_55%),linear-gradient(200deg,var(--navy-800)_0%,var(--navy-900)_85%)] text-light";
 
 /**
  * Hai section cùng mang class này đứng liền nhau trong CMS thì nối thành một
@@ -36,7 +36,7 @@ export const SECTION_NOTE =
  * `photo-frame` là móc cho hiệu ứng cuộn (effects.css + GSAP trong SiteEffects.tsx).
  */
 export const PHOTO_FRAME =
-  "photo-frame relative m-0 overflow-hidden rounded-lg border border-line bg-paper shadow-lift transition-[border-color,box-shadow] duration-300 ease-brand hover:border-gold-400 after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(15,23,41,0)_55%,rgba(15,23,41,0.38))] after:opacity-0 after:transition-opacity after:duration-350 after:ease-brand after:content-[''] hover:after:opacity-100 [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-[filter] [&_img]:duration-350 [&_img]:ease-brand hover:[&_img]:[filter:brightness(1.08)_saturate(1.12)]";
+  "photo-frame relative m-0 overflow-hidden rounded-lg border border-line bg-paper shadow-lift transition-[border-color,box-shadow] duration-300 ease-brand hover:border-gold-400 after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,transparent_55%,color-mix(in_oklab,var(--navy-900)_38%,transparent))] after:opacity-0 after:transition-opacity after:duration-350 after:ease-brand after:content-[''] hover:after:opacity-100 [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-[filter] [&_img]:duration-350 [&_img]:ease-brand hover:[&_img]:[filter:brightness(1.08)_saturate(1.12)]";
 
 /** Ảnh ngang lớn đầu khối (dùng cùng PHOTO_FRAME). */
 export const SECTION_PHOTO = "mb-[clamp(2rem,4vw,3rem)] aspect-21/9";
@@ -184,7 +184,7 @@ export function CtaBand({
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-[radial-gradient(120%_100%_at_15%_100%,rgba(37,55,94,0.5)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-900)_0%,var(--navy-800)_100%)] py-[clamp(3.5rem,7vw,5.5rem)] text-center text-light",
+        "relative overflow-hidden bg-[radial-gradient(120%_100%_at_15%_100%,color-mix(in_oklab,var(--navy-600)_50%,transparent)_0%,transparent_55%),linear-gradient(160deg,var(--navy-900)_0%,var(--navy-800)_100%)] py-[clamp(3.5rem,7vw,5.5rem)] text-center text-light",
         NAVY_GRAIN,
       )}
     >

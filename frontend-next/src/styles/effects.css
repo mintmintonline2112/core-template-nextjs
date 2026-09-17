@@ -167,3 +167,15 @@ html.gsap :is(.btn-gold, .btn-primary) {
   60%  { transform: scale(1.12); }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* Admin → Cài đặt → "Hạn chế sao chép nội dung" (CopyGuard.tsx bật class này):
+   không bôi đen chữ trên trang, riêng ô nhập liệu vẫn chọn / dán được. */
+html.copy-guard body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html.copy-guard :is(input, textarea, select, [contenteditable="true"]) {
+  -webkit-user-select: text;
+  user-select: text;
+}

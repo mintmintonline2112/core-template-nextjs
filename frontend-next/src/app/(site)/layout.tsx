@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Footer } from "@/app/(site)/_components/Footer";
 import { Header } from "@/app/(site)/_components/Header";
+import { CopyGuard } from "@/app/(site)/_components/CopyGuard";
 import { SiteEffects } from "@/app/(site)/_components/SiteEffects";
+import { brandColorsCss } from "@/lib/brand-colors";
 import { mediaUrl } from "@/app/(site)/_lib/cms";
 import { getSiteMenu } from "@/app/(site)/_lib/menu";
 import { FONT_STACKS, getSiteSettings, resolveContact } from "@/lib/settings";
@@ -71,11 +73,18 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
 
   const contact = resolveContact(settings);
 
+  // Admin → Cài đặt → Màu thương hiệu: đè 4 biến gốc --brand-*, mọi sắc độ tự
+  // suy ra trong styles/base.css. Chưa đổi màu nào thì không chèn gì.
+  const brandCss = brandColorsCss(settings.brandColors);
+
   return (
     <>
       {fontStack ? (
         <style>{`:root { --font-main: ${fontStack}; }`}</style>
       ) : null}
+      {brandCss ? <style>{brandCss}</style> : null}
+      {/* Admin → Cài đặt → Hạn chế sao chép (mặc định bật, tắt hẳn khi = false) */}
+      {settings.copyProtection !== false ? <CopyGuard /> : null}
       <SiteEffects />
       <Header menu={menu} brand={brand} contact={contact} social={settings.socialLinks} />
       <main id="main">{children}</main>

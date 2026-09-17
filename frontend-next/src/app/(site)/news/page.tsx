@@ -16,6 +16,7 @@ import {
   mediaUrl,
 } from "@/app/(site)/_lib/cms";
 import { buildPageMetadata } from "@/app/(site)/_lib/seo";
+import { getSiteSettings } from "@/lib/settings";
 import type { BlogPost } from "@/types/cms";
 import { siteRoutes } from "@/config/routes";
 
@@ -93,7 +94,12 @@ export default async function NewsPage({
   const pageNumber = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
 
   // Ảnh nền đầu trang lấy từ trang CMS "news" (Admin → Trang); chữ của dải giữ cố định.
-  const cmsPage = await getCmsPage("news");
+  const [cmsPage, settings] = await Promise.all([
+    getCmsPage("news"),
+    getSiteSettings(),
+  ]);
+  // Admin → Cài đặt → Hiện ngày đăng & số phút đọc (mặc định bật).
+  const showMeta = settings.showPostMeta !== false;
   const categories = (await getBlogCategories()).filter(
     (category) => category.isActive !== false && !category.parentId,
   );
@@ -157,9 +163,11 @@ export default async function NewsPage({
                       {featured.category.name}
                     </span>
                   ) : null}
-                  <span className="text-light-soft">
-                    {formatDate(featured.publishedAt)}
-                  </span>
+                  {showMeta ? (
+                    <span className="text-light-soft">
+                      {formatDate(featured.publishedAt)}
+                    </span>
+                  ) : null}
                 </div>
                 <h2 className="text-h3 text-light">
                   <Link
@@ -171,11 +179,12 @@ export default async function NewsPage({
                 </h2>
                 <p className="text-light-soft">{featured.excerpt}</p>
                 <p className="mt-5 border-t border-t-gold-300/30 pt-4 text-sm text-light-soft italic">
-                  {readingTime(featured)} · Prime Nuts USA Editorial
+                  {showMeta ? `${readingTime(featured)} · ` : ""}Prime Nuts
+                  USA Editorial
                 </p>
               </div>
               {/* `news-featured-photo`: móc GSAP (mở khẩu độ + trượt dọc theo cuộn). */}
-              <div className="news-featured-photo relative flex items-center justify-center border-l border-l-gold-300/30 bg-[radial-gradient(120%_100%_at_50%_100%,rgba(217,180,95,0.14)_0%,rgba(217,180,95,0)_60%)] p-0 max-[900px]:border-t max-[900px]:border-l-0 max-[900px]:border-t-gold-300/30">
+              <div className="news-featured-photo relative flex items-center justify-center border-l border-l-gold-300/30 bg-[radial-gradient(120%_100%_at_50%_100%,color-mix(in_oklab,var(--gold-300)_14%,transparent)_0%,transparent_60%)] p-0 max-[900px]:border-t max-[900px]:border-l-0 max-[900px]:border-t-gold-300/30">
                 {mediaUrl(featured.coverImagePath) ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -209,9 +218,11 @@ export default async function NewsPage({
                           {post.category.name}
                         </span>
                       ) : null}
-                      <span className="text-ink-faint">
-                        {formatDate(post.publishedAt)}
-                      </span>
+                      {showMeta ? (
+                        <span className="text-ink-faint">
+                          {formatDate(post.publishedAt)}
+                        </span>
+                      ) : null}
                     </div>
                     <h3 className="mb-2 text-2xl transition-[color] duration-200 ease-brand group-hover:text-navy-700">
                       {post.title}
@@ -219,9 +230,11 @@ export default async function NewsPage({
                     <p className="m-0 grow text-base text-ink-soft">
                       {post.excerpt}
                     </p>
-                    <p className="m-0 grow border-t border-t-line-soft pt-4 text-base text-ink-soft italic">
-                      {readingTime(post)}
-                    </p>
+                    {showMeta ? (
+                      <p className="m-0 grow border-t border-t-line-soft pt-4 text-base text-ink-soft italic">
+                        {readingTime(post)}
+                      </p>
+                    ) : null}
                   </Link>
                 </article>
               ))}

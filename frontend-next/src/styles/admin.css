@@ -2209,15 +2209,109 @@ body .swal2-html-container {
   max-height: 260px;
   object-fit: cover;
 }
-.st-colors-grid {
+/* Màu thương hiệu: ô chọn màu | xem trước. Khối .st-brand mang biến --brand-*
+   (inline style) nên bản xem trước đổi màu ngay khi kéo ô chọn màu. */
+.st-brand {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
 }
 @media (min-width: 900px) {
-  .st-colors-grid {
-    grid-template-columns: 1fr 1fr;
+  .st-brand {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   }
+}
+.st-color-label small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--admin-muted);
+}
+.st-brand-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.st-brand-mock {
+  overflow: hidden;
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--brand-primary) 4%, #faf8f3);
+  color: var(--brand-black);
+}
+.st-brand-mock-bar {
+  display: block;
+  padding: 5px 14px;
+  background: color-mix(in oklab, var(--brand-primary) 58%, #000);
+  color: color-mix(in oklab, var(--brand-white) 76%, var(--brand-primary));
+  font-size: 11px;
+}
+.st-brand-mock-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 14px;
+  background: var(--brand-primary);
+  color: var(--brand-white);
+}
+.st-brand-mock-hero strong {
+  font-size: 18px;
+}
+.st-brand-mock-hero span {
+  font-size: 12px;
+  color: color-mix(in oklab, var(--brand-white) 76%, var(--brand-primary));
+}
+.st-brand-mock-hero em {
+  margin-top: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--brand-secondary);
+  color: color-mix(in oklab, var(--brand-primary) 58%, #000);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+.st-brand-mock-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 14px;
+  padding: 12px 14px;
+  border: 1px solid #e3ddd0;
+  border-top: 3px solid var(--brand-secondary);
+  border-radius: 8px;
+  background: var(--brand-white);
+}
+.st-brand-mock-card strong {
+  font-size: 14px;
+  color: color-mix(in oklab, var(--brand-primary) 58%, #000);
+}
+.st-brand-mock-card span {
+  font-size: 12px;
+  color: color-mix(in oklab, var(--brand-black) 78%, #fff);
+}
+.st-brand-shades {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.st-brand-shades li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--admin-muted);
+}
+.st-brand-shades i {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--admin-line);
+  border-radius: 5px;
 }
 .st-color-group {
   border: 1px solid var(--admin-line);
@@ -2252,6 +2346,7 @@ body .swal2-html-container {
 }
 .st-color-controls {
   display: flex;
+  flex: none; /* nhãn dài xuống dòng, không bóp ô màu */
   align-items: center;
   gap: 8px;
 }

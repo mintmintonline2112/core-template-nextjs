@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 
 /** Nền panel: quầng sáng navy-600 mờ góc trên phải chồng lên dốc navy-800 → navy-900. */
 const PANEL_BG =
-  "bg-[radial-gradient(120%_100%_at_80%_0%,rgba(37,55,94,0.5)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_100%)]";
+  "bg-[radial-gradient(120%_100%_at_80%_0%,color-mix(in_oklab,var(--navy-600)_50%,transparent)_0%,transparent_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_100%)]";
 
 /**
  * Thước đo cỡ hạt: panel xanh đậm, mỗi cỡ là một hạt hạnh nhân vàng nhỏ dần

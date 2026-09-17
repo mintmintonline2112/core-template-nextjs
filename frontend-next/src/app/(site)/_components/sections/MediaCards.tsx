@@ -138,11 +138,11 @@ export function MediaCards({ section, index = 0 }: SectionProps) {
 
 /** Nền thẻ gradient (không có ảnh): navy đậm → navy nhạt, ánh vàng đồng góc dưới. */
 const GRADIENT_CARD =
-  "bg-[radial-gradient(120%_70%_at_100%_100%,rgba(217,180,95,0.38),transparent_62%),linear-gradient(178deg,var(--navy-800)_0%,var(--navy-600)_52%,#7F91B4_100%)]";
+  "bg-[radial-gradient(120%_70%_at_100%_100%,color-mix(in_oklab,var(--gold-300)_38%,transparent),transparent_62%),linear-gradient(178deg,var(--navy-800)_0%,var(--navy-600)_52%,color-mix(in_oklab,var(--navy-600)_55%,#fff)_100%)]";
 
 /** Thẻ ảnh: lớp tối phủ lên ảnh cho chữ dễ đọc. */
 const PHOTO_CARD_SCRIM =
-  'before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(180deg,rgba(15,23,41,0.72)_0%,rgba(15,23,41,0.28)_42%,rgba(15,23,41,0.05)_62%,rgba(15,23,41,0.45)_100%)] before:content-[""]';
+  'before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--navy-900)_72%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_28%,transparent)_42%,color-mix(in_oklab,var(--navy-900)_5%,transparent)_62%,color-mix(in_oklab,var(--navy-900)_45%,transparent)_100%)] before:content-[""]';
 
 /** Đoạn mô tả trong thẻ — dùng cho cả bản ngắn và các đoạn của bản đầy đủ. */
 const CARD_TEXT = "mt-3 max-w-[44ch] text-base leading-relaxed text-white/90";
@@ -400,7 +400,7 @@ function BadgeCards({
                 key={`${card.title}-${i}`}
               >
                 {/* ::after = lớp tối vuốt dần xuống đáy ảnh, cho nhãn số nổi lên */}
-                <div className='relative aspect-[4/3] overflow-hidden bg-cream-2 after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(15,23,41,0.02)_45%,rgba(15,23,41,0.32)_100%)] after:content-[""]'>
+                <div className='relative aspect-[4/3] overflow-hidden bg-cream-2 after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--navy-900)_2%,transparent)_45%,color-mix(in_oklab,var(--navy-900)_32%,transparent)_100%)] after:content-[""]'>
                   {card.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img

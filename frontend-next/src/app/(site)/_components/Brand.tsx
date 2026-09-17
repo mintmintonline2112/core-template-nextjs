@@ -22,7 +22,11 @@ export function BrandMark({ footer = false }: { footer?: boolean }) {
         cx="20"
         cy="20"
         r="19"
-        fill={footer ? "rgba(217,180,95,0.12)" : "var(--navy-700)"}
+        fill={
+          footer
+            ? "color-mix(in oklab, var(--gold-300) 12%, transparent)"
+            : "var(--navy-700)"
+        }
       />
       <path
         d="M20 6.5 C 26.5 13 30.5 20.5 28.4 26.6 C 26.8 31.4 13.2 31.4 11.6 26.6 C 9.5 20.5 13.5 13 20 6.5 Z"

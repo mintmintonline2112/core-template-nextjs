@@ -7,17 +7,6 @@ import { DEFAULT_LANG, type Lang } from "@/lib/i18n";
  * Lỗi API → trả object rỗng, site dùng mặc định trong code/CSS.
  */
 
-export type ThemeColorOverrides = Partial<{
-  bg: string;
-  surface: string;
-  ink: string;
-  muted: string;
-  accent: string;
-  heading: string;
-  /** Chữ menu dial (desktop + mobile) — mặc định ăn theo màu chữ phụ. */
-  menuFg: string;
-}>;
-
 export interface SiteSettings {
   siteTitle?: string;
   siteDescription?: string;
@@ -37,9 +26,10 @@ export interface SiteSettings {
   fontFamily?: string;
   /** Cỡ chữ tối đa (px, desktop) của tiêu đề bài viết — mobile tự co. Trống = 56. */
   postTitleSize?: number;
-  colorsDark?: ThemeColorOverrides;
-  colorsLight?: ThemeColorOverrides;
+  /** 4 màu thương hiệu (#RRGGBB) — xem lib/brand-colors.ts. Trống = màu mặc định trong base.css. */
+  brandColors?: import("@/lib/brand-colors").BrandColors | null;
   translateEnabled?: boolean;
+  /** Chặn chuột phải / bôi đen / Ctrl+C trên website (mặc định bật; false = tắt). */
   copyProtection?: boolean;
   /** Hiện ngày đăng + số phút đọc trên bài viết (mặc định bật; false = ẩn toàn site). */
   showPostMeta?: boolean;
@@ -106,52 +96,3 @@ export async function getSiteSettings(
   }
 }
 
-/* key setting → tên biến CSS (key camelCase không trùng tên biến kebab-case) */
-const COLOR_VARS: Record<keyof ThemeColorOverrides & string, string> = {
-  bg: "--bg",
-  surface: "--surface",
-  ink: "--ink",
-  muted: "--muted",
-  accent: "--accent",
-  heading: "--heading",
-  menuFg: "--menu-fg",
-};
-const HEX_RE = /^#[0-9a-fA-F]{3,8}$/;
-
-function colorBlock(overrides: ThemeColorOverrides | undefined): string {
-  if (!overrides) return "";
-  return (Object.keys(COLOR_VARS) as Array<keyof ThemeColorOverrides>)
-    .filter((key) => HEX_RE.test(overrides[key] ?? ""))
-    .map((key) => `${COLOR_VARS[key]}: ${overrides[key]};`)
-    .join(" ");
-}
-
-function safeCssUrl(raw: string | undefined): string | null {
-  if (!raw) return null;
-  const cleaned = raw.replace(/["'()\\\s]/g, "");
-  if (!/^(https?:\/\/|\/)/.test(cleaned)) return null;
-  return cleaned;
-}
-
-export function buildThemeCss(settings: SiteSettings): string {
-  const parts: string[] = [];
-
-  const heroUrl = safeCssUrl(settings.heroImageUrl);
-  if (heroUrl) parts.push(`:root { --hero-image: url("${heroUrl}"); }`);
-
-  const dark = colorBlock(settings.colorsDark);
-  if (dark) parts.push(`:root { ${dark} }`);
-
-  const light = colorBlock(settings.colorsLight);
-  if (light) parts.push(`html[data-theme="light"] { ${light} }`);
-
-  const titleSize = Number(settings.postTitleSize);
-  if (Number.isFinite(titleSize) && titleSize >= POST_TITLE_MIN && titleSize <= POST_TITLE_MAX) {
-    parts.push(`:root { --post-title-size: ${Math.round(titleSize)}px; }`);
-  }
-
-  const stack = settings.fontFamily ? FONT_STACKS[settings.fontFamily] : undefined;
-  if (stack) parts.push(`body { font-family: ${stack} !important; }`);
-
-  return parts.join("\n");
-}

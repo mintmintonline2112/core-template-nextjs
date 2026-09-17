@@ -16,6 +16,9 @@ const ALLOWED_KEYS = new Set([
   'heroImageUrl',
   'ogImageUrl', // ảnh đại diện khi chia sẻ link (og:image) — trống thì dùng ảnh bìa
   'fontFamily',
+  'brandColors', // { primary, secondary, black, white } dạng #RRGGBB — đè màu gốc của site
+  // Màu theme tối/sáng của admin UI cũ — đã thay bằng brandColors; giữ key để form
+  // settings gửi null xoá dữ liệu cũ khỏi DB.
   'colorsDark',
   'colorsLight',
   'translateEnabled',
@@ -41,6 +44,26 @@ const DEFAULT_SETTINGS: Record<string, unknown> = {
   footerLogoHeight: 44,
 };
 
+const BRAND_COLOR_KEYS = new Set(['primary', 'secondary', 'black', 'white']);
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
+/** brandColors được chèn thẳng vào <style> của site → chỉ nhận đúng 4 key, mã #RRGGBB. */
+function assertBrandColors(value: unknown): void {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new BadRequestException('brandColors must be an object');
+  }
+  for (const [colorKey, color] of Object.entries(value)) {
+    if (!BRAND_COLOR_KEYS.has(colorKey)) {
+      throw new BadRequestException(`Unknown brand color: ${colorKey}`);
+    }
+    if (typeof color !== 'string' || !HEX_COLOR.test(color)) {
+      throw new BadRequestException(
+        `Brand color "${colorKey}" must be a #RRGGBB hex code`,
+      );
+    }
+  }
+}
+
 @Injectable()
 export class SettingsService {
   constructor(
@@ -62,11 +85,15 @@ export class SettingsService {
       throw new BadRequestException('Settings payload must be an object');
     }
 
+    // Kiểm tra hết trước khi ghi để payload lỗi không bị lưu dở một nửa.
     for (const [key, value] of Object.entries(values)) {
       if (!ALLOWED_KEYS.has(key)) {
         throw new BadRequestException(`Unknown setting key: ${key}`);
       }
+      if (key === 'brandColors' && value !== null) assertBrandColors(value);
+    }
 
+    for (const [key, value] of Object.entries(values)) {
       if (value === null) {
         await this.settingsRepo.delete({ key });
         continue;

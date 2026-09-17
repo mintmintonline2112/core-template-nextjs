@@ -82,7 +82,7 @@ export function WorldMapPanel({
   return (
     <div
       className={cn(
-        "reveal relative overflow-hidden rounded-lg border border-gold-300/35 bg-[radial-gradient(110%_90%_at_18%_0%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(165deg,var(--navy-800),var(--navy-900))] shadow-lift",
+        "reveal relative overflow-hidden rounded-lg border border-gold-300/35 bg-[radial-gradient(110%_90%_at_18%_0%,color-mix(in_oklab,var(--navy-600)_55%,transparent)_0%,transparent_55%),linear-gradient(165deg,var(--navy-800),var(--navy-900))] shadow-lift",
         className ?? "mb-4",
       )}
       id={id}

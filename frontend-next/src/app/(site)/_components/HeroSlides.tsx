@@ -77,7 +77,7 @@ export function HeroSlides({
 
   return (
     <section
-      className="relative isolate flex min-h-[clamp(580px,88vh,840px)] items-center overflow-hidden bg-navy-900 text-light before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(90deg,rgba(15,23,41,0.95)_0%,rgba(15,23,41,0.86)_34%,rgba(15,23,41,0.45)_64%,rgba(15,23,41,0.2)_100%),linear-gradient(0deg,rgba(15,23,41,0.55)_0%,rgba(15,23,41,0)_30%)] before:content-[''] max-[900px]:min-h-0 max-[900px]:before:bg-[linear-gradient(180deg,rgba(15,23,41,0.6)_0%,rgba(15,23,41,0.92)_55%)]"
+      className="relative isolate flex min-h-[clamp(580px,88vh,840px)] items-center overflow-hidden bg-navy-900 text-light before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--navy-900)_95%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_86%,transparent)_34%,color-mix(in_oklab,var(--navy-900)_45%,transparent)_64%,color-mix(in_oklab,var(--navy-900)_20%,transparent)_100%),linear-gradient(0deg,color-mix(in_oklab,var(--navy-900)_55%,transparent)_0%,transparent_30%)] before:content-[''] max-[900px]:min-h-0 max-[900px]:before:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--navy-900)_60%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_92%,transparent)_55%)]"
       id={id}
       aria-roledescription="carousel"
       aria-label="Prime Nuts USA highlights"

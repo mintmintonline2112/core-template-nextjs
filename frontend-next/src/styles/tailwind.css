@@ -157,10 +157,10 @@
  * Viền focus / viền nhấn dùng `ring-*` (VD `focus:ring-3 focus:ring-navy-700/15`).
  */
 @theme {
-  --shadow-badge: 0 8px 18px -10px rgb(15 23 41 / 0.5);
-  --shadow-float: 0 24px 48px -24px rgb(15 23 41 / 0.4);
-  --shadow-glow: 0 0 10px rgb(217 180 95 / 0.7);
-  --shadow-glow-lg: 0 0 18px rgb(217 180 95 / 0.95);
+  --shadow-badge: 0 8px 18px -10px color-mix(in oklab, var(--navy-900) 50%, transparent);
+  --shadow-float: 0 24px 48px -24px color-mix(in oklab, var(--navy-900) 40%, transparent);
+  --shadow-glow: 0 0 10px color-mix(in oklab, var(--gold-300) 70%, transparent);
+  --shadow-glow-lg: 0 0 18px color-mix(in oklab, var(--gold-300) 95%, transparent);
 }
 
 /**

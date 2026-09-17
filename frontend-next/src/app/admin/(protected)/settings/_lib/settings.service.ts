@@ -1,17 +1,7 @@
 import { adminApi } from '@/app/admin/_lib/admin-api';
+import type { BrandColors } from '@/lib/brand-colors';
 
 export const SETTINGS_QUERY_KEY = ['admin', 'settings'] as const;
-
-export type ThemeColorOverrides = Partial<{
-  bg: string;
-  surface: string;
-  ink: string;
-  muted: string;
-  accent: string;
-  heading: string;
-  /** Chữ menu dial (vòng cung góc trái) — mặc định ăn theo "Chữ phụ". */
-  menuFg: string;
-}>;
 
 export interface SiteSettings {
   siteTitle?: string;
@@ -30,8 +20,8 @@ export interface SiteSettings {
   fontFamily?: string;
   /** Cỡ chữ tối đa (px, desktop) của tiêu đề bài viết — xem lib/settings.ts. */
   postTitleSize?: number;
-  colorsDark?: ThemeColorOverrides;
-  colorsLight?: ThemeColorOverrides;
+  /** 4 màu thương hiệu — xem src/lib/brand-colors.ts. */
+  brandColors?: BrandColors | null;
   translateEnabled?: boolean;
   copyProtection?: boolean;
   showPostMeta?: boolean;
@@ -56,24 +46,6 @@ export const settingsService = {
     return adminApi.put<SiteSettings>('admin/settings', values);
   },
 };
-
-export const COLOR_TOKENS: Array<{
-  key: keyof ThemeColorOverrides;
-  label: string;
-  darkDefault: string;
-  lightDefault: string;
-}> = [
-  // Mặc định theo bảng màu site (src/styles/base.css): navy #1A2744 + vàng hạnh nhân.
-  { key: 'bg', label: 'Nền trang', darkDefault: '#1a2744', lightDefault: '#faf8f3' },
-  { key: 'surface', label: 'Nền card', darkDefault: '#25375e', lightDefault: '#ffffff' },
-  { key: 'ink', label: 'Chữ chính', darkDefault: '#f5f1e3', lightDefault: '#1a2236' },
-  { key: 'muted', label: 'Chữ phụ', darkDefault: '#c3cadb', lightDefault: '#4a5468' },
-  { key: 'accent', label: 'Điểm nhấn', darkDefault: '#d9b45f', lightDefault: '#1a2744' },
-  { key: 'heading', label: 'Heading (vàng đồng)', darkDefault: '#c9a25e', lightDefault: '#9a7326' },
-  // Mặc định ăn theo "Chữ phụ" (--menu-fg: var(--muted)); default hiển thị
-  // trong ô màu phải khớp giá trị đó để chưa đổi thì thấy đúng màu đang dùng.
-  { key: 'menuFg', label: 'Chữ menu (vòng cung)', darkDefault: '#c3cadb', lightDefault: '#4a5468' },
-];
 
 /** Giới hạn slider cỡ chữ tiêu đề bài viết (px) — khớp POST_TITLE_* ở lib/settings.ts. */
 export const POST_TITLE_MIN = 28;

@@ -10,33 +10,43 @@
    ============================================================ */
 
 :root {
-  /* Brand navy */
-  --navy-900: #0F1729;
-  --navy-800: #141F38;
-  --navy-700: #1A2744;            /* primary brand color */
-  --navy-600: #25375E;
-  --navy-100: #DDE3EE;
-  --navy-50:  #EEF1F7;
+  /* ===== MÀU THƯƠNG HIỆU — 4 màu gốc =====
+     Chỉnh ở Admin → Cài đặt → Màu thương hiệu (layout (site) chèn :root { --brand-*: … }
+     đè lên các giá trị mặc định dưới đây). Mọi sắc độ đậm/nhạt bên dưới TỰ SUY RA
+     bằng color-mix nên chỉ cần đổi 4 màu này. */
+  --brand-primary:   #004C69;   /* màu chủ đạo (thay navy cũ) */
+  --brand-secondary: #C9A35E;   /* màu phụ — vàng hạnh nhân */
+  --brand-black:     #231F20;   /* chữ chính */
+  --brand-white:     #FFFFFF;
+
+  /* Màu chủ đạo theo sắc độ. Tên `navy-*` giữ từ bản cũ (đang dùng trong ~160
+     class) — giá trị thật là sắc độ của --brand-primary. 700 = đúng màu gốc. */
+  --navy-900: color-mix(in oklab, var(--brand-primary) 58%, #000);   /* dải tối, footer */
+  --navy-800: color-mix(in oklab, var(--brand-primary) 78%, #000);
+  --navy-700: var(--brand-primary);
+  --navy-600: color-mix(in oklab, var(--brand-primary) 80%, #fff);
+  --navy-100: color-mix(in oklab, var(--brand-primary) 14%, #fff);
+  --navy-50:  color-mix(in oklab, var(--brand-primary) 7%, #fff);
 
   /* Warm neutrals */
   --cream:     #FAF8F3;
   --cream-2:   #F3EFE6;
-  --paper:     #FFFFFF;
+  --paper:     var(--brand-white);
   --line:      #E3DDD0;
   --line-soft: #ECE7DC;
 
-  /* Almond gold */
-  --gold-500:  #9A7326;
-  --gold-400:  #C9A25E;
-  --gold-300:  #D9B45F;
-  --gold-100:  #F3E8CD;
+  /* Vàng hạnh nhân theo sắc độ — 400 = đúng --brand-secondary */
+  --gold-500:  color-mix(in oklab, var(--brand-secondary) 72%, #000);  /* chữ vàng trên nền sáng */
+  --gold-400:  var(--brand-secondary);
+  --gold-300:  color-mix(in oklab, var(--brand-secondary) 82%, #fff);  /* vàng trên nền tối */
+  --gold-100:  color-mix(in oklab, var(--brand-secondary) 22%, #fff);
 
   /* Text */
-  --ink:       #1A2236;
-  --ink-soft:  #4A5468;
-  --ink-faint: #6B7385;
-  --light:     #F5F1E3;
-  --light-soft:#C3CADB;
+  --ink:       var(--brand-black);
+  --ink-soft:  color-mix(in oklab, var(--brand-black) 78%, #fff);
+  --ink-faint: color-mix(in oklab, var(--brand-black) 62%, #fff);
+  --light:     var(--brand-white);                                         /* chữ trên nền tối */
+  --light-soft:color-mix(in oklab, var(--brand-white) 76%, var(--brand-primary));
 
   /* Type — chỉnh font toàn site tại đây:
      --font-main    = chữ thân bài (mặc định Roboto)
@@ -51,8 +61,8 @@
   --radius-lg: 12px;
   --container: 1160px;
   --section-pad: clamp(4.5rem, 9vw, 7.5rem);
-  --shadow-soft: 0 1px 2px rgba(15, 23, 41, 0.05), 0 12px 32px -16px rgba(15, 23, 41, 0.18);
-  --shadow-lift: 0 2px 4px rgba(15, 23, 41, 0.06), 0 20px 44px -20px rgba(15, 23, 41, 0.28);
+  --shadow-soft: 0 1px 2px color-mix(in oklab, var(--navy-900) 5%, transparent), 0 12px 32px -16px color-mix(in oklab, var(--navy-900) 18%, transparent);
+  --shadow-lift: 0 2px 4px color-mix(in oklab, var(--navy-900) 6%, transparent), 0 20px 44px -20px color-mix(in oklab, var(--navy-900) 28%, transparent);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
   /* Viền + nền báo lỗi form */

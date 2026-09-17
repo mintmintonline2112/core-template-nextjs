@@ -98,20 +98,23 @@ export default async function NewsDetailPage({
                 {post.category.name}
               </Link>
             ) : null}
-            {/* Ngày + thời gian đọc là một cụm: xuống dòng thì xuống cả cụm */}
-            <span className="whitespace-nowrap">
-              {post.publishedAt ? (
-                <>
-                  <time dateTime={post.publishedAt}>
-                    {formatDate(post.publishedAt)}
-                  </time>
-                  <span aria-hidden="true" className="mx-2">
-                    ·
-                  </span>
-                </>
-              ) : null}
-              {readingMinutes(post.content)} min read
-            </span>
+            {/* Ngày + thời gian đọc là một cụm: xuống dòng thì xuống cả cụm.
+                Admin → Cài đặt → Hiện ngày đăng & số phút đọc (tắt = ẩn cả cụm). */}
+            {settings.showPostMeta !== false ? (
+              <span className="whitespace-nowrap">
+                {post.publishedAt ? (
+                  <>
+                    <time dateTime={post.publishedAt}>
+                      {formatDate(post.publishedAt)}
+                    </time>
+                    <span aria-hidden="true" className="mx-2">
+                      ·
+                    </span>
+                  </>
+                ) : null}
+                {readingMinutes(post.content)} min read
+              </span>
+            ) : null}
           </div>
 
           <h1

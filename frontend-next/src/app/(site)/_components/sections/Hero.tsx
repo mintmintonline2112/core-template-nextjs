@@ -137,7 +137,7 @@ export function Hero({ section }: SectionProps) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-[radial-gradient(120%_90%_at_85%_10%,rgba(37,55,94,0.55)_0%,rgba(20,31,56,0)_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_78%)] text-light",
+        "relative overflow-hidden bg-[radial-gradient(120%_90%_at_85%_10%,color-mix(in_oklab,var(--navy-600)_55%,transparent)_0%,transparent_55%),linear-gradient(160deg,var(--navy-800)_0%,var(--navy-900)_78%)] text-light",
         NAVY_PATTERN,
         NAVY_GRAIN,
       )}

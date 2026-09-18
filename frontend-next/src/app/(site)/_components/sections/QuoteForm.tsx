@@ -26,7 +26,7 @@ export function QuoteForm({ section }: SectionProps) {
     <section
       className={cn(
         SECTION,
-        "relative overflow-hidden bg-[radial-gradient(120%_90%_at_90%_100%,color-mix(in_oklab,var(--navy-600)_50%,transparent)_0%,transparent_55%),linear-gradient(160deg,var(--navy-900)_0%,var(--navy-800)_100%)] text-light before:pointer-events-none before:absolute before:inset-0 before:bg-[url('/images/almonds-table.webp')] before:bg-cover before:bg-center before:opacity-[0.14] before:content-['']",
+        "relative overflow-hidden bg-[radial-gradient(120%_90%_at_90%_100%,color-mix(in_oklab,var(--navy-600)_50%,transparent)_0%,transparent_55%),linear-gradient(160deg,var(--navy-900)_0%,var(--navy-800)_100%)] text-light before:pointer-events-none before:absolute before:inset-0 before:bg-[url('/images/placeholder-wide.svg')] before:bg-cover before:bg-center before:opacity-[0.14] before:content-['']",
       )}
       id={anchorId(section, "quote-form")}
     >

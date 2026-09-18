@@ -32,8 +32,8 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
             <i />
           </span>
           <span>
-            <strong>Prime Nuts USA</strong>
-            <small>Prime Nuts CMS</small>
+            <strong>Your Company</strong>
+            <small>Quản trị website</small>
           </span>
         </div>
 

@@ -10,7 +10,7 @@ import { siteRoutes } from "@/config/routes";
 export async function generateMetadata(): Promise<Metadata> {
   const page = (await getCmsPage("contact")) ?? fallbackPage("contact");
   return buildPageMetadata({
-    title: page.metaTitle ?? page.title,
+    title: page.metaTitle?.trim() || page.title,
     description: page.metaDescription ?? page.lead,
     path: siteRoutes.contact,
     image: page.ogImagePath,

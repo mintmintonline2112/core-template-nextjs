@@ -1,6 +1,6 @@
 import type { AdminUser } from './types';
 
-const STORAGE_KEY = 'primenuts_admin_user';
+const STORAGE_KEY = 'core_admin_user';
 
 export function getStoredUser(): AdminUser | null {
   if (typeof window === 'undefined') return null;

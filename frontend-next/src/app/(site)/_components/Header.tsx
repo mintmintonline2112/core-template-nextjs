@@ -126,7 +126,7 @@ export function Header({
             links={social}
             className="inline-flex items-center gap-2"
             linkClassName="grid h-[30px] w-[30px] place-items-center rounded-full border border-light/20 text-light-soft transition-[color,background-color,border-color] duration-200 ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900 max-[640px]:h-[26px] max-[640px]:w-[26px] [&>svg]:h-[15px] [&>svg]:w-[15px] max-[640px]:[&>svg]:h-[13px] max-[640px]:[&>svg]:w-[13px]"
-            label="Prime Nuts USA on social media"
+            label="Your Company on social media"
           />
         </div>
       </div>

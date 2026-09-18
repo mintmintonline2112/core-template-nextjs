@@ -101,9 +101,9 @@ app.use(express.json());
 
   if (swaggerEnabled) {
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('Prime Nuts USA API')
+      .setTitle('Website API')
       .setDescription(
-        'CMS & API for the Prime Nuts USA website — pages, blog, contacts, B2B quote requests',
+        'CMS & API for the company website — pages, blog, contacts, B2B quote requests',
       )
       .setVersion('1.0')
       .addBearerAuth()

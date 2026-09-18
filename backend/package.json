@@ -1,7 +1,7 @@
 {
-  "name": "primenuts-backend",
+  "name": "core-template-backend",
   "version": "0.0.1",
-  "description": "CMS & API backend for the Prime Nuts USA website (pages, blog, contacts, B2B quote requests)",
+  "description": "CMS & API backend for a company website (pages, blog, contacts, quote requests)",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

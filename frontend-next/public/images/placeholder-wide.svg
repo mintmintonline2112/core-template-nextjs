@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Ảnh minh hoạ">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b3a46" />
+      <stop offset="1" stop-color="#16212b" />
+    </linearGradient>
+    <pattern id="p" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0v80" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)" />
+  <rect width="1600" height="900" fill="url(#p)" />
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="6">
+    <rect x="620" y="352" width="360" height="236" rx="16" />
+    <path d="M660 540l96-104 78 82 54-52 92 96" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <circle cx="720" cy="418" r="26" fill="#ffffff" fill-opacity="0.22" />
+  <text x="800" y="672" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="40" fill="#ffffff" fill-opacity="0.5">Ảnh minh hoạ</text>
+</svg>

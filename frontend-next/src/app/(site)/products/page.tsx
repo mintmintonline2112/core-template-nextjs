@@ -10,7 +10,7 @@ import { siteRoutes } from "@/config/routes";
 export async function generateMetadata(): Promise<Metadata> {
   const page = (await getCmsPage("products")) ?? fallbackPage("products");
   return buildPageMetadata({
-    title: page.metaTitle ?? page.title,
+    title: page.metaTitle?.trim() || page.title,
     description: page.metaDescription ?? page.lead,
     path: siteRoutes.products,
     image: page.ogImagePath,
@@ -50,7 +50,7 @@ export default async function ProductsPage() {
           href={siteRoutes.homeSection("about-map")}
           className="btn btn-ghost"
         >
-          About Prime Nuts USA
+          About Your Company
         </Link>
       </CtaBand>
     </>

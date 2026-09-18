@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { env } from "@/lib/env";
-import { ALMOND_VARIETIES, KERNEL_SIZES } from "@/config/products";
+import { PRODUCT_OPTIONS, SIZE_OPTIONS } from "@/config/products";
 import { cn } from "@/utils/cn";
 
 /** Các form public nối API backend: báo giá B2B, liên hệ, newsletter. */
@@ -255,7 +255,7 @@ export function QuoteForm() {
               <option value="" disabled>
                 Select a variety
               </option>
-              {ALMOND_VARIETIES.map((v) => (
+              {PRODUCT_OPTIONS.map((v) => (
                 <option key={v}>{v}</option>
               ))}
               <option>Other / Custom specification</option>
@@ -274,7 +274,7 @@ export function QuoteForm() {
               <option value="" disabled>
                 Select a size
               </option>
-              {KERNEL_SIZES.map((size) => (
+              {SIZE_OPTIONS.map((size) => (
                 <option key={size}>{size}</option>
               ))}
               <option>Other / Custom</option>
@@ -330,7 +330,7 @@ export function QuoteForm() {
             type="text"
             id="qf-destination"
             name="destination"
-            placeholder="e.g. Vietnam — Cat Lai Port"
+            placeholder="e.g. Destination port or city"
             required
           />
         </div>
@@ -549,7 +549,7 @@ export function ContactForm() {
               id="cf-country"
               name="country"
               autoComplete="country-name"
-              placeholder="e.g. Vietnam"
+              placeholder="e.g. United States"
             />
           </div>
           <div className={FIELD}>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
-# Deploy Prime Nuts lên VPS bằng MỘT lệnh:
-#     bash /www/wwwroot/primenutusa.com/deploy.sh
+# Deploy website lên VPS bằng MỘT lệnh:
+#     bash /www/wwwroot/<ten-mien-site>/deploy.sh
 #
 # Tuần tự: git fetch + merge (tự gỡ vướng lock file / file upload trùng tên)
 # → npm ci + build backend → migration + seed → npm ci + build frontend
@@ -19,10 +19,12 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# VPS dùng chung với site primenuts.vn (pm2 primenuts_api:3010, primenuts_web:3001)
-# → site này dùng tên app + cổng RIÊNG. Đừng đổi về tên/cổng của site kia.
-API_NAME="${API_NAME:-primenutusa_api}"; API_PORT="${API_PORT:-3012}"
-WEB_NAME="${WEB_NAME:-primenutusa_web}"; WEB_PORT="${WEB_PORT:-3005}"
+# ĐỔI TRƯỚC KHI DEPLOY: APP_NAME là tên riêng của site này — pm2 sẽ quản 2 tiến
+# trình tên <APP_NAME>_api và <APP_NAME>_web. Một VPS chạy nhiều site thì mỗi site
+# phải có APP_NAME + cổng RIÊNG, không được trùng tên/cổng với site khác.
+APP_NAME="${APP_NAME:-core}"
+API_NAME="${API_NAME:-${APP_NAME}_api}"; API_PORT="${API_PORT:-3012}"
+WEB_NAME="${WEB_NAME:-${APP_NAME}_web}"; WEB_PORT="${WEB_PORT:-3005}"
 APP_USER="${APP_USER:-www}"
 
 say()  { printf '\n\033[1;32m==> %s\033[0m\n' "$1"; }
@@ -139,7 +141,7 @@ UPSTREAM="$(git -C "$ROOT" rev-parse --abbrev-ref --symbolic-full-name '@{u}')"
 # File upload trên server (VD ảnh up qua admin) trùng đường dẫn với file repo
 # mới thêm → merge từ chối ("untracked working tree files would be overwritten").
 # KHÔNG xoá: cất sang thư mục backup có mốc giờ rồi mới merge, in ra để kiểm tra.
-UPLOAD_BACKUP="${DEPLOY_BACKUP_DIR:-$HOME/primenutusa-deploy-backup}/$(date +%Y%m%d-%H%M%S)"
+UPLOAD_BACKUP="${DEPLOY_BACKUP_DIR:-$HOME/${APP_NAME}-deploy-backup}/$(date +%Y%m%d-%H%M%S)"
 git -C "$ROOT" diff --name-only --diff-filter=A HEAD "$UPSTREAM" | while IFS= read -r f; do
   if [ -e "$ROOT/$f" ] && ! git -C "$ROOT" ls-files --error-unmatch "$f" >/dev/null 2>&1; then
     mkdir -p "$UPLOAD_BACKUP/$(dirname "$f")"

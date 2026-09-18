@@ -27,7 +27,7 @@ export const contactTemplate = (data: any) => `
                 text-transform: uppercase;
                 font-weight: normal;
               ">
-                PRIME NUTS USA — NEW MESSAGE
+                YOUR COMPANY — NEW MESSAGE
               </h1>
               <p style="margin: 5px 0 0; color: #ba949b; font-size: 12px; font-style: italic; letter-spacing: 1px;">
                 You have received a sweet note from a customer
@@ -53,7 +53,7 @@ export const contactTemplate = (data: any) => `
                       color: #c06c7a; 
                       margin: 0 0 25px 0;
                     ">
-                      Dear Prime Nuts USA Team,
+                      Dear Team,
                     </p>
 
                     <div style="
@@ -98,7 +98,7 @@ export const contactTemplate = (data: any) => `
                 <span style="display: block; margin-bottom: 8px; font-weight: bold; color: #d88a9a;">🌸 DON'T FORGET TO REPLY:</span>
                 📧 <b>Email:</b> ${data.email} <br>
                 📞 <b>Phone:</b> ${data.phone} <br>
-                ✨ <b>Subject:</b> ${data.subject || 'Inquiry from the Prime Nuts USA website'}
+                ✨ <b>Subject:</b> ${data.subject || 'Inquiry from the website'}
               </div>
             </td>
           </tr>
@@ -106,7 +106,7 @@ export const contactTemplate = (data: any) => `
           <tr>
             <td align="center" style="padding-bottom: 30px;">
               <div style="color: #d88a9a; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">
-                PRIME NUTS USA — CALIFORNIA ALMONDS
+                YOUR COMPANY
               </div>
               <div style="margin-top: 8px; color: #c5beb5; font-size: 10px;">
                 Automated message generated at: ${new Date().toLocaleString('en-US')}

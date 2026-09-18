@@ -32,7 +32,7 @@ export async function generateMetadata({
   const page = await getCmsPage(slug);
   if (!page) return { title: "Page not found", robots: { index: false } };
   return buildPageMetadata({
-    title: page.metaTitle ?? page.title,
+    title: page.metaTitle?.trim() || page.title,
     description: page.metaDescription ?? page.lead,
     path: siteRoutes.page(page.slug),
     image: page.ogImagePath,
@@ -82,7 +82,7 @@ export default async function CmsGenericPage({
 
       <CtaBand
         eyebrow="Work With Us"
-        title="Looking for California Almond Supply?"
+        title="Looking for a Reliable Supplier?"
         text="Tell us your requirements and our team will prepare a commercial quotation."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">

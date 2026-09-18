@@ -58,7 +58,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <AdminIcon name="menu" />
             </button>
             <span>
-              <small>Prime Nuts CMS</small>
+              <small>Quản trị website</small>
               <strong>{getAdminPageTitle(pathname)}</strong>
             </span>
           </div>

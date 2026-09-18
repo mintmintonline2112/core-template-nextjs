@@ -16,36 +16,27 @@ export type SourcingSlide = { src: string; alt?: string; caption?: string };
 const ARROW =
   "absolute top-1/2 z-4 flex h-11 w-11 items-center justify-center rounded-full border border-gold-300/55 bg-navy-900/60 text-gold-300 backdrop-blur-[4px] [transform:translateY(-50%)] [transition:background-color_200ms_var(--ease),transform_200ms_var(--ease),border-color_200ms_var(--ease)] hover:border-gold-300 hover:bg-navy-700 hover:[transform:translateY(-50%)_scale(1.08)] max-[640px]:h-9 max-[640px]:w-9 [&>svg]:h-5 [&>svg]:w-5 max-[640px]:[&>svg]:h-4 max-[640px]:[&>svg]:w-4";
 
+/** Ảnh mẫu của khung — thay bằng ảnh thật trong Admin → Trang → Section. */
 export const DEFAULT_SOURCING_SLIDES: SourcingSlide[] = [
   {
-    src: "/images/orchard-rows.jpg",
-    alt: "Rows of almond trees in a California orchard near Winton",
-    caption: "Established California orchards",
+    src: "/images/placeholder-wide.svg",
+    alt: "Ảnh minh hoạ",
+    caption: "Bước một trong quy trình",
   },
   {
-    src: "/images/hero-branch.jpg",
-    alt: "Green almonds ripening on the branch",
-    caption: "New crop ripening on the tree",
+    src: "/images/placeholder-wide.svg",
+    alt: "Ảnh minh hoạ",
+    caption: "Bước hai trong quy trình",
   },
   {
-    src: "/images/green-almond.jpg",
-    alt: "Fresh green almond cut open in an open hand",
-    caption: "Checked by hand in the field",
+    src: "/images/placeholder-wide.svg",
+    alt: "Ảnh minh hoạ",
+    caption: "Bước ba trong quy trình",
   },
   {
-    src: "/images/kernels-study.jpg",
-    alt: "Almonds in shell, cracked open, natural and blanched kernels",
-    caption: "Sized, sorted & graded",
-  },
-  {
-    src: "/images/ship-color.webp",
-    alt: "Container ship being loaded at a port terminal",
-    caption: "Export-ready for global markets",
-  },
-  {
-    src: "/images/almonds-ramekin.webp",
-    alt: "Almond kernels in a white ramekin, ready for retail",
-    caption: "Ready for retail & distribution",
+    src: "/images/placeholder-wide.svg",
+    alt: "Ảnh minh hoạ",
+    caption: "Bước bốn trong quy trình",
   },
 ];
 

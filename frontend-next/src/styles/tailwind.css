@@ -98,7 +98,7 @@
 /**
  * THANG THIẾT KẾ của site — thay hẳn thang mặc định của Tailwind cho cỡ chữ,
  * giãn chữ, khoảng cách dòng (cùng tên quen thuộc nhưng giá trị theo thiết kế
- * Prime Nuts). Viết `text-sm`, `tracking-md`, `leading-relaxed`…; KHÔNG viết
+ * của site). Viết `text-sm`, `tracking-md`, `leading-relaxed`…; KHÔNG viết
  * giá trị tuỳ ý kiểu `text-[0.93rem]`, `tracking-[0.13em]`, `leading-[1.6]`.
  * Khoảng cách (padding/margin/gap) dùng thang số mặc định: bước 0,25rem.
  *

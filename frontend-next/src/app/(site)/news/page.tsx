@@ -23,10 +23,10 @@ import { siteRoutes } from "@/config/routes";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("news");
   return buildPageMetadata({
-    title: page?.metaTitle ?? "News & Insights",
+    title: page?.metaTitle?.trim() || page?.title || "News & Insights",
     description:
       page?.metaDescription ??
-      "News, market updates, and industry insights from Prime Nuts USA.",
+      "News, market updates, and industry insights from Your Company.",
     path: siteRoutes.news,
     image: page?.ogImagePath,
     canonical: page?.canonicalUrl,
@@ -179,8 +179,8 @@ export default async function NewsPage({
                 </h2>
                 <p className="text-light-soft">{featured.excerpt}</p>
                 <p className="mt-5 border-t border-t-gold-300/30 pt-4 text-sm text-light-soft italic">
-                  {showMeta ? `${readingTime(featured)} · ` : ""}Prime Nuts
-                  USA Editorial
+                  {showMeta ? `${readingTime(featured)} · ` : ""}Your Company
+                  Editorial
                 </p>
               </div>
               {/* `news-featured-photo`: móc GSAP (mở khẩu độ + trượt dọc theo cuộn). */}
@@ -289,7 +289,7 @@ export default async function NewsPage({
 
       <CtaBand
         eyebrow="Work With Us"
-        title="Looking for California Almond Supply?"
+        title="Looking for a Reliable Supplier?"
         text="Tell us your requirements and our team will prepare a commercial quotation."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">

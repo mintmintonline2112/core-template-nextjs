@@ -1,7 +1,7 @@
 /**
  * Đa ngôn ngữ: helper merge cột JSON `translations` đè lên bản gốc tiếng Anh.
  *
- * Nội dung gốc của Prime Nuts USA là TIẾNG ANH ('en'); ngôn ngữ phụ ('vi', ...)
+ * Nội dung gốc của website là TIẾNG ANH ('en'); ngôn ngữ phụ ('vi', ...)
  * lưu trong cột `translations` và merge đè khi client truyền `?lang=`.
  *
  * - `Translations` = { vi?: Record<field, value> } — mở rộng ngôn ngữ chỉ là thêm key.

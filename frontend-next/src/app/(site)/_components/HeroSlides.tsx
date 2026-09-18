@@ -80,7 +80,7 @@ export function HeroSlides({
       className="relative isolate flex min-h-[clamp(580px,88vh,840px)] items-center overflow-hidden bg-navy-900 text-light before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--navy-900)_95%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_86%,transparent)_34%,color-mix(in_oklab,var(--navy-900)_45%,transparent)_64%,color-mix(in_oklab,var(--navy-900)_20%,transparent)_100%),linear-gradient(0deg,color-mix(in_oklab,var(--navy-900)_55%,transparent)_0%,transparent_30%)] before:content-[''] max-[900px]:min-h-0 max-[900px]:before:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--navy-900)_60%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_92%,transparent)_55%)]"
       id={id}
       aria-roledescription="carousel"
-      aria-label="Prime Nuts USA highlights"
+      aria-label="Your Company highlights"
       style={
         { ["--hs-interval" as string]: `${interval}ms` } as React.CSSProperties
       }

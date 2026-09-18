@@ -32,7 +32,7 @@ type PickerTarget = 'logo' | 'footerLogo' | 'favicon' | 'hero' | 'og' | null;
 
 /** Ô thông tin liên hệ — khớp contactPage.company (lib/contact-page.ts). */
 const COMPANY_FIELDS = [
-  { key: 'name', label: 'Tên công ty', placeholder: 'Prime Nuts USA' },
+  { key: 'name', label: 'Tên công ty', placeholder: 'Tên công ty của bạn' },
   { key: 'phone', label: 'Điện thoại', placeholder: SITE_CONTACT.phone, type: 'tel' },
   { key: 'email', label: 'Email', placeholder: SITE_CONTACT.email, type: 'email' },
   { key: 'hours', label: 'Giờ mở cửa', placeholder: SITE_CONTACT.hours },
@@ -263,11 +263,11 @@ export function SettingsScreen() {
             className="gf-control"
             value={siteTitle}
             onChange={(e) => setSiteTitle(e.target.value)}
-            placeholder="Prime Nuts USA — California Almonds"
+            placeholder="Your Company — Your Tagline"
           />
           <p className="gf-hint">
             Hiện trên tab trình duyệt và kết quả Google cho trang chủ; các trang khác lấy tiêu đề
-            riêng rồi thêm đuôi &ldquo;— {brandName.trim() || 'Prime Nuts USA'}&rdquo;. Để trống dùng mặc định.
+            riêng rồi thêm đuôi &ldquo;— {brandName.trim() || 'Your Company'}&rdquo;. Để trống dùng mặc định.
           </p>
           {homeTitleOverride && (
             <p className="gf-hint st-soon">
@@ -287,7 +287,7 @@ export function SettingsScreen() {
             rows={2}
             value={siteDescription}
             onChange={(e) => setSiteDescription(e.target.value)}
-            placeholder="Reliable California almond supply for U.S. & global markets…"
+            placeholder="Short description of your products and services…"
           />
           <p className="gf-hint">Thẻ meta description cho SEO, nên 120–160 ký tự.</p>
         </div>
@@ -297,7 +297,7 @@ export function SettingsScreen() {
             className="gf-control"
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
-            placeholder="Prime Nuts USA"
+            placeholder="Your Company"
           />
           <p className="gf-hint">
             Chữ hiển thị cạnh logo ở góc trên bên trái mọi trang. Để trống dùng mặc định của theme.
@@ -309,7 +309,7 @@ export function SettingsScreen() {
             className="gf-control"
             value={footerText}
             onChange={(e) => setFooterText(e.target.value)}
-            placeholder="California Almonds. Global Markets. Reliable Supply."
+            placeholder="Your Company. All rights reserved."
           />
           <p className="gf-hint">
             Phần chữ sau &ldquo;© {new Date().getFullYear()}&rdquo; ở cuối mọi trang (năm tự cập nhật, không cần
@@ -328,7 +328,7 @@ export function SettingsScreen() {
                 className="gf-control"
                 value={zhSiteTitle}
                 onChange={(e) => setZhSiteTitle(e.target.value)}
-                placeholder="Prime Nuts USA — Hạnh nhân California"
+                placeholder="Tên công ty — Mô tả ngắn"
               />
             </div>
             <div>
@@ -338,7 +338,7 @@ export function SettingsScreen() {
                 rows={2}
                 value={zhSiteDescription}
                 onChange={(e) => setZhSiteDescription(e.target.value)}
-                placeholder="Nguồn cung hạnh nhân California ổn định cho thị trường Mỹ và quốc tế…"
+                placeholder="Mô tả ngắn về sản phẩm và dịch vụ của công ty…"
               />
             </div>
             <div>
@@ -347,7 +347,7 @@ export function SettingsScreen() {
                 className="gf-control"
                 value={zhBrandName}
                 onChange={(e) => setZhBrandName(e.target.value)}
-                placeholder="Prime Nuts USA"
+                placeholder="Tên công ty"
               />
             </div>
             <div>
@@ -356,7 +356,7 @@ export function SettingsScreen() {
                 className="gf-control"
                 value={zhFooterText}
                 onChange={(e) => setZhFooterText(e.target.value)}
-                placeholder="Hạnh nhân California. Thị trường toàn cầu. Nguồn cung tin cậy."
+                placeholder="Tên công ty. Bảo lưu mọi quyền."
               />
             </div>
           </div>
@@ -570,7 +570,7 @@ export function SettingsScreen() {
             />
           </div>
           <div className="st-title-preview" aria-hidden="true">
-            <span style={{ fontSize: postTitleSize }}>2026 California Almond Crop: What Buyers Should Watch</span>
+            <span style={{ fontSize: postTitleSize }}>Tiêu đề bài viết mẫu hiển thị ở cỡ chữ này</span>
           </div>
           <p className="gf-hint">
             Áp cho tiêu đề (H1) trang chi tiết bài viết trong mục News. Đây là cỡ lớn nhất
@@ -632,15 +632,15 @@ export function SettingsScreen() {
 
           <div className="st-brand-preview" aria-hidden="true">
             <div className="st-brand-mock">
-              <span className="st-brand-mock-bar">Prime Nuts USA · Hotline · Email</span>
+              <span className="st-brand-mock-bar">Tên công ty · Hotline · Email</span>
               <div className="st-brand-mock-hero">
-                <strong>California Almonds</strong>
-                <span>Direct from the orchard to your warehouse.</span>
-                <em>Request a B2B Quote</em>
+                <strong>Tiêu đề lớn</strong>
+                <span>Dòng mô tả ngắn dưới tiêu đề.</span>
+                <em>Nút kêu gọi hành động</em>
               </div>
               <div className="st-brand-mock-card">
-                <strong>Nonpareil Supreme</strong>
-                <span>Size 23/25 · Crop 2026 · 22.68 kg carton</span>
+                <strong>Tên sản phẩm</strong>
+                <span>Thông số · Phân loại · Quy cách</span>
               </div>
             </div>
             <ul className="st-brand-shades">

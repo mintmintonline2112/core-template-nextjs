@@ -16,44 +16,41 @@ interface SeedMenuItem {
   children?: SeedMenuChild[];
 }
 
-/** Điều hướng chính của website Prime Nuts USA — khớp header trong frontend/. */
+/**
+ * Menu khởi tạo của khung mẫu — href trỏ đúng các trang/section do page.seed.ts tạo.
+ * Đổi nhãn và thêm mục trong Admin → Menu, không cần sửa file này.
+ */
 const MENU_TREE: SeedMenuItem[] = [
   {
-    label: 'Home',
+    label: 'Trang chủ',
     href: '/',
     showSubmenu: false,
   },
   {
-    label: 'Products',
+    label: 'Dịch vụ',
     href: '/products',
     children: [
-      { label: 'Natural Almonds', href: '/products#natural-almonds' },
-      { label: 'Processed Almonds', href: '/products#processed-almonds' },
-      { label: 'Kernel Sizes', href: '/products#kernel-sizes' },
+      { label: 'Các gói dịch vụ', href: '/products#dich-vu-noi-bat' },
+      { label: 'Cam kết', href: '/products#cam-ket' },
     ],
   },
   {
-    label: 'About',
-    href: '/#about-map',
+    label: 'Giới thiệu',
+    href: '/#gioi-thieu',
     showSubmenu: false,
   },
   {
-    label: 'How It Works',
-    href: '/#how-it-works',
+    label: 'Quy trình',
+    href: '/#quy-trinh',
     showSubmenu: false,
   },
   {
-    label: 'News',
+    label: 'Tin tức',
     href: '/news',
-    children: [
-      { label: 'Market Update', href: '/news?category=market-update' },
-      { label: 'Company News', href: '/news?category=company-news' },
-      { label: 'Industry Insight', href: '/news?category=industry-insight' },
-      { label: 'Logistics', href: '/news?category=logistics' },
-    ],
+    showSubmenu: false,
   },
   {
-    label: 'Contact',
+    label: 'Liên hệ',
     href: '/contact',
     showSubmenu: false,
   },

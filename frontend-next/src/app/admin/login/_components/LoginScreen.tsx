@@ -49,8 +49,8 @@ export function LoginScreen() {
             <i />
           </span>
           <span>
-            <strong>Prime Nuts USA</strong>
-            <small>California Almonds</small>
+            <strong>Your Company</strong>
+            <small>Quản trị nội dung</small>
           </span>
         </div>
         <div>
@@ -61,13 +61,13 @@ export function LoginScreen() {
             trong một hệ thống tập trung.
           </p>
         </div>
-        <small>© {new Date().getFullYear()} Prime Nuts USA</small>
+        <small>© {new Date().getFullYear()} Your Company</small>
       </section>
 
       <section className="admin-login-panel">
         <form className="admin-login-card" onSubmit={handleSubmit}>
           <header>
-            <p className="admin-eyebrow">Prime Nuts CMS</p>
+            <p className="admin-eyebrow">Quản trị website</p>
             <h2>Đăng nhập quản trị</h2>
             <p>Dùng tài khoản nhân sự đã được cấp quyền.</p>
           </header>

@@ -18,7 +18,7 @@ export const getOtpTemplate = (otp: string) => {
       color: #ffffff;
     ">
       <h2 style="margin:0; font-size: 20px; letter-spacing: 2px;">
-        PRIME NUTS USA — CALIFORNIA ALMONDS
+        YOUR COMPANY
       </h2>
       <p style="margin:6px 0 0; font-size: 12px; opacity: 0.8;">
         Account Verification Code
@@ -76,7 +76,7 @@ export const getOtpTemplate = (otp: string) => {
       font-size: 12px;
       color: #6b7280;
     ">
-      © ${new Date().getFullYear()} Prime Nuts USA . All rights reserved.
+      © ${new Date().getFullYear()} Your Company. All rights reserved.
     </div>
 
   </div>

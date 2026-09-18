@@ -31,7 +31,7 @@ export function Footer({
 } = {}) {
   const info = contact ?? {
     ...SITE_CONTACT,
-    name: "Prime Nuts USA",
+    name: "Your Company",
     mapUrl: null,
   };
   return (
@@ -40,57 +40,50 @@ export function Footer({
         <div>
           <Brand footer {...brand} />
           <p className="mt-6 max-w-80 text-lg text-gold-300 italic">
-            California Almonds. Sourced with Confidence.
+            Your company tagline goes here.
           </p>
         </div>
 
-        <nav aria-label="Explore">
-          <h4 className={COL_TITLE}>Explore</h4>
+        {/* Link chân trang trỏ vào section của trang chủ (page.seed.ts) —
+            đổi sectionKey trong seed thì sửa lại đường dẫn ở đây cho khớp. */}
+        <nav aria-label="Khám phá">
+          <h4 className={COL_TITLE}>Khám phá</h4>
           <Link className={FOOTER_LINK} href={siteRoutes.products}>
-            Our Products
+            Dịch vụ
           </Link>
           <Link
             className={FOOTER_LINK}
-            href={siteRoutes.homeSection("about-map")}
+            href={siteRoutes.homeSection("gioi-thieu")}
           >
-            About Prime Nuts USA
+            Giới thiệu
+          </Link>
+          <Link className={FOOTER_LINK} href={siteRoutes.homeSection("dich-vu")}>
+            Chúng tôi làm gì
           </Link>
           <Link
             className={FOOTER_LINK}
-            href={siteRoutes.homeSection("product-specs")}
+            href={siteRoutes.homeSection("quy-trinh")}
           >
-            Product Specifications
-          </Link>
-          <Link
-            className={FOOTER_LINK}
-            href={siteRoutes.homeSection("how-it-works")}
-          >
-            How It Works
-          </Link>
-          <Link
-            className={FOOTER_LINK}
-            href={siteRoutes.homeSection("sourcing-services")}
-          >
-            Sourcing &amp; Procurement
+            Quy trình làm việc
           </Link>
         </nav>
 
-        <nav aria-label="Company">
-          <h4 className={COL_TITLE}>Company</h4>
+        <nav aria-label="Công ty">
+          <h4 className={COL_TITLE}>Công ty</h4>
           <Link className={FOOTER_LINK} href={siteRoutes.homeSection("faq")}>
-            Why Prime Nuts USA
+            Câu hỏi thường gặp
+          </Link>
+          <Link className={FOOTER_LINK} href={siteRoutes.news}>
+            Tin tức
+          </Link>
+          <Link className={FOOTER_LINK} href={siteRoutes.contact}>
+            Liên hệ
           </Link>
           <Link
             className={FOOTER_LINK}
-            href={siteRoutes.homeSection("buyers-marquee")}
+            href={siteRoutes.homeSection("request-quote")}
           >
-            International Buyers
-          </Link>
-          <Link className={FOOTER_LINK} href={siteRoutes.news}>
-            News &amp; Insights
-          </Link>
-          <Link className={FOOTER_LINK} href={siteRoutes.contact}>
-            Contact
+            Nhận báo giá
           </Link>
         </nav>
 
@@ -177,18 +170,14 @@ export function Footer({
             ) : null}
           </address>
           <Link href={siteRoutes.contact} className="btn btn-gold btn-sm">
-            Request a Quote
+            Nhận báo giá
           </Link>
         </div>
       </div>
       <div className="site-container flex flex-wrap justify-between gap-x-8 gap-y-2 border-t border-t-light/10 py-6 text-sm max-[640px]:flex-col">
         <p className="m-0">
           © {new Date().getFullYear()}{" "}
-          {footerText?.trim() || `${info.name}. All rights reserved.`}
-        </p>
-        <p className="m-0 text-light-soft/70 italic [&_a]:text-inherit [&_a]:underline [&_a:hover]:text-gold-300">
-          Photos via Wikimedia Commons &amp; rawpixel —{" "}
-          <a href="/images/CREDITS.md">photo credits</a>
+          {footerText?.trim() || `${info.name}. Bảo lưu mọi quyền.`}
         </p>
       </div>
     </footer>

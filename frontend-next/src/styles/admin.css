@@ -1,10 +1,10 @@
 /* ==========================================================================
-   PRIME NUTS CMS ADMIN — shell, sidebar, dashboard, login (chuyển từ style.css)
+   CMS ADMIN — shell, sidebar, dashboard, login (chuyển từ style.css)
    ========================================================================== */
 .admin-root,
 .admin-login-page,
 .admin-auth-loading {
-  /* Palette đồng bộ với :root của site (styles/base.css) — brand Prime Nuts */
+  /* Palette đồng bộ với :root của site (styles/base.css) — màu thương hiệu */
   --admin-bg: #f3efe6;                     /* --cream-2 */
   --admin-surface: rgba(255, 255, 255, 0.78);
   --admin-surface-solid: #faf8f3;          /* --cream */
@@ -2598,7 +2598,7 @@ body .swal2-html-container {
 }
 
 /* ============================================================
-   PRIME NUTS POLISH — tinh chỉnh thẩm mỹ trên nền theme gốc
+   POLISH — tinh chỉnh thẩm mỹ trên nền theme gốc
    (đặt cuối file để đè các rule phía trên)
    ============================================================ */
 

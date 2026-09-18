@@ -1,5 +1,5 @@
 /**
- * Ngôn ngữ site Prime Nuts USA: nội dung gốc TIẾNG ANH ('en'); bản dịch phụ
+ * Ngôn ngữ website: nội dung gốc TIẾNG ANH ('en'); bản dịch phụ
  * ('vi') lưu ở cột `translations` phía backend và truy vấn qua `?lang=vi`.
  * Site public hiện chỉ render bản tiếng Anh — file này giữ type/helper tối
  * thiểu cho các lib dùng chung (settings, contact-page, admin).

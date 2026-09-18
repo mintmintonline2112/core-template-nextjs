@@ -7,7 +7,7 @@ export type MarketPoint = { r: string; n: string; lat: number; lon: number };
 
 export type MapRegion = { key: string; label: string };
 
-export const ORIGIN: MarketPoint = { r: "us", n: "California — Origin", lat: 36.8, lon: -119.8 };
+export const ORIGIN: MarketPoint = { r: "us", n: "Trụ sở chính", lat: 36.8, lon: -119.8 };
 
 export const MARKETS: MarketPoint[] = [
   { r: "us", n: "United States", lat: 39.8, lon: -98.6 },
@@ -43,7 +43,7 @@ export const MARKETS: MarketPoint[] = [
   { r: "eu", n: "United Kingdom", lat: 53.0, lon: -1.5 },
 ];
 
-/** Điểm đến của đường hàng hải từ California cho từng khu vực. */
+/** Điểm đến của đường nối từ trụ sở tới từng khu vực. */
 export const HUBS: Record<string, { lat: number; lon: number }> = {
   na: { lat: 23.6, lon: -102.5 },
   ap: { lat: 16.2, lon: 106.0 },

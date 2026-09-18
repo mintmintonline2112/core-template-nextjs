@@ -52,7 +52,7 @@ export function Brand({
   logoHeight,
   brandName,
 }: BrandProps) {
-  const name = brandName?.trim() || "Prime Nuts USA";
+  const name = brandName?.trim() || "Your Company";
   return (
     <Link
       href={siteRoutes.home}
@@ -81,8 +81,8 @@ export function Brand({
                 name
               ) : (
                 <>
-                  Prime Nuts{" "}
-                  <em className="font-medium text-gold-500 italic">USA</em>
+                  Your{" "}
+                  <em className="font-medium text-gold-500 italic">Company</em>
                 </>
               )}
             </span>
@@ -92,7 +92,7 @@ export function Brand({
                 footer ? "text-light-soft" : "text-ink-faint",
               )}
             >
-              {footer ? "California, USA" : "California Almonds"}
+              {footer ? "Location, Country" : "Your Tagline"}
             </span>
           </span>
         </>

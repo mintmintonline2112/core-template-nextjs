@@ -30,7 +30,7 @@ export function quoteRequestTemplate(data: CreateQuoteRequestDto): string {
       ${row('Message', data.message)}
     </table>
     <div style="padding:12px 24px;background:#FAF7EE;color:#6C7563;font-size:12px;">
-      © ${new Date().getFullYear()} Prime Nuts USA — sent automatically from the website quote form.
+      © ${new Date().getFullYear()} Your Company — sent automatically from the website quote form.
     </div>
   </div>`;
 }

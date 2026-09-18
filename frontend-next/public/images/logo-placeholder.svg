@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" role="img" aria-label="Logo">
+  <g fill="none" stroke="currentColor" stroke-width="4">
+    <rect x="6" y="14" width="52" height="52" rx="14" stroke="#1f3a4d" />
+    <path d="M20 46l10-14 9 11 7-7" stroke="#c9a35e" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="74" y="43" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#1f3a4d" letter-spacing="1">LOGO</text>
+  <text x="74" y="63" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12" fill="#1f3a4d" fill-opacity="0.65" letter-spacing="3">THAY BẰNG LOGO THẬT</text>
+</svg>

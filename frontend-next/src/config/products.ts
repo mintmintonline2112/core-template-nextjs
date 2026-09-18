@@ -1,32 +1,24 @@
 /**
- * Danh mục sản phẩm cho các ô chọn trong FORM BÁO GIÁ (forms.tsx).
- * Nội dung hiển thị trên trang (giống, cỡ hạt…) nằm trong CMS / seed
- * (backend page.seed.ts), không đọc từ đây.
+ * Danh mục cho các ô chọn trong FORM BÁO GIÁ (forms.tsx).
+ * Nội dung hiển thị trên trang nằm trong CMS / seed (backend page.seed.ts),
+ * không đọc từ đây.
+ *
+ * KHI TẠO SITE MỚI: thay bằng danh mục thật của khách. Tên hằng giữ nguyên để
+ * khỏi phải sửa forms.tsx.
  */
 
-/** Cỡ hạt tính theo số nhân trên mỗi ounce. */
-export const KERNEL_SIZES = [
-  "20/22",
-  "22/24",
-  "23/25",
-  "25/27",
-  "27/30",
-  "30/32",
+/** Ô chọn thứ hai của form — quy mô, cỡ, gói… tuỳ ngành. */
+export const SIZE_OPTIONS = [
+  "Nhỏ",
+  "Vừa",
+  "Lớn",
+  "Theo yêu cầu riêng",
 ] as const;
 
-/** Giống hạt chào bán chính (form báo giá có thêm lựa chọn "Other / Custom"). */
-export const ALMOND_VARIETIES = [
-  "Nonpareil",
-  "Independence",
-  "Carmel-Type",
-  "California-Type",
-] as const;
-
-/** Định dạng đã qua chế biến. */
-export const PROCESSED_FORMATS = [
-  "Blanched",
-  "Sliced",
-  "Slivered",
-  "Diced",
-  "Almond Flour & Meal",
+/** Nhóm sản phẩm / dịch vụ chính (form báo giá có thêm lựa chọn "Khác"). */
+export const PRODUCT_OPTIONS = [
+  "Nhóm sản phẩm 1",
+  "Nhóm sản phẩm 2",
+  "Nhóm sản phẩm 3",
+  "Nhóm sản phẩm 4",
 ] as const;

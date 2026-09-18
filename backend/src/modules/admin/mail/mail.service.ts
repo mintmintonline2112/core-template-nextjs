@@ -56,9 +56,9 @@ export class MailService implements OnModuleInit {
     const htmlContent = getOtpTemplate(otp);
 
     return this.deliver({
-      from: `"Prime Nuts USA" <${mail.from}>`,
+      from: `"Your Company" <${mail.from}>`,
       to,
-      subject: '[Prime Nuts USA] Your Verification Code',
+      subject: '[Your Company] Your Verification Code',
       html: htmlContent,
     });
   }
@@ -66,9 +66,9 @@ export class MailService implements OnModuleInit {
   async sendPasswordResetEmail(to: string, resetLink: string) {
     const mail = this.configService.get<MailConfig>('mail');
     return this.deliver({
-      from: `"Prime Nuts USA" <${mail.from}>`,
+      from: `"Your Company" <${mail.from}>`,
       to,
-      subject: '[Prime Nuts USA] Password Reset Request',
+      subject: '[Your Company] Password Reset Request',
       html: getPasswordResetTemplate(resetLink),
     });
   }
@@ -83,7 +83,7 @@ export class MailService implements OnModuleInit {
     const mail = this.configService.get<MailConfig>('mail');
 
     return this.deliver({
-      from: `"Prime Nuts USA" <${mail.from}>`,
+      from: `"Your Company" <${mail.from}>`,
       ...options,
     });
   }

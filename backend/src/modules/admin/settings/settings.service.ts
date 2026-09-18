@@ -6,7 +6,7 @@ import { SiteSetting } from './site-setting.entity';
 const ALLOWED_KEYS = new Set([
   'siteTitle',
   'siteDescription',
-  'brandName', // chữ hiển thị cạnh logo (mặc định "Prime Nuts USA")
+  'brandName', // chữ hiển thị cạnh logo (mặc định "Your Company")
   'footerText', // dòng chữ cuối trang (sau "© <năm> ")
   'faviconUrl',
   'logoUrl',
@@ -28,7 +28,7 @@ const ALLOWED_KEYS = new Set([
   'socialLinks', // { facebook, youtube, instagram, linkedin } — khung social trang Contact
   'contactPage', // cấu hình trang Contact (hero, thông tin công ty, form)
   'contactInfo', // { location, address, email, phone } hiển thị trên website
-  // Key kế thừa từ admin UI cũ — site Prime Nuts chưa dùng, giữ để form settings không lỗi.
+  // Key kế thừa từ admin UI cũ — site hiện tại chưa dùng, giữ để form settings không lỗi.
   'postTitleSize',
 ]);
 
@@ -38,9 +38,9 @@ const ALLOWED_KEYS = new Set([
  * ảnh admin chọn từ Thư viện sẽ là /uploads/... và ghi đè các giá trị này.
  */
 const DEFAULT_SETTINGS: Record<string, unknown> = {
-  logoUrl: '/images/logo-primenut-main.png',
+  logoUrl: '/images/logo-placeholder.svg',
   logoHeight: 42,
-  footerLogoUrl: '/images/logo-primenut-footer.png',
+  footerLogoUrl: '/images/logo-placeholder-light.svg',
   footerLogoHeight: 44,
 };
 

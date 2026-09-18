@@ -22,7 +22,7 @@ export async function generateMetadata({
   const post = await getBlogPost(slug);
   if (!post) return { title: "Article not found", robots: { index: false } };
   return buildPageMetadata({
-    title: post.metaTitle ?? post.title,
+    title: post.metaTitle?.trim() || post.title,
     description: post.metaDescription ?? post.excerpt,
     path: siteRoutes.newsPost(post.slug),
     image: post.ogImagePath ?? post.coverImagePath,
@@ -131,7 +131,7 @@ export default async function NewsDetailPage({
             </p>
           ) : null}
           <p className="reveal mt-5 mb-0 text-sm text-ink-faint">
-            Prime Nuts USA Editorial
+            Your Company Editorial
           </p>
         </div>
       </header>
@@ -167,7 +167,7 @@ export default async function NewsDetailPage({
 
       <CtaBand
         eyebrow="Work With Us"
-        title="Looking for California Almond Supply?"
+        title="Looking for a Reliable Supplier?"
         text="Tell us your requirements and our team will prepare a commercial quotation."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">

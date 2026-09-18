@@ -91,7 +91,7 @@ export function WorldMapPanel({
       <img
         className="block h-auto w-full opacity-[0.92]"
         src="/images/world-map.svg"
-        alt="World map showing Prime Nuts USA export markets"
+        alt="World map showing our export markets"
         width={800}
         height={400}
       />

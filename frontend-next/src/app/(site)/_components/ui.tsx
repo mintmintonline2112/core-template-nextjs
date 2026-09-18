@@ -46,7 +46,7 @@ export const ARCH = "rounded-[240px_240px_var(--radius-lg)_var(--radius-lg)]";
 
 /** Hoa văn hạt hạnh nhân mờ (::before) cho dải navy — phần tử phải `relative`. */
 export const NAVY_PATTERN =
-  "before:pointer-events-none before:absolute before:inset-0 before:bg-(image:--pattern-almonds) before:content-['']";
+  "before:pointer-events-none before:absolute before:inset-0 before:bg-(image:--pattern-motif) before:content-['']";
 
 /** Hạt phim mịn (::after) phủ dải navy — phần tử phải `relative`. */
 export const NAVY_GRAIN =
@@ -100,7 +100,7 @@ export function Eyebrow({
 }
 
 /** Ảnh nền dải tiêu đề đầu trang khi trang chưa chọn ảnh (Admin → Trang). */
-export const DEFAULT_PAGE_HERO_IMAGE = "/images/orchard-rows.jpg";
+export const DEFAULT_PAGE_HERO_IMAGE = "/images/placeholder-wide.svg";
 
 /**
  * Dải tiêu đề đầu trang con (Products, News, bài viết, Contact, trang CMS tự do):

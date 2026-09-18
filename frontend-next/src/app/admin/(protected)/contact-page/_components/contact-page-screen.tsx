@@ -225,7 +225,7 @@ export function ContactPageScreen() {
           Hiện ở trang Liên hệ, chân trang và thanh trên cùng (điện thoại, email). Để trống ô nào
           thì website dùng giá trị mặc định trong code (chữ mờ trong ô).
         </p>
-        {field('Tên công ty', company.name, (v) => setCompany({ ...company, name: v }), { placeholder: 'Prime Nuts USA' })}
+        {field('Tên công ty', company.name, (v) => setCompany({ ...company, name: v }), { placeholder: 'Tên công ty của bạn' })}
         <div className="st-media-row">
           <div style={{ flex: 1 }}>{field('Quốc gia / khu vực', company.location, (v) => setCompany({ ...company, location: v }), { placeholder: SITE_CONTACT.location })}</div>
           <div style={{ flex: 1 }}>{field('Điện thoại', company.phone, (v) => setCompany({ ...company, phone: v }), { placeholder: SITE_CONTACT.phone, type: 'tel' })}</div>

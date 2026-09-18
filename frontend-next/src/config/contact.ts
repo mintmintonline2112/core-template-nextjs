@@ -1,12 +1,14 @@
 /**
- * Thông tin liên hệ MẶC ĐỊNH của Prime Nuts USA — dùng khi Admin → Trang Liên hệ
+ * Thông tin liên hệ MẶC ĐỊNH của website — dùng khi Admin → Trang Liên hệ
  * → Thông tin công ty để trống ô tương ứng (xem resolveContact trong lib/settings.ts).
+ *
+ * KHI TẠO SITE MỚI: thay bằng thông tin thật của khách, hoặc nhập trong dashboard.
  */
 export const SITE_CONTACT = {
-  location: "United States",
-  address: "15 Colonial, Irvine, California 92620",
-  email: "mod@wwpath.us",
-  phone: "+1 (949) 656-6672",
-  phoneHref: "tel:+19496566672",
-  hours: "9AM - 5PM / 10AM - 3PM",
+  location: "Việt Nam",
+  address: "Số nhà, đường, phường, quận, thành phố",
+  email: "hello@example.com",
+  phone: "0900 000 000",
+  phoneHref: "tel:0900000000",
+  hours: "8:00 - 17:30 (Thứ 2 - Thứ 7)",
 } as const;

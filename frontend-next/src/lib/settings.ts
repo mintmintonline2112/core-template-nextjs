@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api";
 import { SITE_CONTACT } from "@/config/contact";
+import { env } from "@/lib/env";
 import { DEFAULT_LANG, type Lang } from "@/lib/i18n";
 
 /**
@@ -48,6 +49,29 @@ export interface SiteSettings {
 
 export type SocialKey = "facebook" | "youtube" | "instagram" | "tiktok";
 export type SocialLinks = Partial<Record<SocialKey, string>>;
+
+/** Tên thương hiệu khi Admin → Cài đặt → Tên logo để trống. */
+export const DEFAULT_BRAND_NAME = "Prime Nuts USA";
+
+/** Favicon mặc định (frontend-next/public) khi admin chưa chọn ảnh. */
+export const DEFAULT_FAVICON = "/favicon.svg";
+
+/** Tên thương hiệu đang dùng — cho tiêu đề tab, hậu tố SEO, tên admin. */
+export function brandNameOf(settings: SiteSettings): string {
+  return settings.brandName?.trim() || DEFAULT_BRAND_NAME;
+}
+
+/**
+ * Đường dẫn favicon dùng CHUNG cho site public và dashboard admin:
+ * /images/... là file tĩnh của frontend, còn lại là ảnh upload nằm ở phía API.
+ */
+export function faviconHref(settings: SiteSettings): string {
+  const path = settings.faviconUrl?.trim();
+  if (!path) return DEFAULT_FAVICON;
+  if (/^https?:\/\//.test(path) || path.startsWith("/images/")) return path;
+  const base = env.publicApiUrl.replace(/\/api$/, "");
+  return `${base}${path.startsWith("/") ? "" : "/"}${path}`;
+}
 
 /** Giới hạn cỡ chữ tiêu đề bài viết (px) — khớp slider trong admin. */
 export const POST_TITLE_MIN = 28;

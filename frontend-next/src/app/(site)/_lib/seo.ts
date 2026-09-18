@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { env } from "@/lib/env";
-import { getSiteSettings } from "@/lib/settings";
+import {
+  brandNameOf,
+  DEFAULT_BRAND_NAME,
+  getSiteSettings,
+  type SiteSettings,
+} from "@/lib/settings";
 import { mediaUrl } from "./cms";
 
 /**
@@ -12,7 +17,7 @@ import { mediaUrl } from "./cms";
  * layout (không merge sâu), nên helper phải điền đầy đủ mọi field mỗi lần.
  */
 
-export const SITE_NAME = "Prime Nuts USA";
+export const SITE_NAME = DEFAULT_BRAND_NAME;
 export const SITE_DEFAULT_TITLE = "Prime Nuts USA — California Almonds. Sourced with Confidence.";
 export const SITE_DEFAULT_DESCRIPTION =
   "Reliable California almond sourcing, procurement, and export coordination for wholesale buyers worldwide.";
@@ -29,6 +34,18 @@ export function absoluteUrl(path: string): string {
       ? pathname
       : `${pathname}/`;
   return `${env.siteUrl}${withSlash}${rest}`;
+}
+
+/**
+ * Tên brand + tiêu đề + mô tả đang dùng: ưu tiên Admin → Cài đặt → Thương hiệu & SEO,
+ * ô nào trống thì lấy hằng số mặc định phía trên.
+ */
+export function resolveSiteSeo(settings: SiteSettings) {
+  return {
+    name: brandNameOf(settings),
+    title: settings.siteTitle?.trim() || SITE_DEFAULT_TITLE,
+    description: settings.siteDescription?.trim() || SITE_DEFAULT_DESCRIPTION,
+  };
 }
 
 export type PageSeoInput = {
@@ -50,14 +67,15 @@ export type PageSeoInput = {
 
 export async function buildPageMetadata(input: PageSeoInput): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const site = resolveSiteSeo(settings);
 
-  const description = input.description ?? SITE_DEFAULT_DESCRIPTION;
+  const description = input.description ?? site.description;
   const image =
     mediaUrl(input.image) ?? settings.ogImageUrl ?? settings.heroImageUrl ?? DEFAULT_OG_IMAGE;
   const url = absoluteUrl(input.canonical ?? input.path);
   // metaTitle admin nhập thường đã có sẵn tên brand → không gắn hậu tố lần nữa.
-  const absolute = input.absoluteTitle || input.title.includes(SITE_NAME);
-  const socialTitle = absolute ? input.title : `${input.title} — ${SITE_NAME}`;
+  const absolute = input.absoluteTitle || input.title.includes(site.name);
+  const socialTitle = absolute ? input.title : `${input.title} — ${site.name}`;
   const type = input.type ?? "website";
 
   return {
@@ -66,7 +84,7 @@ export async function buildPageMetadata(input: PageSeoInput): Promise<Metadata> 
     alternates: { canonical: url },
     openGraph: {
       type,
-      siteName: SITE_NAME,
+      siteName: site.name,
       locale: SITE_LOCALE,
       title: socialTitle,
       description,

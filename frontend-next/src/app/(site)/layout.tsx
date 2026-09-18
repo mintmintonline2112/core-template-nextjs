@@ -7,13 +7,16 @@ import { SiteEffects } from "@/app/(site)/_components/SiteEffects";
 import { brandColorsCss } from "@/lib/brand-colors";
 import { mediaUrl } from "@/app/(site)/_lib/cms";
 import { getSiteMenu } from "@/app/(site)/_lib/menu";
-import { FONT_STACKS, getSiteSettings, resolveContact } from "@/lib/settings";
+import {
+  faviconHref,
+  FONT_STACKS,
+  getSiteSettings,
+  resolveContact,
+} from "@/lib/settings";
 import {
   DEFAULT_OG_IMAGE,
-  SITE_DEFAULT_DESCRIPTION,
-  SITE_DEFAULT_TITLE,
+  resolveSiteSeo,
   SITE_LOCALE,
-  SITE_NAME,
 } from "@/app/(site)/_lib/seo";
 
 /**
@@ -24,26 +27,25 @@ import {
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   const image = settings.ogImageUrl ?? settings.heroImageUrl ?? DEFAULT_OG_IMAGE;
-  // Admin → Cài đặt → Favicon: có thì đè /favicon.svg mặc định.
-  const favicon = settings.faviconUrl?.startsWith("/images/")
-    ? settings.faviconUrl
-    : mediaUrl(settings.faviconUrl);
+  // Admin → Cài đặt → Thương hiệu & SEO; ô nào trống thì dùng mặc định trong seo.ts.
+  const site = resolveSiteSeo(settings);
   return {
-    title: { default: SITE_DEFAULT_TITLE, template: `%s — ${SITE_NAME}` },
-    ...(favicon ? { icons: { icon: favicon } } : {}),
-    description: SITE_DEFAULT_DESCRIPTION,
+    title: { default: site.title, template: `%s — ${site.name}` },
+    // Admin → Cài đặt → Favicon: có thì đè /favicon.svg mặc định.
+    icons: { icon: faviconHref(settings) },
+    description: site.description,
     openGraph: {
       type: "website",
-      siteName: SITE_NAME,
+      siteName: site.name,
       locale: SITE_LOCALE,
-      title: SITE_DEFAULT_TITLE,
-      description: SITE_DEFAULT_DESCRIPTION,
+      title: site.title,
+      description: site.description,
       images: [{ url: image }],
     },
     twitter: {
       card: "summary_large_image",
-      title: SITE_DEFAULT_TITLE,
-      description: SITE_DEFAULT_DESCRIPTION,
+      title: site.title,
+      description: site.description,
       images: [image],
     },
     robots: { index: true, follow: true },

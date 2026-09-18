@@ -14,6 +14,11 @@ import {
   POST_TITLE_MAX,
   POST_TITLE_MIN,
 } from '@/app/admin/(protected)/settings/_lib/settings.service';
+import Link from 'next/link';
+import { pageService, PAGE_QUERY_KEY } from '@/app/admin/(protected)/pages/_lib/page.service';
+import { SITE_CONTACT } from '@/config/contact';
+import { adminRoutes } from '@/config/routes';
+import type { ContactPageConfig } from '@/lib/contact-page';
 import {
   BRAND_COLOR_DEFAULTS,
   BRAND_COLOR_FIELDS,
@@ -24,6 +29,24 @@ import {
 } from '@/lib/brand-colors';
 
 type PickerTarget = 'logo' | 'footerLogo' | 'favicon' | 'hero' | 'og' | null;
+
+/** Ô thông tin liên hệ — khớp contactPage.company (lib/contact-page.ts). */
+const COMPANY_FIELDS = [
+  { key: 'name', label: 'Tên công ty', placeholder: 'Prime Nuts USA' },
+  { key: 'phone', label: 'Điện thoại', placeholder: SITE_CONTACT.phone, type: 'tel' },
+  { key: 'email', label: 'Email', placeholder: SITE_CONTACT.email, type: 'email' },
+  { key: 'hours', label: 'Giờ mở cửa', placeholder: SITE_CONTACT.hours },
+  { key: 'address', label: 'Địa chỉ', placeholder: SITE_CONTACT.address },
+  { key: 'location', label: 'Quốc gia / khu vực', placeholder: SITE_CONTACT.location },
+  { key: 'mapUrl', label: 'Link Google Maps (tuỳ chọn)', placeholder: 'https://maps.app.goo.gl/...', type: 'url' },
+] as const;
+
+type CompanyField = (typeof COMPANY_FIELDS)[number]['key'];
+
+const EMPTY_COMPANY = Object.fromEntries(COMPANY_FIELDS.map((f) => [f.key, ''])) as Record<
+  CompanyField,
+  string
+>;
 
 export function SettingsScreen() {
   const queryClient = useQueryClient();
@@ -51,11 +74,21 @@ export function SettingsScreen() {
   const [copyProtection, setCopyProtection] = useState(true);
   const [showPostMeta, setShowPostMeta] = useState(true);
   const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
+  // Thông tin liên hệ nằm trong JSON contactPage.company — cùng dữ liệu với Admin → Trang Liên hệ.
+  const [company, setCompany] = useState<Record<CompanyField, string>>(EMPTY_COMPANY);
 
   const { data, isLoading } = useQuery({
     queryKey: [...SETTINGS_QUERY_KEY],
     queryFn: () => settingsService.get(),
   });
+
+  // Tiêu đề website áp cho TRANG CHỦ; nếu trang chủ có "Tiêu đề SEO" riêng thì ô này vô hiệu.
+  const { data: pages } = useQuery({
+    queryKey: [...PAGE_QUERY_KEY, 'meta-title'],
+    queryFn: () => pageService.paginate({ limit: 100 }),
+  });
+  const homePage = (pages?.data ?? []).find((page) => page.slug === 'home');
+  const homeTitleOverride = homePage?.metaTitle?.trim() ? homePage : null;
 
   useEffect(() => {
     if (!data) return;
@@ -87,6 +120,12 @@ export function SettingsScreen() {
       instagram: data.socialLinks?.instagram ?? '',
       tiktok: data.socialLinks?.tiktok ?? '',
     });
+    const saved = data.contactPage?.company ?? {};
+    setCompany(
+      Object.fromEntries(
+        COMPANY_FIELDS.map((field) => [field.key, saved[field.key] ?? '']),
+      ) as Record<CompanyField, string>,
+    );
   }, [data]);
 
   /** Màu admin đang chọn, chưa chọn / không hợp lệ thì là màu mặc định. */
@@ -137,6 +176,20 @@ export function SettingsScreen() {
         // Màu theme cũ (tối/sáng) không còn dùng — xoá khỏi DB.
         colorsDark: null,
         colorsLight: null,
+        // Thông tin liên hệ gộp vào JSON contactPage: giữ nguyên tiêu đề trang, form,
+        // nhu cầu quan tâm và bản dịch do Admin → Trang Liên hệ quản lý.
+        contactPage: (() => {
+          const next: ContactPageConfig = { ...(data?.contactPage ?? {}) };
+          const nextCompany = { ...(next.company ?? {}) };
+          for (const field of COMPANY_FIELDS) {
+            const value = company[field.key].trim();
+            if (value) nextCompany[field.key] = value;
+            else delete nextCompany[field.key];
+          }
+          if (Object.keys(nextCompany).length) next.company = nextCompany;
+          else delete next.company;
+          return Object.keys(next).length ? next : null;
+        })(),
         copyProtection,
         showPostMeta,
         socialLinks: (() => {
@@ -189,7 +242,7 @@ export function SettingsScreen() {
       <div className="adm-page-header is-row">
         <div>
           <h1 className="adm-page-title">Cài đặt website</h1>
-          <p className="adm-page-subtitle">Thương hiệu · Hình ảnh · Font chữ · Màu thương hiệu · Tính năng</p>
+          <p className="adm-page-subtitle">Thương hiệu · Hình ảnh · Font chữ · Màu thương hiệu · Liên hệ · Tính năng</p>
         </div>
         <button
           type="button"
@@ -212,7 +265,20 @@ export function SettingsScreen() {
             onChange={(e) => setSiteTitle(e.target.value)}
             placeholder="Prime Nuts USA — California Almonds"
           />
-          <p className="gf-hint">Hiển thị trên tab trình duyệt và kết quả Google. Để trống dùng mặc định.</p>
+          <p className="gf-hint">
+            Hiện trên tab trình duyệt và kết quả Google cho trang chủ; các trang khác lấy tiêu đề
+            riêng rồi thêm đuôi &ldquo;— {brandName.trim() || 'Prime Nuts USA'}&rdquo;. Để trống dùng mặc định.
+          </p>
+          {homeTitleOverride && (
+            <p className="gf-hint st-soon">
+              ⚠ Trang chủ đang đặt tiêu đề SEO riêng (&ldquo;{homeTitleOverride.metaTitle}&rdquo;) nên
+              ô này chưa hiện ra ngoài.{' '}
+              <Link href={adminRoutes.pages.edit(homeTitleOverride.id)}>
+                Mở trang chủ trong mục Trang
+              </Link>{' '}
+              rồi xoá trống ô &ldquo;Tiêu đề SEO&rdquo; là xong.
+            </p>
+          )}
         </div>
         <div>
           <label className="gf-label">Mô tả website (description)</label>
@@ -611,6 +677,27 @@ export function SettingsScreen() {
               onChange={(e) => setSocialLinks((prev) => ({ ...prev, [key]: e.target.value }))}
               placeholder={placeholder}
               inputMode="url"
+            />
+          </div>
+        ))}
+      </section>
+
+      <section className="gf-card st-section">
+        <h2 className="st-section-title">Thông tin liên hệ</h2>
+        <p className="gf-hint" style={{ marginTop: -6 }}>
+          Hiện ở thanh trên cùng, chân trang và trang Liên hệ. Để trống ô nào thì website dùng
+          giá trị mặc định (chữ mờ trong ô). Đây cũng chính là thông tin ở Admin → Trang Liên hệ,
+          sửa bên nào cũng được.
+        </p>
+        {COMPANY_FIELDS.map((field) => (
+          <div key={field.key}>
+            <label className="gf-label">{field.label}</label>
+            <input
+              className="gf-control"
+              type={'type' in field ? field.type : 'text'}
+              value={company[field.key]}
+              placeholder={field.placeholder}
+              onChange={(e) => setCompany((prev) => ({ ...prev, [field.key]: e.target.value }))}
             />
           </div>
         ))}

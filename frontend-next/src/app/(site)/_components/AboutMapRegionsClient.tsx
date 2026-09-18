@@ -21,7 +21,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
     <div className="reveal grid grid-cols-[minmax(0,0.78fr)_minmax(0,1.72fr)] items-start gap-[clamp(1.5rem,3vw,2.5rem)] max-[900px]:grid-cols-1">
       <ul
         className="flex flex-col border-t border-line"
-        aria-label="Export regions"
+        aria-label="Khu vực xuất khẩu"
       >
         {regions.map((region) => {
           const isActive = region.key === active;
@@ -46,8 +46,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
                     isActive ? "text-gold-300" : "text-ink-faint",
                   )}
                 >
-                  {region.countries.length}{" "}
-                  {region.countries.length === 1 ? "market" : "markets"}
+                  {region.countries.length} thị trường
                 </span>
                 <svg
                   viewBox="0 0 24 24"
@@ -88,7 +87,7 @@ export function AboutMapRegionsClient({ regions }: { regions: RegionEntry[] }) {
       <div className="max-[900px]:order-[-1]">
         <WorldMapPanel active={active} className="mb-3" />
         <p className="m-0 text-right text-base text-ink-faint italic max-[900px]:text-left">
-          Additional destinations on request.
+          Những điểm đến khác vui lòng liên hệ.
         </p>
       </div>
     </div>

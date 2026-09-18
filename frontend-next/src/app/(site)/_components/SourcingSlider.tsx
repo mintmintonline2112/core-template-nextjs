@@ -128,7 +128,7 @@ export function SourcingSlider({
       <button
         type="button"
         className={cn(ARROW, "left-[0.9rem]")}
-        aria-label="Previous slide"
+        aria-label="Slide trước"
         onClick={() => goTo(current - 1)}
       >
         <svg
@@ -145,7 +145,7 @@ export function SourcingSlider({
       <button
         type="button"
         className={cn(ARROW, "right-[0.9rem]")}
-        aria-label="Next slide"
+        aria-label="Slide tiếp theo"
         onClick={() => goTo(current + 1)}
       >
         <svg
@@ -161,7 +161,7 @@ export function SourcingSlider({
       </button>
       <div
         className="absolute right-[1.2rem] bottom-[1.1rem] z-4 flex gap-2 max-[640px]:right-[0.9rem] max-[640px]:bottom-[0.9rem]"
-        aria-label="Slides"
+        aria-label="Danh sách slide"
       >
         {SLIDES.map((slide, index) => (
           <button
@@ -173,7 +173,7 @@ export function SourcingSlider({
                 ? "w-[22px] bg-gold-300"
                 : "w-[9px] bg-light/40",
             )}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={`Tới slide ${index + 1}`}
             onClick={() => goTo(index)}
           />
         ))}

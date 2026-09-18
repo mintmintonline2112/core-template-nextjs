@@ -39,18 +39,18 @@ export default async function ProductsPage() {
       <PageSections page={page} />
 
       <CtaBand
-        eyebrow="Ready to Order?"
-        title="Request Specifications or a Commercial Quotation"
-        text="Tell us your variety, size, volume, packaging, and destination — our team will respond with current availability and pricing."
+        eyebrow="Sẵn sàng đặt hàng?"
+        title="Nhận thông số chi tiết hoặc báo giá"
+        text="Cho chúng tôi biết sản phẩm, quy cách, số lượng, đóng gói và nơi nhận hàng — đội ngũ sẽ phản hồi kèm khả năng cung ứng và giá hiện tại."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">
-          Request a B2B Quote
+          Nhận báo giá B2B
         </Link>
         <Link
           href={siteRoutes.homeSection("about-map")}
           className="btn btn-ghost"
         >
-          About Your Company
+          Về chúng tôi
         </Link>
       </CtaBand>
     </>

@@ -31,7 +31,7 @@ export function Footer({
 } = {}) {
   const info = contact ?? {
     ...SITE_CONTACT,
-    name: "Your Company",
+    name: "Tên công ty",
     mapUrl: null,
   };
   return (
@@ -40,7 +40,7 @@ export function Footer({
         <div>
           <Brand footer {...brand} />
           <p className="mt-6 max-w-80 text-lg text-gold-300 italic">
-            Your company tagline goes here.
+            Khẩu hiệu công ty của bạn đặt ở đây.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ export function Footer({
         </nav>
 
         <div>
-          <h4 className={COL_TITLE}>Contact</h4>
+          <h4 className={COL_TITLE}>Liên hệ</h4>
           <address className="mb-6 flex flex-col gap-3 text-sm leading-relaxed text-light-soft not-italic">
             <a
               className={cn(CONTACT_ROW, "hover:text-gold-300")}
@@ -163,7 +163,7 @@ export function Footer({
                   </svg>
                 </span>
                 <span>
-                  <span className="sr-only">Opening hours: </span>
+                  <span className="sr-only">Giờ mở cửa: </span>
                   {info.hours}
                 </span>
               </div>

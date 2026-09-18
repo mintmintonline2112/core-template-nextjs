@@ -23,10 +23,10 @@ import { siteRoutes } from "@/config/routes";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("news");
   return buildPageMetadata({
-    title: page?.metaTitle?.trim() || page?.title || "News & Insights",
+    title: page?.metaTitle?.trim() || page?.title || "Tin tức & Góc nhìn",
     description:
       page?.metaDescription ??
-      "News, market updates, and industry insights from Your Company.",
+      "Tin tức, cập nhật thị trường và góc nhìn ngành từ chúng tôi.",
     path: siteRoutes.news,
     image: page?.ogImagePath,
     canonical: page?.canonicalUrl,
@@ -51,7 +51,7 @@ const TAG = "rounded-full border border-gold-400 px-3 py-1 font-semibold";
 
 function formatDate(value: string | null): string {
   if (!value) return "";
-  return new Date(value).toLocaleDateString("en-US", {
+  return new Date(value).toLocaleDateString("vi-VN", {
     month: "long",
     year: "numeric",
   });
@@ -62,7 +62,7 @@ function readingTime(post: BlogPost): string {
     .replace(/<[^>]+>/g, " ")
     .split(/\s+/)
     .filter(Boolean).length;
-  return `${Math.max(1, Math.round(words / 200))} min read`;
+  return `${Math.max(1, Math.round(words / 200))} phút đọc`;
 }
 
 /**
@@ -128,9 +128,9 @@ export default async function NewsPage({
   return (
     <>
       <PageHero
-        eyebrow="News & Insights"
-        title="From the Orchard to the Market"
-        lead="Crop updates, market perspectives, and company news for our buyers and distribution partners around the world."
+        eyebrow="Tin tức & Góc nhìn"
+        title="Cập nhật mới nhất từ chúng tôi"
+        lead="Tin thị trường, góc nhìn ngành và tin tức công ty dành cho khách hàng cùng đối tác của chúng tôi."
         image={heroImageUrl(cmsPage?.heroImagePath)}
         imagePosition={cmsPage?.heroImagePosition}
       />
@@ -140,7 +140,7 @@ export default async function NewsPage({
           {categories.length > 0 ? (
             <div className="reveal mt-0 mb-4 flex flex-wrap justify-center gap-2">
               <Link href={siteRoutes.news} className={chip(!activeCategory)}>
-                All
+                Tất cả
               </Link>
               {categories.map((category) => (
                 <Link
@@ -179,8 +179,7 @@ export default async function NewsPage({
                 </h2>
                 <p className="text-light-soft">{featured.excerpt}</p>
                 <p className="mt-5 border-t border-t-gold-300/30 pt-4 text-sm text-light-soft italic">
-                  {showMeta ? `${readingTime(featured)} · ` : ""}Your Company
-                  Editorial
+                  {showMeta ? `${readingTime(featured)} · ` : ""}Ban biên tập
                 </p>
               </div>
               {/* `news-featured-photo`: móc GSAP (mở khẩu độ + trượt dọc theo cuộn). */}
@@ -242,15 +241,15 @@ export default async function NewsPage({
           ) : posts.length === 0 ? (
             <p className={cn(SECTION_NOTE, "reveal")}>
               {result
-                ? "No articles published yet — check back soon."
-                : "Could not load articles right now — please try again later."}
+                ? "Chưa có bài viết nào — bạn quay lại sau nhé."
+                : "Chưa tải được danh sách bài viết — vui lòng thử lại sau."}
             </p>
           ) : null}
 
           {totalPages > 1 ? (
             <nav
               className="reveal mt-[clamp(2rem,4vw,3rem)] flex justify-center gap-2"
-              aria-label="Pagination"
+              aria-label="Phân trang"
             >
               {Array.from({ length: totalPages }, (_, index) => index + 1).map(
                 (page) => (
@@ -274,10 +273,10 @@ export default async function NewsPage({
 
           <div className="reveal mt-[clamp(3rem,6vw,4.5rem)] grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] items-center gap-8 rounded-lg border border-line bg-paper p-[clamp(2rem,4vw,3rem)] shadow-soft max-[900px]:grid-cols-1">
             <div>
-              <h2 className="mb-1 text-3xl">Stay in the Loop</h2>
+              <h2 className="mb-1 text-3xl">Đừng bỏ lỡ tin mới</h2>
               <p className="m-0 text-ink-soft">
-                Market updates and availability notes for commercial buyers — a
-                short email, a few times per season.
+                Cập nhật thị trường và thông tin hàng hoá dành cho khách doanh
+                nghiệp — một email ngắn, vài lần mỗi mùa.
               </p>
             </div>
             <div>
@@ -288,15 +287,15 @@ export default async function NewsPage({
       </section>
 
       <CtaBand
-        eyebrow="Work With Us"
-        title="Looking for a Reliable Supplier?"
-        text="Tell us your requirements and our team will prepare a commercial quotation."
+        eyebrow="Hợp tác cùng chúng tôi"
+        title="Đang tìm một nhà cung cấp đáng tin cậy?"
+        text="Cho chúng tôi biết yêu cầu của bạn, đội ngũ sẽ chuẩn bị báo giá phù hợp."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">
-          Request a B2B Quote
+          Nhận báo giá B2B
         </Link>
         <Link href={siteRoutes.products} className="btn btn-ghost">
-          Browse Our Products
+          Xem sản phẩm
         </Link>
       </CtaBand>
     </>

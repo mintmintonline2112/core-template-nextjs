@@ -11,7 +11,7 @@ import { DEFAULT_LANG, type Lang } from "@/lib/i18n";
 export interface SiteSettings {
   siteTitle?: string;
   siteDescription?: string;
-  /** Chữ hiển thị cạnh logo góc trên trái — trống dùng mặc định theme ("Your Company"). */
+  /** Chữ hiển thị cạnh logo góc trên trái — trống dùng mặc định theme ("Tên công ty"). */
   brandName?: string;
   /** Dòng chữ cuối trang, hiện sau "© <năm> " — trống dùng mặc định i18n. */
   footerText?: string;
@@ -51,7 +51,7 @@ export type SocialKey = "facebook" | "youtube" | "instagram" | "tiktok";
 export type SocialLinks = Partial<Record<SocialKey, string>>;
 
 /** Tên thương hiệu khi Admin → Cài đặt → Tên logo để trống. */
-export const DEFAULT_BRAND_NAME = "Your Company";
+export const DEFAULT_BRAND_NAME = "Tên công ty";
 
 /** Favicon mặc định (frontend-next/public) khi admin chưa chọn ảnh. */
 export const DEFAULT_FAVICON = "/favicon.svg";
@@ -93,7 +93,7 @@ export function resolveContact(settings: SiteSettings) {
   const company = settings.contactPage?.company ?? {};
   const phone = company.phone?.trim() || SITE_CONTACT.phone;
   return {
-    name: company.name?.trim() || "Your Company",
+    name: company.name?.trim() || DEFAULT_BRAND_NAME,
     location: company.location?.trim() || SITE_CONTACT.location,
     address: company.address?.trim() || SITE_CONTACT.address,
     email: company.email?.trim() || SITE_CONTACT.email,

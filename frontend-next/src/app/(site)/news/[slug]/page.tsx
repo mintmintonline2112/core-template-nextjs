@@ -20,7 +20,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
-  if (!post) return { title: "Article not found", robots: { index: false } };
+  if (!post) return { title: "Không tìm thấy bài viết", robots: { index: false } };
   return buildPageMetadata({
     title: post.metaTitle?.trim() || post.title,
     description: post.metaDescription ?? post.excerpt,
@@ -35,7 +35,7 @@ export async function generateMetadata({
 
 function formatDate(value: string | null): string {
   if (!value) return "";
-  return new Date(value).toLocaleDateString("en-US", {
+  return new Date(value).toLocaleDateString("vi-VN", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -112,7 +112,7 @@ export default async function NewsDetailPage({
                     </span>
                   </>
                 ) : null}
-                {readingMinutes(post.content)} min read
+                {readingMinutes(post.content)} phút đọc
               </span>
             ) : null}
           </div>
@@ -131,7 +131,7 @@ export default async function NewsDetailPage({
             </p>
           ) : null}
           <p className="reveal mt-5 mb-0 text-sm text-ink-faint">
-            Your Company Editorial
+            Ban biên tập
           </p>
         </div>
       </header>
@@ -160,21 +160,21 @@ export default async function NewsDetailPage({
           />
 
           <p className={cn(SECTION_NOTE, "reveal")}>
-            <Link href={siteRoutes.news}>← Back to News &amp; Insights</Link>
+            <Link href={siteRoutes.news}>← Quay lại Tin tức &amp; Góc nhìn</Link>
           </p>
         </div>
       </section>
 
       <CtaBand
-        eyebrow="Work With Us"
-        title="Looking for a Reliable Supplier?"
-        text="Tell us your requirements and our team will prepare a commercial quotation."
+        eyebrow="Hợp tác cùng chúng tôi"
+        title="Đang tìm một nhà cung cấp đáng tin cậy?"
+        text="Cho chúng tôi biết yêu cầu của bạn, đội ngũ sẽ chuẩn bị báo giá phù hợp."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">
-          Request a B2B Quote
+          Nhận báo giá B2B
         </Link>
         <Link href={siteRoutes.news} className="btn btn-ghost">
-          More Articles
+          Xem thêm bài viết
         </Link>
       </CtaBand>
     </>

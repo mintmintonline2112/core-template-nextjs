@@ -49,7 +49,7 @@ export function LoginScreen() {
             <i />
           </span>
           <span>
-            <strong>Your Company</strong>
+            <strong>Tên công ty</strong>
             <small>Quản trị nội dung</small>
           </span>
         </div>
@@ -61,7 +61,7 @@ export function LoginScreen() {
             trong một hệ thống tập trung.
           </p>
         </div>
-        <small>© {new Date().getFullYear()} Your Company</small>
+        <small>© {new Date().getFullYear()} Tên công ty</small>
       </section>
 
       <section className="admin-login-panel">

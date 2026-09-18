@@ -43,13 +43,13 @@ export async function Contact({ section, index = 0 }: SectionProps) {
   const rows = [
     {
       key: "location",
-      label: "Location",
+      label: "Địa điểm",
       icon: ICONS.pin,
       body: info.location,
     },
     {
       key: "address",
-      label: "Address",
+      label: "Địa chỉ",
       icon: ICONS.building,
       body: info.address,
     },
@@ -61,13 +61,13 @@ export async function Contact({ section, index = 0 }: SectionProps) {
     },
     {
       key: "phone",
-      label: "Phone",
+      label: "Điện thoại",
       icon: ICONS.phone,
       body: <a href={phoneHref}>{info.phone}</a>,
     },
     {
       key: "hours",
-      label: "Opening Hours",
+      label: "Giờ mở cửa",
       icon: ICONS.clock,
       body: info.hours,
     },

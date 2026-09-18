@@ -263,11 +263,11 @@ export function SettingsScreen() {
             className="gf-control"
             value={siteTitle}
             onChange={(e) => setSiteTitle(e.target.value)}
-            placeholder="Your Company — Your Tagline"
+            placeholder="Tên công ty — Khẩu hiệu ngắn"
           />
           <p className="gf-hint">
             Hiện trên tab trình duyệt và kết quả Google cho trang chủ; các trang khác lấy tiêu đề
-            riêng rồi thêm đuôi &ldquo;— {brandName.trim() || 'Your Company'}&rdquo;. Để trống dùng mặc định.
+            riêng rồi thêm đuôi &ldquo;— {brandName.trim() || 'Tên công ty'}&rdquo;. Để trống dùng mặc định.
           </p>
           {homeTitleOverride && (
             <p className="gf-hint st-soon">
@@ -297,7 +297,7 @@ export function SettingsScreen() {
             className="gf-control"
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
-            placeholder="Your Company"
+            placeholder="Tên công ty"
           />
           <p className="gf-hint">
             Chữ hiển thị cạnh logo ở góc trên bên trái mọi trang. Để trống dùng mặc định của theme.
@@ -309,7 +309,7 @@ export function SettingsScreen() {
             className="gf-control"
             value={footerText}
             onChange={(e) => setFooterText(e.target.value)}
-            placeholder="Your Company. All rights reserved."
+            placeholder="Tên công ty. Bảo lưu mọi quyền."
           />
           <p className="gf-hint">
             Phần chữ sau &ldquo;© {new Date().getFullYear()}&rdquo; ở cuối mọi trang (năm tự cập nhật, không cần

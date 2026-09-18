@@ -62,7 +62,7 @@ export function SocialIcons({
   links,
   className,
   linkClassName,
-  label = "Social media",
+  label = "Mạng xã hội",
 }: {
   links?: SocialLinks | null;
   className?: string;

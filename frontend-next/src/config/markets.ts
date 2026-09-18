@@ -53,12 +53,12 @@ export const HUBS: Record<string, { lat: number; lon: number }> = {
 };
 
 export const DEFAULT_MAP_REGIONS: MapRegion[] = [
-  { key: "us", label: "United States" },
-  { key: "na", label: "North America" },
-  { key: "ap", label: "Asia Pacific" },
-  { key: "sa", label: "South Asia" },
-  { key: "me", label: "Middle East" },
-  { key: "eu", label: "Europe" },
+  { key: "us", label: "Trong nước" },
+  { key: "na", label: "Bắc Mỹ" },
+  { key: "ap", label: "Châu Á - Thái Bình Dương" },
+  { key: "sa", label: "Nam Á" },
+  { key: "me", label: "Trung Đông" },
+  { key: "eu", label: "Châu Âu" },
 ];
 
 /** Tên các nước có ghim trên bản đồ thuộc một khu vực. */

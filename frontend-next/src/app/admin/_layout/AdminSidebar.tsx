@@ -32,7 +32,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
             <i />
           </span>
           <span>
-            <strong>Your Company</strong>
+            <strong>Tên công ty</strong>
             <small>Quản trị website</small>
           </span>
         </div>

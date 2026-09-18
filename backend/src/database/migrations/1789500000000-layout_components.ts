@@ -132,7 +132,7 @@ const RULES: Record<string, Rule> = {
   'hero-slider': { component: 'hero', layout: 'slider', transform: heroCtas },
   'hero-stats': {
     component: 'hero', layout: 'static',
-    transform: (m) => { heroCtas(m); setDefault(m, 'image', '/images/orchard-rows.jpg'); },
+    transform: (m) => { heroCtas(m); setDefault(m, 'image', '/images/placeholder-wide.svg'); },
   },
   'about-map': { component: 'about-map', layout: 'pins' },
   'markets-map': { component: 'about-map', layout: 'pins' },
@@ -299,9 +299,9 @@ const RULES: Record<string, Rule> = {
     transform: (m) => {
       // Thông tin liên hệ seed cũ chưa từng hiển thị (component đọc Admin → Trang Liên hệ).
       delete m.location; delete m.address; delete m.email; delete m.phone;
-      setDefault(m, 'note', 'We typically respond to commercial inquiries within 1–2 business days. For the fastest quotation, include your target variety, size &amp; grade, volume, packaging, destination port, and preferred Incoterm.');
-      setDefault(m, 'image', '/images/orchard-rows.jpg');
-      setDefault(m, 'imageAlt', 'Rows of almond trees in a California orchard');
+      setDefault(m, 'note', 'Chúng tôi phản hồi trong vòng 24 giờ làm việc.');
+      setDefault(m, 'image', '/images/placeholder-wide.svg');
+      setDefault(m, 'imageAlt', 'Ảnh minh hoạ');
     },
   },
   'contact-info': { component: 'contact', layout: 'list' },
@@ -310,10 +310,10 @@ const RULES: Record<string, Rule> = {
 
 /** Đoạn intro seed cũ của contact-details có cả câu "respond within 1–2 days" (giờ nằm ở ghi chú). */
 const CONTACT_SEED_CONTENT =
-  '<p>We work with commercial buyers — importers, distributors, wholesalers, food manufacturers, roasters, and private-label brands. We typically respond to commercial inquiries within 1–2 business days.</p>';
-const CONTACT_HERO_TITLE = 'Let’s Talk Almonds';
+  '<p>Gửi yêu cầu qua biểu mẫu, chúng tôi phản hồi trong vòng 24 giờ làm việc.</p>';
+const CONTACT_HERO_TITLE = 'Liên hệ với chúng tôi';
 const CONTACT_INTRO =
-  '<p>We work with commercial buyers — importers, distributors, wholesalers, food manufacturers, roasters, and private-label brands.</p>';
+  '<p>Gửi yêu cầu qua biểu mẫu bên cạnh, hoặc gọi trực tiếp trong giờ làm việc.</p>';
 
 /** Bản mới (component, layout) → tên cũ, dùng cho down(). */
 const REVERSE: Array<[string, string | undefined, string]> = [

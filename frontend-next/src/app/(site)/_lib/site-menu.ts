@@ -14,30 +14,20 @@ export type SiteMenuItem = {
   children?: SiteMenuChild[];
 };
 
+/** Khớp menu khởi tạo trong backend `menu.seed.ts` — đổi seed thì sửa cả ở đây. */
 export const SITE_MENU_ITEMS: SiteMenuItem[] = [
-  { key: "home", label: "Home", href: siteRoutes.home },
+  { key: "home", label: "Trang chủ", href: siteRoutes.home },
   {
     key: "products",
-    label: "Products",
+    label: "Dịch vụ",
     href: siteRoutes.products,
     children: [
-      { label: "Natural Almonds", href: siteRoutes.productsSection('natural-almonds') },
-      { label: "Processed Almonds", href: siteRoutes.productsSection('processed-almonds') },
-      { label: "Kernel Sizes", href: siteRoutes.productsSection('kernel-sizes') },
+      { label: "Các gói dịch vụ", href: siteRoutes.productsSection('dich-vu-noi-bat') },
+      { label: "Cam kết", href: siteRoutes.productsSection('cam-ket') },
     ],
   },
-  { key: "about-map", label: "About", href: siteRoutes.homeSection('about-map') },
-  { key: "how-it-works", label: "How It Works", href: siteRoutes.homeSection('how-it-works') },
-  {
-    key: "news",
-    label: "News",
-    href: siteRoutes.news,
-    children: [
-      { label: "Market Update", href: siteRoutes.newsCategory('market-update') },
-      { label: "Company News", href: siteRoutes.newsCategory('company-news') },
-      { label: "Industry Insight", href: siteRoutes.newsCategory('industry-insight') },
-      { label: "Logistics", href: siteRoutes.newsCategory('logistics') },
-    ],
-  },
-  { key: "contact", label: "Contact", href: siteRoutes.contact },
+  { key: "gioi-thieu", label: "Giới thiệu", href: siteRoutes.homeSection('gioi-thieu') },
+  { key: "quy-trinh", label: "Quy trình", href: siteRoutes.homeSection('quy-trinh') },
+  { key: "news", label: "Tin tức", href: siteRoutes.news },
+  { key: "contact", label: "Liên hệ", href: siteRoutes.contact },
 ];

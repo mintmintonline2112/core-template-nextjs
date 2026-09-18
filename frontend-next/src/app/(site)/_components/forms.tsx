@@ -45,7 +45,7 @@ async function postJson(path: string, body: Record<string, unknown>) {
   });
   if (response.status === 429) {
     throw new Error(
-      "You are sending too fast — please wait a minute and try again.",
+      "Bạn đang gửi quá nhanh — vui lòng đợi một phút rồi thử lại.",
     );
   }
   if (!response.ok) {
@@ -55,7 +55,7 @@ async function postJson(path: string, body: Record<string, unknown>) {
     const message = Array.isArray(payload?.message)
       ? payload?.message.join(", ")
       : payload?.message;
-    throw new Error(message || "Could not send — please try again.");
+    throw new Error(message || "Không gửi được — vui lòng thử lại.");
   }
   return response.json().catch(() => null);
 }
@@ -133,23 +133,24 @@ export function QuoteForm() {
         // Backend chưa có cột ngày giao hàng → gộp vào message.
         message:
           [
-            data.shipmentDate && `Target shipment date: ${data.shipmentDate}`,
+            data.shipmentDate &&
+              `Thời gian giao hàng dự kiến: ${data.shipmentDate}`,
             data.message,
           ]
             .filter(Boolean)
             .join("\n\n") || undefined,
       });
       setSuccess(
-        `We received your request for ${data.variety}${data.volume ? ` — ${data.volume}` : ""}${
-          data.destination ? `, destined for ${data.destination}` : ""
-        }. Our team will review your requirements and prepare a commercial quotation based on current availability and market conditions.`,
+        `Chúng tôi đã nhận yêu cầu của bạn cho ${data.variety}${data.volume ? ` — ${data.volume}` : ""}${
+          data.destination ? `, giao tới ${data.destination}` : ""
+        }. Đội ngũ của chúng tôi sẽ xem lại yêu cầu và chuẩn bị báo giá theo khả năng cung ứng cùng tình hình thị trường hiện tại.`,
       );
       form.reset();
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Could not send — please try again.",
+          : "Không gửi được — vui lòng thử lại.",
       );
     } finally {
       setSending(false);
@@ -160,10 +161,10 @@ export function QuoteForm() {
     return (
       <div className={cn(QUOTE_WRAP, "reveal is-visible")}>
         <SuccessPanel
-          title="Thank you — request received"
+          title="Cảm ơn bạn — đã nhận yêu cầu"
           body={success}
           onReset={() => setSuccess(null)}
-          resetLabel="Submit another request"
+          resetLabel="Gửi yêu cầu khác"
         />
       </div>
     );
@@ -172,12 +173,12 @@ export function QuoteForm() {
   return (
     <div className={cn(QUOTE_WRAP, "reveal")}>
       <form className={FORM} onSubmit={onSubmit}>
-        <h3 className={FORM_TITLE}>Request a Quote</h3>
+        <h3 className={FORM_TITLE}>Nhận báo giá</h3>
 
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-company">
-              Company{" "}
+              Công ty{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -193,7 +194,7 @@ export function QuoteForm() {
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-email">
-              Business Email{" "}
+              Email công việc{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -212,7 +213,7 @@ export function QuoteForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-name">
-              Contact Name
+              Người liên hệ
             </label>
             <input
               className={INPUT}
@@ -224,7 +225,7 @@ export function QuoteForm() {
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-phone">
-              Phone / WhatsApp
+              Điện thoại / Zalo
             </label>
             <input
               className={INPUT}
@@ -232,7 +233,7 @@ export function QuoteForm() {
               id="qf-phone"
               name="phone"
               autoComplete="tel"
-              placeholder="Include country code"
+              placeholder="Nhớ kèm mã quốc gia"
             />
           </div>
         </div>
@@ -240,7 +241,7 @@ export function QuoteForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-variety">
-              Product / Variety{" "}
+              Sản phẩm / Dịch vụ{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -253,17 +254,17 @@ export function QuoteForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select a variety
+                Chọn sản phẩm
               </option>
               {PRODUCT_OPTIONS.map((v) => (
                 <option key={v}>{v}</option>
               ))}
-              <option>Other / Custom specification</option>
+              <option>Khác / Theo yêu cầu riêng</option>
             </select>
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-size">
-              Size &amp; Grade
+              Quy cách &amp; phân loại
             </label>
             <select
               className={SELECT}
@@ -272,12 +273,12 @@ export function QuoteForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select a size
+                Chọn quy cách
               </option>
               {SIZE_OPTIONS.map((size) => (
                 <option key={size}>{size}</option>
               ))}
-              <option>Other / Custom</option>
+              <option>Khác / Theo yêu cầu</option>
             </select>
           </div>
         </div>
@@ -285,7 +286,7 @@ export function QuoteForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-volume">
-              Required Volume{" "}
+              Số lượng cần{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -295,13 +296,13 @@ export function QuoteForm() {
               type="text"
               id="qf-volume"
               name="volume"
-              placeholder="e.g. Pallet, truckload, or 1 × 40′ container"
+              placeholder="VD: 1 pallet, 1 xe tải, hoặc 1 container 40′"
               required
             />
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-packaging">
-              Packaging
+              Đóng gói
             </label>
             <select
               className={SELECT}
@@ -310,17 +311,17 @@ export function QuoteForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select packaging
+                Chọn kiểu đóng gói
               </option>
-              <option>50 lb cartons</option>
-              <option>Other commercial packaging</option>
+              <option>Thùng carton tiêu chuẩn</option>
+              <option>Đóng gói thương mại khác</option>
             </select>
           </div>
         </div>
 
         <div className={FIELD}>
           <label className={LABEL} htmlFor="qf-destination">
-            Destination Country &amp; Port{" "}
+            Quốc gia &amp; cảng đến{" "}
             <span className={REQ} aria-hidden="true">
               *
             </span>
@@ -330,7 +331,7 @@ export function QuoteForm() {
             type="text"
             id="qf-destination"
             name="destination"
-            placeholder="e.g. Destination port or city"
+            placeholder="VD: cảng hoặc thành phố nhận hàng"
             required
           />
         </div>
@@ -338,19 +339,19 @@ export function QuoteForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-shipment">
-              Target Shipment Date
+              Thời gian giao hàng dự kiến
             </label>
             <input
               className={INPUT}
               type="text"
               id="qf-shipment"
               name="shipmentDate"
-              placeholder="e.g. November 2026"
+              placeholder="VD: Tháng 11/2026"
             />
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="qf-incoterm">
-              Preferred Incoterm
+              Điều kiện Incoterm
             </label>
             <select
               className={SELECT}
@@ -359,26 +360,26 @@ export function QuoteForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select Incoterm
+                Chọn điều kiện Incoterm
               </option>
               <option>FOB</option>
               <option>CFR</option>
               <option>CIF</option>
-              <option>Other</option>
+              <option>Khác</option>
             </select>
           </div>
         </div>
 
         <div className={FIELD}>
           <label className={LABEL} htmlFor="qf-message">
-            Special Specifications
+            Yêu cầu riêng
           </label>
           <textarea
             className={TEXTAREA}
             id="qf-message"
             name="message"
             rows={4}
-            placeholder="Grade, crop year, certifications, packing or labeling requirements…"
+            placeholder="Phân loại, năm sản xuất, chứng nhận, yêu cầu đóng gói hoặc nhãn mác…"
           />
         </div>
 
@@ -393,11 +394,11 @@ export function QuoteForm() {
           className="btn btn-gold btn-block"
           disabled={sending}
         >
-          {sending ? "Sending…" : "Request a Quote"}
+          {sending ? "Đang gửi…" : "Nhận báo giá"}
         </button>
         <p className={FORM_PRIVACY}>
-          Fields marked <span className={REQ}>*</span> are required. Wholesale
-          and trade inquiries only.
+          Các ô có dấu <span className={REQ}>*</span> là bắt buộc. Chỉ tiếp nhận
+          yêu cầu bán sỉ và hợp tác thương mại.
         </p>
       </form>
     </div>
@@ -433,7 +434,7 @@ export function ContactForm() {
           ? `${data.subject} — ${data.company}`
           : data.subject,
         message: data.country
-          ? `[Country: ${data.country}]\n${data.message}`
+          ? `[Quốc gia: ${data.country}]\n${data.message}`
           : data.message,
       });
       setSuccess(true);
@@ -442,7 +443,7 @@ export function ContactForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Could not send — please try again.",
+          : "Không gửi được — vui lòng thử lại.",
       );
     } finally {
       setSending(false);
@@ -453,10 +454,10 @@ export function ContactForm() {
     return (
       <div className={cn(CONTACT_WRAP, "reveal is-visible")}>
         <SuccessPanel
-          title="Thank you — inquiry received"
-          body="Our team will review your message and respond within 1–2 business days with current availability and next steps."
+          title="Cảm ơn bạn — đã nhận yêu cầu"
+          body="Đội ngũ của chúng tôi sẽ xem nội dung bạn gửi và phản hồi trong 1–2 ngày làm việc kèm thông tin hiện có cùng các bước tiếp theo."
           onReset={() => setSuccess(false)}
-          resetLabel="Send another inquiry"
+          resetLabel="Gửi yêu cầu khác"
         />
       </div>
     );
@@ -465,12 +466,12 @@ export function ContactForm() {
   return (
     <div className={cn(CONTACT_WRAP, "reveal")}>
       <form className={FORM} onSubmit={onSubmit}>
-        <h3 className={FORM_TITLE}>Send Us an Inquiry</h3>
+        <h3 className={FORM_TITLE}>Gửi yêu cầu cho chúng tôi</h3>
 
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-name">
-              Full Name{" "}
+              Họ và tên{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -486,7 +487,7 @@ export function ContactForm() {
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-company">
-              Company{" "}
+              Công ty{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -505,7 +506,7 @@ export function ContactForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-email">
-              Business Email{" "}
+              Email công việc{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -521,7 +522,7 @@ export function ContactForm() {
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-phone">
-              Phone / WhatsApp{" "}
+              Điện thoại / Zalo{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -532,7 +533,7 @@ export function ContactForm() {
               id="cf-phone"
               name="phone"
               autoComplete="tel"
-              placeholder="Include country code"
+              placeholder="Nhớ kèm mã quốc gia"
               required
             />
           </div>
@@ -541,7 +542,7 @@ export function ContactForm() {
         <div className={ROW}>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-country">
-              Country
+              Quốc gia
             </label>
             <input
               className={INPUT}
@@ -549,12 +550,12 @@ export function ContactForm() {
               id="cf-country"
               name="country"
               autoComplete="country-name"
-              placeholder="e.g. United States"
+              placeholder="VD: Việt Nam"
             />
           </div>
           <div className={FIELD}>
             <label className={LABEL} htmlFor="cf-subject">
-              Inquiry Type{" "}
+              Loại yêu cầu{" "}
               <span className={REQ} aria-hidden="true">
                 *
               </span>
@@ -567,20 +568,20 @@ export function ContactForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select a topic
+                Chọn nội dung
               </option>
-              <option>Request a quotation</option>
-              <option>Distribution partnership</option>
-              <option>Logistics &amp; documentation</option>
-              <option>Product specifications</option>
-              <option>General inquiry</option>
+              <option>Yêu cầu báo giá</option>
+              <option>Hợp tác phân phối</option>
+              <option>Vận chuyển &amp; chứng từ</option>
+              <option>Thông số sản phẩm</option>
+              <option>Câu hỏi chung</option>
             </select>
           </div>
         </div>
 
         <div className={FIELD}>
           <label className={LABEL} htmlFor="cf-message">
-            Message{" "}
+            Nội dung{" "}
             <span className={REQ} aria-hidden="true">
               *
             </span>
@@ -592,7 +593,7 @@ export function ContactForm() {
             rows={6}
             minLength={10}
             required
-            placeholder="Variety, size & grade, required volume, packaging, destination country & port, preferred Incoterm…"
+            placeholder="Sản phẩm, quy cách & phân loại, số lượng cần, đóng gói, quốc gia & cảng đến, điều kiện Incoterm…"
           />
         </div>
 
@@ -607,11 +608,11 @@ export function ContactForm() {
           className="btn btn-gold btn-block"
           disabled={sending}
         >
-          {sending ? "Sending…" : "Send Inquiry"}
+          {sending ? "Đang gửi…" : "Gửi yêu cầu"}
         </button>
         <p className={FORM_PRIVACY}>
-          Fields marked <span className={REQ}>*</span> are required. Your
-          information is only used to respond to your inquiry.
+          Các ô có dấu <span className={REQ}>*</span> là bắt buộc. Thông tin của
+          bạn chỉ dùng để phản hồi yêu cầu này.
         </p>
       </form>
     </div>
@@ -629,7 +630,7 @@ export function NewsletterForm() {
         <span className={cn(CHECK, "h-[30px] w-[30px]")} aria-hidden="true">
           ✓
         </span>
-        <span>Thank you — you&rsquo;re on the list.</span>
+        <span>Cảm ơn bạn — đã đăng ký thành công.</span>
       </div>
     );
   }
@@ -644,7 +645,7 @@ export function NewsletterForm() {
       }}
     >
       <label className="sr-only" htmlFor="nl-email">
-        Business email
+        Email công việc
       </label>
       <input
         className={cn(
@@ -654,11 +655,11 @@ export function NewsletterForm() {
         type="email"
         id="nl-email"
         name="email"
-        placeholder="Your business email"
+        placeholder="Email công việc của bạn"
         required
       />
       <button type="submit" className="btn btn-primary">
-        Subscribe
+        Đăng ký
       </button>
     </form>
   );

@@ -30,7 +30,7 @@ export async function generateMetadata({
   const { slug } = await params;
   if (RESERVED_SLUGS.has(slug)) return {};
   const page = await getCmsPage(slug);
-  if (!page) return { title: "Page not found", robots: { index: false } };
+  if (!page) return { title: "Không tìm thấy trang", robots: { index: false } };
   return buildPageMetadata({
     title: page.metaTitle?.trim() || page.title,
     description: page.metaDescription ?? page.lead,
@@ -74,22 +74,23 @@ export default async function CmsGenericPage({
         <section className={SECTION}>
           <div className="site-container">
             <p className={cn(SECTION_NOTE, "reveal")}>
-              This page has no content yet — add sections in the CMS.
+              Trang này chưa có nội dung — hãy thêm section trong trang quản
+              trị.
             </p>
           </div>
         </section>
       ) : null}
 
       <CtaBand
-        eyebrow="Work With Us"
-        title="Looking for a Reliable Supplier?"
-        text="Tell us your requirements and our team will prepare a commercial quotation."
+        eyebrow="Hợp tác cùng chúng tôi"
+        title="Đang tìm một nhà cung cấp đáng tin cậy?"
+        text="Cho chúng tôi biết yêu cầu của bạn, đội ngũ sẽ chuẩn bị báo giá phù hợp."
       >
         <Link href={siteRoutes.contact} className="btn btn-gold">
-          Request a B2B Quote
+          Nhận báo giá B2B
         </Link>
         <Link href={siteRoutes.products} className="btn btn-ghost">
-          Browse Our Products
+          Xem sản phẩm
         </Link>
       </CtaBand>
     </>

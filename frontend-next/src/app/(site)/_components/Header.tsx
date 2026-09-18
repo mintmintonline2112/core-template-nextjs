@@ -126,7 +126,7 @@ export function Header({
             links={social}
             className="inline-flex items-center gap-2"
             linkClassName="grid h-[30px] w-[30px] place-items-center rounded-full border border-light/20 text-light-soft transition-[color,background-color,border-color] duration-200 ease-brand hover:border-gold-300 hover:bg-gold-300 hover:text-navy-900 max-[640px]:h-[26px] max-[640px]:w-[26px] [&>svg]:h-[15px] [&>svg]:w-[15px] max-[640px]:[&>svg]:h-[13px] max-[640px]:[&>svg]:w-[13px]"
-            label="Your Company on social media"
+            label="Mạng xã hội của chúng tôi"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ export function Header({
           <nav
             className="flex items-center gap-6 max-[900px]:absolute max-[900px]:inset-x-0 max-[900px]:top-full max-[900px]:hidden max-[900px]:flex-col max-[900px]:items-stretch max-[900px]:gap-0 max-[900px]:border-b max-[900px]:border-b-line max-[900px]:bg-cream max-[900px]:px-6 max-[900px]:pt-2 max-[900px]:pb-6 max-[900px]:shadow-float max-[900px]:group-data-open/header:flex"
             id="site-nav"
-            aria-label="Primary"
+            aria-label="Menu chính"
           >
             {menu.map((item) => (
               <Link
@@ -156,7 +156,7 @@ export function Header({
               className="btn btn-gold btn-sm ml-3 font-display text-xs tracking-md max-[900px]:mt-4 max-[900px]:ml-0 max-[900px]:justify-center"
               onClick={() => setOpen(false)}
             >
-              Request a Quote
+              Nhận báo giá
             </Link>
 
             {/* Menu mobile: nhắc lại hotline + social vì utility bar rất hẹp. Hai
@@ -183,7 +183,7 @@ export function Header({
             type="button"
             aria-expanded={open}
             aria-controls="site-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? "Đóng menu" : "Mở menu"}
             onClick={() => setOpen((value) => !value)}
           >
             <span

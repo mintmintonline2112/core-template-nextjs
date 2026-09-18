@@ -161,7 +161,7 @@ function ToggleCards({
   cards,
 }: { id: string } & Pick<SectionProps, "section"> & { cards: Card[] }) {
   const sizes = strings(section, "sizes");
-  const toggleLabel = str(section, "toggleLabel") ?? "Short version";
+  const toggleLabel = str(section, "toggleLabel") ?? "Bản rút gọn";
   const ctaLabel = str(section, "ctaLabel");
   const ctaHref = str(section, "ctaHref");
 
@@ -255,7 +255,7 @@ function ToggleCards({
                       {sizes.length > 0 ? (
                         <ul
                           className="mt-4 flex flex-wrap gap-2"
-                          aria-label="Available sizes"
+                          aria-label="Quy cách hiện có"
                         >
                           {sizes.map((size) => (
                             <li
@@ -306,7 +306,7 @@ function PhotoCards({
   cards,
 }: { id: string } & Pick<SectionProps, "section"> & { cards: Card[] }) {
   const image = str(section, "image");
-  const itemLabel = str(section, "itemLabel") ?? "Variety";
+  const itemLabel = str(section, "itemLabel") ?? "Loại";
 
   return (
     <section className={SECTION} id={id}>
@@ -338,7 +338,7 @@ function PhotoCards({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={resolveImage(card.image)}
-                      alt={`${card.title} natural almond kernels`}
+                      alt={`Ảnh ${card.title}`}
                       loading="lazy"
                       style={
                         card.imagePosition
@@ -382,7 +382,7 @@ function BadgeCards({
 }: { id: string } & Pick<SectionProps, "section"> & { cards: Card[] }) {
   const photos = items(section, "photos").filter((photo) => photo.image);
   const note = str(section, "note");
-  const itemLabel = str(section, "itemLabel") ?? "Format";
+  const itemLabel = str(section, "itemLabel") ?? "Dạng";
 
   return (
     <section className={cn(SECTION, SECTION_TINT)} id={id}>
@@ -405,7 +405,7 @@ function BadgeCards({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={resolveImage(card.image)}
-                      alt={`${card.title} almond format`}
+                      alt={`Ảnh ${card.title}`}
                       loading="lazy"
                       style={{ objectPosition: card.imagePosition || "center" }}
                       className={CARD_ZOOM}

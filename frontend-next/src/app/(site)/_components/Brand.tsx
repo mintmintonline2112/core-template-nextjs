@@ -52,12 +52,12 @@ export function Brand({
   logoHeight,
   brandName,
 }: BrandProps) {
-  const name = brandName?.trim() || "Your Company";
+  const name = brandName?.trim() || "Tên công ty";
   return (
     <Link
       href={siteRoutes.home}
       className="inline-flex items-center gap-3 text-navy-700"
-      aria-label={`${name} — home`}
+      aria-label={`${name} — trang chủ`}
     >
       {logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -81,8 +81,8 @@ export function Brand({
                 name
               ) : (
                 <>
-                  Your{" "}
-                  <em className="font-medium text-gold-500 italic">Company</em>
+                  Tên{" "}
+                  <em className="font-medium text-gold-500 italic">công ty</em>
                 </>
               )}
             </span>
@@ -92,7 +92,7 @@ export function Brand({
                 footer ? "text-light-soft" : "text-ink-faint",
               )}
             >
-              {footer ? "Location, Country" : "Your Tagline"}
+              {footer ? "Địa điểm, Quốc gia" : "Khẩu hiệu của bạn"}
             </span>
           </span>
         </>

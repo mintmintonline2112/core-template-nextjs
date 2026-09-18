@@ -43,7 +43,7 @@ export function SizeRuler({ sizes, note }: { sizes: string[]; note?: string }) {
               {size}
             </span>
             <span className="text-2xs tracking-md whitespace-nowrap text-light-soft uppercase">
-              kernels / oz
+              hạt / oz
             </span>
           </li>
         ))}

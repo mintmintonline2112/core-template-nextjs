@@ -133,8 +133,8 @@ export function PhotoCarousel({
   const visibleCount = Math.min(perView, n);
   const liveText =
     visibleCount === 1
-      ? `Photo ${current + 1} of ${n}`
-      : `Photos ${Array.from({ length: visibleCount }, (_, k) => mod(current + k, n) + 1).join(", ")} of ${n}`;
+      ? `Ảnh ${current + 1} / ${n}`
+      : `Ảnh ${Array.from({ length: visibleCount }, (_, k) => mod(current + k, n) + 1).join(", ")} / ${n}`;
 
   return (
     <div
@@ -214,7 +214,7 @@ export function PhotoCarousel({
               ARROW,
               "left-0 -translate-x-1/2 max-[640px]:left-2 max-[640px]:translate-x-0",
             )}
-            aria-label="Previous photo"
+            aria-label="Ảnh trước"
             onClick={() => step(-1)}
           >
             <svg
@@ -235,7 +235,7 @@ export function PhotoCarousel({
               ARROW,
               "right-0 translate-x-1/2 max-[640px]:right-2 max-[640px]:translate-x-0",
             )}
-            aria-label="Next photo"
+            aria-label="Ảnh tiếp theo"
             onClick={() => step(1)}
           >
             <svg
@@ -262,7 +262,7 @@ export function PhotoCarousel({
                     ? "w-5.5 bg-gold-500"
                     : "w-2.25 bg-navy-700/20 hover:bg-navy-700/40",
                 )}
-                aria-label={`Show photo ${i + 1}`}
+                aria-label={`Xem ảnh ${i + 1}`}
                 aria-current={i === current}
                 onClick={() => moveTo(clones + i)}
               />

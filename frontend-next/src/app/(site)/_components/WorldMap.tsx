@@ -91,7 +91,7 @@ export function WorldMapPanel({
       <img
         className="block h-auto w-full opacity-[0.92]"
         src="/images/world-map.svg"
-        alt="World map showing our export markets"
+        alt="Bản đồ thế giới thể hiện các thị trường xuất khẩu"
         width={800}
         height={400}
       />
@@ -142,17 +142,17 @@ export function WorldMapPanel({
       >
         <span className="inline-flex items-center gap-2">
           <i className="h-[10px] w-[10px] rounded-full bg-gold-300 shadow-glow outline-[1.5px] outline-offset-2 outline-gold-300/60" />
-          California — Origin
+          Trụ sở chính
         </span>
         <span className="inline-flex items-center gap-2">
           <i className="h-2 w-2 rounded-full bg-gold-300 shadow-glow" />
-          Export Markets
+          Thị trường xuất khẩu
         </span>
         <span className="inline-flex items-center gap-2">
           {/* Chỉ viền trên nét đứt: `border-dashed` của Tailwind đổi kiểu cả 4 cạnh
               (thành khung đứt nét), nên khai thẳng shorthand border-top. */}
           <i className="w-6 opacity-85 [border-top:2px_dashed_var(--gold-300)]" />
-          Trade Routes
+          Tuyến vận chuyển
         </span>
       </div>
     </div>
@@ -189,8 +189,8 @@ export function WorldMap({ regions }: { regions?: MapRegion[] }) {
         ))}
       </div>
       <p className="mx-auto my-0 max-w-[46rem] text-center text-base text-ink-faint italic">
-        Hover a region — its markets light up. Additional destinations on
-        request.
+        Rê chuột lên một khu vực để xem các thị trường tương ứng. Những điểm đến
+        khác vui lòng liên hệ.
       </p>
     </>
   );

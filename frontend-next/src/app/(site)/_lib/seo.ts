@@ -18,12 +18,12 @@ import { mediaUrl } from "./cms";
  */
 
 export const SITE_NAME = DEFAULT_BRAND_NAME;
-export const SITE_DEFAULT_TITLE = "Your Company — Your Tagline";
+export const SITE_DEFAULT_TITLE = "Tên công ty — Khẩu hiệu của bạn";
 export const SITE_DEFAULT_DESCRIPTION =
-  "Short description of your company, products, and services for search results.";
+  "Mô tả ngắn về công ty, sản phẩm và dịch vụ của bạn để hiển thị trên kết quả tìm kiếm.";
 /** Ảnh chia sẻ mặc định khi CMS và Cài đặt đều không có ảnh (public/images). */
 export const DEFAULT_OG_IMAGE = "/images/placeholder-wide.svg";
-export const SITE_LOCALE = "en_US";
+export const SITE_LOCALE = "vi_VN";
 
 /** URL tuyệt đối, tôn trọng `trailingSlash: true` trong next.config để canonical không bị redirect. */
 export function absoluteUrl(path: string): string {
@@ -50,7 +50,7 @@ export function resolveSiteSeo(settings: SiteSettings) {
 
 export type PageSeoInput = {
   title: string;
-  /** true → không áp template "%s — Your Company" (dùng cho trang chủ). */
+  /** true → không áp template "%s — Tên công ty" (dùng cho trang chủ). */
   absoluteTitle?: boolean;
   description?: string | null;
   /** Đường dẫn tương đối của trang, lấy từ siteRoutes. */

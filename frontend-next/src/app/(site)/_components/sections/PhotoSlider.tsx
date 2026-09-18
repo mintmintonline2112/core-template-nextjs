@@ -47,7 +47,7 @@ export function PhotoSlider({ section }: SectionProps) {
           <PhotoCarousel
             className="mt-[clamp(2.5rem,5vw,3.5rem)]"
             photos={photos}
-            label={section?.heading || "Photos"}
+            label={section?.heading || "Thư viện ảnh"}
           />
         ) : null}
 

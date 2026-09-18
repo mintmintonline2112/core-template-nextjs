@@ -80,7 +80,7 @@ export function HeroSlides({
       className="relative isolate flex min-h-[clamp(580px,88vh,840px)] items-center overflow-hidden bg-navy-900 text-light before:absolute before:inset-0 before:-z-1 before:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--navy-900)_95%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_86%,transparent)_34%,color-mix(in_oklab,var(--navy-900)_45%,transparent)_64%,color-mix(in_oklab,var(--navy-900)_20%,transparent)_100%),linear-gradient(0deg,color-mix(in_oklab,var(--navy-900)_55%,transparent)_0%,transparent_30%)] before:content-[''] max-[900px]:min-h-0 max-[900px]:before:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--navy-900)_60%,transparent)_0%,color-mix(in_oklab,var(--navy-900)_92%,transparent)_55%)]"
       id={id}
       aria-roledescription="carousel"
-      aria-label="Your Company highlights"
+      aria-label="Điểm nổi bật"
       style={
         { ["--hs-interval" as string]: `${interval}ms` } as React.CSSProperties
       }
@@ -139,7 +139,7 @@ export function HeroSlides({
           <div
             className="flex flex-col items-end gap-1 max-[900px]:mt-7 max-[900px]:flex-row max-[900px]:items-center max-[900px]:justify-center max-[900px]:gap-5"
             role="group"
-            aria-label="Choose slide"
+            aria-label="Chọn slide"
           >
             {slides.map((item, index) => (
               <button
@@ -152,7 +152,7 @@ export function HeroSlides({
                     ? "text-gold-300"
                     : "text-light-soft hover:text-light",
                 )}
-                aria-label={`Slide ${index + 1} of ${count}: ${item.title}`}
+                aria-label={`Slide ${index + 1} / ${count}: ${item.title}`}
                 aria-current={index === current ? "true" : undefined}
                 onClick={() => go(index)}
               >
